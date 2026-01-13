@@ -15,9 +15,9 @@
             <p>Plataforma Digital de Automatizacao das Actividades de Gestao Condominial</p>
         </div>
 
-        <?php if ($error): ?>
-            <div class="alert">
-                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+        <?php if (isset($_GET['erro'])): ?>
+            <div class="error-message" style="color:#b71c1c;background:#fdecea;padding:8px;border-radius:4px;margin:10px 0;">
+                <?php echo htmlspecialchars($_GET['erro']); ?>
             </div>
         <?php endif; ?>
 
@@ -26,8 +26,7 @@
                 <label for="email">Email</label>
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>"
-                        required>
+                    <input type="email" id="email" name="email" required>
                 </div>
             </div>
 
@@ -54,8 +53,7 @@
     </div>
 
     <script>
-
-        document.getElementById('togglePassword').addEventListener('click', function () {
+        document.getElementById('togglePassword').addEventListener('click', function() {
             const senhaInput = document.getElementById('senha');
             const icon = this.querySelector('i');
 
@@ -74,7 +72,7 @@
         document.getElementById('email').focus();
 
         // TESTE: Marcar visualmente os elementos para debug
-        setTimeout(function () {
+        setTimeout(function() {
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => {
                 input.style.border = '2px solid rgba(151, 67, 215, 0.5)';
