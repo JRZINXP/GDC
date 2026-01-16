@@ -174,9 +174,6 @@ if ($resultado->num_rows > 0) {
             transform: translateY(-2px);
             box-shadow: 0 10px 15px rgba(0,0,0,0.1);
         }
-        .reserva-card.pendente {
-            border-left: 4px solid #f59e0b;
-        }
         .reserva-card.aprovada {
             border-left: 4px solid #10b981;
         }
@@ -200,7 +197,6 @@ if ($resultado->num_rows > 0) {
             font-size: 0.75rem;
             font-weight: 500;
         }
-        .status-pendente { background: #fef3c7; color: #92400e; }
         .status-aprovada { background: #d1fae5; color: #065f46; }
         .status-recusada { background: #fee2e2; color: #991b1b; }
         .reserva-info {
@@ -271,7 +267,7 @@ if ($resultado->num_rows > 0) {
     <main class="dashboard-container">
         <!-- Cabeçalho da Página -->
         <div class="page-header">
-            <h1><i class="fas fa-calendar-check"></i> Reservas Pendentes</h1>
+            <h1><i class="fas fa-calendar-check"></i> Reservas Marcadas</h1>
             <div class="page-actions">
                 <a href="#" class="btn btn-primary">
                     <i class="fas fa-sync-alt"></i> Atualizar
@@ -299,15 +295,6 @@ if ($resultado->num_rows > 0) {
                     <label style="display: block; margin-bottom: .5rem; color: #1f2937; font-weight: 500;">Data</label>
                     <input type="date" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;">
                 </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <label style="display: block; margin-bottom: .5rem; color: #1f2937; font-weight: 500;">Status</label>
-                    <select style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;">
-                        <option value="pendente">Pendentes</option>
-                        <option value="todas">Todas</option>
-                        <option value="aprovada">Aprovadas</option>
-                        <option value="recusada">Recusadas</option>
-                    </select>
-                </div>
                 <button class="btn btn-primary">
                     <i class="fas fa-filter"></i> Filtrar
                 </button>
@@ -316,184 +303,73 @@ if ($resultado->num_rows > 0) {
 
         <!-- Cards de Reservas -->
         <div class="reservas-grid">
-            <!-- Reserva 1 -->
-            <div class="reserva-card pendente">
-                <div class="reserva-header">
-                    <div class="reserva-title">Churrasqueira</div>
-                    <span class="reserva-status status-pendente">Pendente</span>
-                </div>
-                <div class="reserva-info">
-                    <div class="info-item">
-                        <i class="fas fa-user"></i>
-                        <span><strong>Morador:</strong> João Silva</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar"></i>
-                        <span><strong>Data:</strong> 15/03/2024</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span><strong>Horário:</strong> 14:00 - 18:00</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-users"></i>
-                        <span><strong>Convidados:</strong> 15 pessoas</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-sticky-note"></i>
-                        <span><strong>Observação:</strong> Aniversário de 10 anos</span>
-                    </div>
-                </div>
-                <div class="reserva-actions">
-                    <button class="btn btn-success btn-sm" onclick="aprovarReserva(1)">
-                        <i class="fas fa-check"></i> Aprovar
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="recusarReserva(1)">
-                        <i class="fas fa-times"></i> Recusar
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="verDetalhes(1)">
-                        <i class="fas fa-eye"></i> Detalhes
-                    </button>
-                </div>
-            </div>
+            <?php
+            // Buscar todas as reservas reais do banco de dados
+            $query = "SELECT r.id_reserva, r.area_comum, r.data, r.hora_inicio, r.hora_fim, 
+                             m.nome as nome_morador, m.telefone
+                      FROM Reserva r
+                      INNER JOIN Morador m ON r.id_morador = m.id_morador
+                      ORDER BY r.data DESC, r.hora_inicio DESC";
+            
+            $resultado = $conexao->query($query);
 
-            <!-- Reserva 2 -->
-            <div class="reserva-card pendente">
-                <div class="reserva-header">
-                    <div class="reserva-title">Salão de Festas</div>
-                    <span class="reserva-status status-pendente">Pendente</span>
-                </div>
-                <div class="reserva-info">
-                    <div class="info-item">
-                        <i class="fas fa-user"></i>
-                        <span><strong>Morador:</strong> Maria Santos</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar"></i>
-                        <span><strong>Data:</strong> 16/03/2024</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span><strong>Horário:</strong> 19:00 - 23:00</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-users"></i>
-                        <span><strong>Convidados:</strong> 50 pessoas</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-sticky-note"></i>
-                        <span><strong>Observação:</strong> Casamento civil</span>
-                    </div>
-                </div>
-                <div class="reserva-actions">
-                    <button class="btn btn-success btn-sm" onclick="aprovarReserva(2)">
-                        <i class="fas fa-check"></i> Aprovar
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="recusarReserva(2)">
-                        <i class="fas fa-times"></i> Recusar
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="verDetalhes(2)">
-                        <i class="fas fa-eye"></i> Detalhes
-                    </button>
-                </div>
-            </div>
-
-            <!-- Reserva 3 -->
-            <div class="reserva-card aprovada">
-                <div class="reserva-header">
-                    <div class="reserva-title">Quadra Poliesportiva</div>
-                    <span class="reserva-status status-aprovada">Aprovada</span>
-                </div>
-                <div class="reserva-info">
-                    <div class="info-item">
-                        <i class="fas fa-user"></i>
-                        <span><strong>Morador:</strong> Pedro Oliveira</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar"></i>
-                        <span><strong>Data:</strong> 14/03/2024</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span><strong>Horário:</strong> 09:00 - 12:00</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-users"></i>
-                        <span><strong>Convidados:</strong> 10 pessoas</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-sticky-note"></i>
-                        <span><strong>Observação:</strong> Campeonato amador</span>
-                    </div>
-                </div>
-                <div class="reserva-actions">
-                    <button class="btn btn-danger btn-sm" onclick="cancelarReserva(3)">
-                        <i class="fas fa-ban"></i> Cancelar
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="verDetalhes(3)">
-                        <i class="fas fa-eye"></i> Detalhes
-                    </button>
-                </div>
-            </div>
-
-            <!-- Reserva 4 -->
-            <div class="reserva-card recusada">
-                <div class="reserva-header">
-                    <div class="reserva-title">Piscina</div>
-                    <span class="reserva-status status-recusada">Recusada</span>
-                </div>
-                <div class="reserva-info">
-                    <div class="info-item">
-                        <i class="fas fa-user"></i>
-                        <span><strong>Morador:</strong> Ana Costa</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar"></i>
-                        <span><strong>Data:</strong> 10/03/2024</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span><strong>Horário:</strong> 13:00 - 17:00</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-users"></i>
-                        <span><strong>Convidados:</strong> 30 pessoas</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-sticky-note"></i>
-                        <span><strong>Observação:</strong> Festa de formatura</span>
-                    </div>
-                </div>
-                <div class="reserva-actions">
-                    <button class="btn btn-success btn-sm" onclick="reaprovarReserva(4)">
-                        <i class="fas fa-redo"></i> Reaprovar
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="verDetalhes(4)">
-                        <i class="fas fa-eye"></i> Detalhes
-                    </button>
-                </div>
-            </div>
+            if ($resultado && $resultado->num_rows > 0) {
+                while ($reserva = $resultado->fetch_assoc()) {
+                    $data_formatada = date('d/m/Y', strtotime($reserva['data']));
+                    $hora_inicio = date('H:i', strtotime($reserva['hora_inicio']));
+                    $hora_fim = date('H:i', strtotime($reserva['hora_fim']));
+                    
+                    echo "<div class='reserva-card'>";
+                    echo "<div class='reserva-header'>";
+                    echo "<div class='reserva-title'>" . htmlspecialchars($reserva['area_comum']) . "</div>";
+                    echo "</div>";
+                    echo "<div class='reserva-info'>";
+                    echo "<div class='info-item'>";
+                    echo "<i class='fas fa-user'></i>";
+                    echo "<span><strong>Morador:</strong> " . htmlspecialchars($reserva['nome_morador']) . "</span>";
+                    echo "</div>";
+                    echo "<div class='info-item'>";
+                    echo "<i class='fas fa-calendar'></i>";
+                    echo "<span><strong>Data:</strong> " . $data_formatada . "</span>";
+                    echo "</div>";
+                    echo "<div class='info-item'>";
+                    echo "<i class='fas fa-clock'></i>";
+                    echo "<span><strong>Horário:</strong> " . $hora_inicio . " - " . $hora_fim . "</span>";
+                    echo "</div>";
+                    echo "<div class='info-item'>";
+                    echo "<i class='fas fa-phone'></i>";
+                    echo "<span><strong>Telefone:</strong> " . htmlspecialchars($reserva['telefone'] ?? 'N/A') . "</span>";
+                    echo "</div>";
+                    echo "</div>";
+                    echo "<div class='reserva-actions'>";
+                    echo "<button class='btn btn-primary btn-sm' onclick=\"verDetalhes(" . $reserva['id_reserva'] . ")\">";
+                    echo "<i class='fas fa-eye'></i> Detalhes";
+                    echo "</button>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<div style='grid-column: 1/-1; text-align: center; padding: 40px; background: white; border-radius: .75rem;'>";
+                echo "<i class='fas fa-inbox' style='font-size: 48px; color: #d1d5db; margin-bottom: 20px; display: block;'></i>";
+                echo "<p style='color: #6b7280; font-size: 1.1rem;'>Nenhuma reserva cadastrada no sistema</p>";
+                echo "</div>";
+            }
+            ?>
         </div>
 
         <!-- Estatísticas -->
         <div style="background: white; border-radius: .75rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <h3><i class="fas fa-chart-bar"></i> Estatísticas de Reservas</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <?php
+                // Calcular estatísticas
+                $query_total = "SELECT COUNT(*) as total FROM Reserva";
+                $resultado_total = $conexao->query($query_total);
+                $total = $resultado_total->fetch_assoc()['total'];
+                ?>
                 <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: .5rem;">
-                    <div style="font-size: 2rem; color: #f59e0b; font-weight: 700;">7</div>
-                    <div style="color: #6b7280;">Pendentes</div>
-                </div>
-                <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: .5rem;">
-                    <div style="font-size: 2rem; color: #10b981; font-weight: 700;">24</div>
-                    <div style="color: #6b7280;">Aprovadas</div>
-                </div>
-                <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: .5rem;">
-                    <div style="font-size: 2rem; color: #ef4444; font-weight: 700;">5</div>
-                    <div style="color: #6b7280;">Recusadas</div>
-                </div>
-                <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: .5rem;">
-                    <div style="font-size: 2rem; color: #7e22ce; font-weight: 700;">36</div>
-                    <div style="color: #6b7280;">Total do Mês</div>
+                    <div style="font-size: 2rem; color: #7e22ce; font-weight: 700;"><?php echo $total; ?></div>
+                    <div style="color: #6b7280;">Total de Reservas</div>
                 </div>
             </div>
         </div>
@@ -505,35 +381,6 @@ if ($resultado->num_rows > 0) {
     </footer>
 
     <script>
-        function aprovarReserva(id) {
-            if(confirm('Deseja aprovar esta reserva?')) {
-                alert('Reserva ' + id + ' aprovada com sucesso!');
-                // Aqui você faria uma requisição AJAX para aprovar
-            }
-        }
-
-        function recusarReserva(id) {
-            const motivo = prompt('Informe o motivo da recusa:');
-            if(motivo) {
-                alert('Reserva ' + id + ' recusada. Motivo: ' + motivo);
-                // Aqui você faria uma requisição AJAX para recusar
-            }
-        }
-
-        function cancelarReserva(id) {
-            if(confirm('Deseja cancelar esta reserva aprovada?')) {
-                alert('Reserva ' + id + ' cancelada!');
-                // Aqui você faria uma requisição AJAX para cancelar
-            }
-        }
-
-        function reaprovarReserva(id) {
-            if(confirm('Deseja reativar esta reserva recusada?')) {
-                alert('Reserva ' + id + ' reativada!');
-                // Aqui você faria uma requisição AJAX para reaprovar
-            }
-        }
-
         function verDetalhes(id) {
             alert('Abrindo detalhes da reserva ' + id);
             // Aqui você redirecionaria para uma página de detalhes

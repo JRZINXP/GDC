@@ -294,7 +294,7 @@ if ($resultado->num_rows > 0) {
         <div class="page-header">
             <h1><i class="fas fa-user-tie"></i> Gerenciar Funcionários</h1>
             <div class="page-actions">
-                <a href="#" class="btn btn-success" onclick="novoFuncionario()">
+                <a href="novoPorteiro.php" class="btn btn-success">
                     <i class="fas fa-user-plus"></i> Novo Funcionário
                 </a>
             </div>

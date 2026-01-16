@@ -1,0 +1,455 @@
+<?php
+require_once __DIR__ . '/../../data/conector.php';
+
+session_start();
+
+$conector = new Conector();
+$conexao = $conector->getConexao();
+
+// Buscar dados do morador logado
+$stmt = $conexao->prepare("SELECT id_morador, nome FROM Morador WHERE id_usuario = ?");
+$stmt->bind_param("s", $_SESSION['id']);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+if ($resultado->num_rows > 0) {
+    $morador = $resultado->fetch_assoc();
+    $id_morador = $morador['id_morador'];
+    $nome_morador = $morador['nome'];
+    $iniciais = strtoupper(substr($nome_morador, 0, 1));
+} else {
+    header("Location: ../../login.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Reservas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../assets/css/colors.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('../../../assets/img/pic.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #9743d7;
+        }
+
+        .header-left h2 {
+            color: #333;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-left h2 i {
+            color: #9743d7;
+        }
+
+        .header-subtitle {
+            color: #222;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #9743d7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+        }
+
+        .card h3 i {
+            color: #9743d7;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #9743d7;
+            box-shadow: 0 0 0 3px rgba(155, 67, 215, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-submit {
+            background: #9743d7;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .btn-submit:hover {
+            background: #7e22ce;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(155, 67, 215, 0.4);
+        }
+
+        .reservas-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .reserva-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #9743d7;
+        }
+
+        .reserva-item h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .reserva-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .reserva-info i {
+            color: #9743d7;
+            width: 20px;
+            text-align: center;
+        }
+
+        .alert-success, .alert-error {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-left: 4px solid #ef4444;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <h2><i class="fas fa-calendar-check"></i> Reservas</h2>
+            <div class="header-subtitle">Gerenciar minhas reservas de áreas comuns</div>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar"><?php echo $iniciais; ?></div>
+            <div>
+                <strong><?php echo htmlspecialchars($nome_morador); ?></strong>
+            </div>
+            <a href="index.php" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Formulário de Nova Reserva -->
+            <div class="card fade-in">
+                <h3>
+                    <i class="fas fa-plus-circle"></i>
+                    Nova Reserva
+                </h3>
+
+                <?php
+                if (isset($_SESSION['mensagem'])) {
+                    $tipo = $_SESSION['tipo_mensagem'] === 'sucesso' ? 'alert-success' : 'alert-error';
+                    echo "<div class='$tipo'>";
+                    echo $_SESSION['mensagem'];
+                    echo "</div>";
+                    unset($_SESSION['mensagem']);
+                    unset($_SESSION['tipo_mensagem']);
+                }
+                ?>
+
+                <form action="../../controller/Morador/reservas.php" method="POST" id="form-reserva">
+                    <div class="form-group">
+                        <label for="area_comum">
+                            <i class="fas fa-door-open"></i> Área Comum
+                        </label>
+                        <select name="area_comum" id="area_comum" required>
+                            <option value="">-- Selecione uma área --</option>
+                            <option value="Salão de Festas">Salão de Festas</option>
+                            <option value="Piscina">Piscina</option>
+                            <option value="Churrasqueira">Churrasqueira</option>
+                            <option value="Quadra de Esportes">Quadra de Esportes</option>
+                            <option value="Sala de Reunião">Sala de Reunião</option>
+                            <option value="Sauna">Sauna</option>
+                            <option value="Ginásio">Ginásio</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="data">
+                                <i class="fas fa-calendar"></i> Data
+                            </label>
+                            <input type="date" name="data" id="data" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hora_inicio">
+                                <i class="fas fa-clock"></i> Hora Início
+                            </label>
+                            <input type="time" name="hora_inicio" id="hora_inicio" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora_fim">
+                            <i class="fas fa-clock"></i> Hora Fim
+                        </label>
+                        <input type="time" name="hora_fim" id="hora_fim" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Reservar Agora
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Reservas -->
+            <div class="card fade-in">
+                <h3>
+                    <i class="fas fa-list"></i>
+                    Minhas Reservas
+                </h3>
+
+                <div class="reservas-list" id="reservas-container">
+                    <?php
+                    // Buscar reservas do morador
+                    $query = "SELECT id_reserva, area_comum, data, hora_inicio, hora_fim 
+                              FROM Reserva 
+                              WHERE id_morador = ? 
+                              ORDER BY data DESC, hora_inicio DESC";
+                    
+                    $stmt = $conexao->prepare($query);
+                    $stmt->bind_param("i", $id_morador);
+                    $stmt->execute();
+                    $resultado = $stmt->get_result();
+
+                    if ($resultado && $resultado->num_rows > 0) {
+                        while ($reserva = $resultado->fetch_assoc()) {
+                            $data_formatada = date('d/m/Y', strtotime($reserva['data']));
+                            $hora_inicio = date('H:i', strtotime($reserva['hora_inicio']));
+                            $hora_fim = date('H:i', strtotime($reserva['hora_fim']));
+                            
+                            echo "<div class='reserva-item'>";
+                            echo "<h4>" . htmlspecialchars($reserva['area_comum']) . "</h4>";
+                            echo "<div class='reserva-info'>";
+                            echo "<i class='fas fa-calendar-alt'></i> <strong>Data:</strong> " . $data_formatada;
+                            echo "</div>";
+                            echo "<div class='reserva-info'>";
+                            echo "<i class='fas fa-clock'></i> <strong>Horário:</strong> " . $hora_inicio . " às " . $hora_fim;
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    } else {
+                        echo "<div style='text-align: center; color: #999; padding: 20px;'>";
+                        echo "<i class='fas fa-inbox' style='font-size: 40px; margin-bottom: 10px; display: block;'></i>";
+                        echo "Você ainda não possui reservas";
+                        echo "</div>";
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validar data mínima
+        document.getElementById('data').addEventListener('change', function() {
+            const data = new Date(this.value);
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            
+            if (data < hoje) {
+                alert('Não é possível reservar para datas passadas!');
+                this.value = '';
+            }
+        });
+
+        // Validar hora fim maior que hora início
+        document.getElementById('form-reserva').addEventListener('submit', function(e) {
+            const horaInicio = document.getElementById('hora_inicio').value;
+            const horaFim = document.getElementById('hora_fim').value;
+
+            if (horaFim <= horaInicio) {
+                e.preventDefault();
+                alert('A hora de término deve ser maior que a hora de início!');
+            }
+        });
+
+        // Limpar mensagem após 3s
+        const alerta = document.querySelector('.alert-success');
+        if (alerta) {
+            setTimeout(function() {
+                alerta.style.opacity = '0';
+                alerta.style.transition = 'opacity 0.4s ease-out';
+                setTimeout(function() {
+                    alerta.style.display = 'none';
+                }, 400);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
