@@ -278,29 +278,6 @@ if ($resultado->num_rows > 0) {
             </div>
         </div>
 
-        <!-- Filtros -->
-        <div style="background: white; border-radius: .75rem; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
-                <div style="flex: 1; min-width: 200px;">
-                    <label style="display: block; margin-bottom: .5rem; color: #1f2937; font-weight: 500;">Área Comum</label>
-                    <select style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;">
-                        <option value="">Todas</option>
-                        <option value="churrasqueira">Churrasqueira</option>
-                        <option value="salao">Salão de Festas</option>
-                        <option value="quadra">Quadra Poliesportiva</option>
-                        <option value="piscina">Piscina</option>
-                    </select>
-                </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <label style="display: block; margin-bottom: .5rem; color: #1f2937; font-weight: 500;">Data</label>
-                    <input type="date" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;">
-                </div>
-                <button class="btn btn-primary">
-                    <i class="fas fa-filter"></i> Filtrar
-                </button>
-            </div>
-        </div>
-
         <!-- Cards de Reservas -->
         <div class="reservas-grid">
             <?php

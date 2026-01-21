@@ -114,4 +114,12 @@ try {
     header("Location: ../../view/Sindico/novoPorteiro.php?erro=$erro_msg");
     exit;
 }
+if ($_GET['action'] === 'toggle') {
+    // ativa / desativa
+}
+
+if ($_GET['action'] === 'reset') {
+    // reset de senha
+}
+
 ?>

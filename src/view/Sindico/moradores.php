@@ -1,578 +1,419 @@
 <?php
 require_once __DIR__ . '/../../data/conector.php';
-
 session_start();
 
-$conector = new Conector();
-$conexao = $conector->getConexao();
-
-$stmt = $conexao->prepare("Select * from sindico Where id_usuario = ?");
-$stmt->bind_param("s", $_SESSION['id']);
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-if ($resultado->num_rows > 0) {
-    $row = $resultado->fetch_assoc();
-    $userName = $row['nome'];
-    $iniciais = strtoupper(substr($userName, 0, 1));
+/* AUTENTICAÇÃO */
+if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
+    header('Location: ../../login.php');
+    exit;
 }
+
+$conexao = (new Conector())->getConexao();
+
+/* ===== EDITAR MORADOR ===== */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'editar') {
+
+    $id_morador = (int)$_POST['id_morador'];
+    $nome = trim($_POST['nome']);
+    $telefone = trim($_POST['telefone']);
+    $id_unidade = $_POST['id_unidade'] ?: null;
+
+    if ($nome !== '') {
+        $stmt = $conexao->prepare("
+            UPDATE Morador
+            SET nome = ?, telefone = ?, id_unidade = ?
+            WHERE id_morador = ?
+        ");
+        $stmt->bind_param("ssii", $nome, $telefone, $id_unidade, $id_morador);
+        $stmt->execute();
+    }
+}
+
+/* Dados do síndico */
+$stmt = $conexao->prepare("SELECT nome FROM Sindico WHERE id_usuario = ?");
+$stmt->bind_param("i", $_SESSION['id']);
+$stmt->execute();
+$row = $stmt->get_result()->fetch_assoc();
+
+$userName = $row['nome'];
+$iniciais = strtoupper(substr($userName, 0, 1));
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciar Moradores - Síndico</title>
-    <link rel="stylesheet" href="../../assets/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
+<meta charset="UTF-8">
+<title>Gerenciar Moradores</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif
+}
+
+body{
+    background:#f4f6f9;
+    color:#1f2937;
+}
+
+/* HEADER (PADRÃO SÍNDICO) */
+.header{
+    background:#ffffff;
+    padding:20px 32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:3px solid #7e22ce;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.header h2{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+}
+
+.header h2 i{
+    color:#7e22ce;
+}
+
+/* USER INFO */
+.user{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#7e22ce;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+}
+
+/* BOTÃO VOLTAR */
+.back-btn{
+    background:#6b7280;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:8px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:.3s;
+}
+
+.back-btn i{color:#fff}
+
+.back-btn:hover{
+    background:#4b5563;
+    transform:translateY(-2px);
+}
+
+/* CONTAINER */
+.container{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+/* CARD */
+.card{
+    background:#ffffff;
+    border-radius:14px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+/* TOPO */
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* BOTÃO NOVO */
+.btn-success{
+    background:#7e22ce;
+    color:#ffffff;
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.btn-success i{color:#fff}
+
+.btn-success:hover{
+    background:#5b21b6;
+    transform:translateY(-2px);
+}
+
+/* TABELA */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f3f4f6;
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+}
+
+td{
+    padding:16px;
+    border-top:1px solid #e5e7eb;
+}
+
+tr:hover{
+    background:#f9fafb;
+}
+
+/* AÇÕES */
+.actions{
+    display:flex;
+    gap:10px;
+}
+
+.actions a{
+    width:36px;
+    height:36px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    transition:.3s;
+}
+
+/* VER */
+.view{
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* EDITAR */
+.edit{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+/* EXCLUIR */
+.delete{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+    .top{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
     }
-
-    body {
-        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-        color: #1f2937;
-        min-height: 100vh;
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
     }
-
-    .dashboard-header {
-        background: white;
-        color: #1f2937;
-        padding: 1.5rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-bottom: 3px solid #7e22ce;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .dashboard-header h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-    }
-
-    .dashboard-header h2 i {
-        color: #7e22ce;
-    }
-
-    .header-subtitle {
-        font-size: .875rem;
-        color: #6b7280;
-        margin-top: .25rem;
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-    }
-
-    .user-avatar {
-        width: 50px;
-        height: 50px;
-        background: #7e22ce;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .user-details {
-        text-align: right;
-    }
-
-    .user-name {
-        font-weight: 500;
-        font-size: 1rem;
-        color: #1f2937;
-    }
-
-    .user-role {
-        font-size: .75rem;
-        color: #6b7280;
-        display: flex;
-        align-items: center;
-        gap: .25rem;
-        margin-top: .125rem;
-    }
-
-    .logout-btn,
-    .back-btn {
-        background: #ff4757;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .logout-btn:hover,
-    .back-btn:hover {
-        background: #ff3742;
-        transform: translateY(-2px);
-    }
-
-    .back-btn {
-        background: #6c757d;
-    }
-
-    .back-btn:hover {
-        background: #5a6268;
-    }
-
-    /* Main container */
-    .dashboard-container {
-        max-width: 1400px;
-        margin: 2rem auto;
-        padding: 0 1.25rem;
-    }
-
-    /* Page header */
-    .page-header {
-        background: white;
-        border-radius: .75rem;
-        padding: 1.5rem 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .page-header h1 {
-        color: #1f2937;
-        font-size: 1.75rem;
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-    }
-
-    .page-header h1 i {
-        color: #7e22ce;
-    }
-
-    .page-actions {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-primary {
-        background: #7e22ce;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #5b21b6;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-        background: #6b7280;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #4b5563;
-    }
-
-    .btn-success {
-        background: #10b981;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #059669;
-    }
-
-    /* Table */
-    .content-card {
-        background: white;
-        border-radius: .75rem;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    .data-table th {
-        background: #f8fafc;
-        color: #1f2937;
-        font-weight: 600;
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 2px solid #e5e7eb;
-    }
-
-    .data-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #e5e7eb;
-        vertical-align: middle;
-    }
-
-    .data-table tr:hover {
-        background: #f9fafb;
-    }
-
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-
-    .status-active {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .status-inactive {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
-    .status-pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 8px;
-    }
-
-    .btn-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-edit {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .btn-edit:hover {
-        background: #bfdbfe;
-    }
-
-    .btn-delete {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-
-    .btn-delete:hover {
-        background: #fecaca;
-    }
-
-    .btn-view {
-        background: #dcfce7;
-        color: #166534;
-    }
-
-    .btn-view:hover {
-        background: #bbf7d0;
-    }
-
-    /* Filters */
-    .filters {
-        background: white;
-        border-radius: .75rem;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-row {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 1rem;
-    }
-
-    .filter-group {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .filter-group label {
-        display: block;
-        margin-bottom: .5rem;
-        color: #1f2937;
-        font-weight: 500;
-    }
-
-    .filter-group select,
-    .filter-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        font-size: 1rem;
-    }
-
-    /* Footer */
-    .dashboard-footer {
-        background: white;
-        color: #6b7280;
-        text-align: center;
-        padding: 1.5rem;
-        margin-top: 3rem;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    @media (max-width:768px) {
-        .dashboard-header {
-            flex-direction: column;
-            padding: 1.25rem;
-            text-align: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .user-details {
-            text-align: center;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .page-actions {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-    </style>
+}
+</style>
 </head>
 
 <body>
-    <!-- Cabeçalho -->
-    <header class="dashboard-header">
-        <div>
-            <h2><i class="fas fa-building"></i> Gestão Condominial</h2>
-            <div class="header-subtitle">Gerenciamento de Moradores</div>
-        </div>
 
-        <div class="user-info">
-            <div class="user-avatar"><?php echo $iniciais; ?></div>
-            <div class="user-details">
-                <div class="user-name"><?php echo $userName; ?></div>
-                <div class="user-role"><i class="fas fa-user-shield"></i> Síndico</div>
-            </div>
-            <a href="index.php" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Voltar
-            </a>
-            <a href="../../controller/AuthController.php?action=logout" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Sair
-            </a>
-        </div>
-    </header>
+<header class="header">
+    <h2><i class="fas fa-users"></i> Gerenciar Moradores</h2>
 
-    <!-- Conteúdo Principal -->
-    <main class="dashboard-container">
-        <!-- Cabeçalho da Página -->
-        <div class="page-header">
-            <h1><i class="fas fa-users"></i> Gerenciar Moradores</h1>
-            <div class="page-actions">
-                <a href="novoUser.php" class="btn btn-success">
-                    <i class="fas fa-user-plus"></i> Novo Morador
-                </a>
-            </div>
-        </div>
+    <div class="user">
+        <div class="avatar"><?= $iniciais ?></div>
+        <strong><?= htmlspecialchars($userName) ?></strong>
+        <a href="index.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+</header>
 
-        <!-- Filtros -->
-        <div class="filters">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label for="search"><i class="fas fa-search"></i> Pesquisar</label>
-                    <input type="text" id="search" placeholder="Nome, unidade... ">
-                </div>
-                <div class="filter-group">
-                    <label for="status"><i class="fas fa-filter"></i> Status</label>
-                    <select id="status">
-                        <option value="">Todos</option>
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
-                        <option value="pendente">Pendente</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="bloco"><i class="fas fa-building"></i> Bloco</label>
-                    <select id="bloco">
-                        <option value="">Todos</option>
-                        <option value="A">Bloco A</option>
-                        <option value="B">Bloco B</option>
-                        <option value="C">Bloco C</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn btn-primary">
-                <i class="fas fa-filter"></i> Aplicar Filtros
-            </button>
-        </div>
+<div class="container">
 
-        <!-- Lista de Moradores -->
-        <div class="content-card">
-            <h3><i class="fas fa-list"></i> Lista de Moradores</h3>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Unidade</th>
-                            <th>Telefone</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        // Buscar todos os moradores reais do banco de dados
-                        $query = "SELECT m.id_morador, m.nome, m.telefone, u.email, un.numero as unidade 
-                                  FROM Morador m
-                                  INNER JOIN Usuario u ON m.id_usuario = u.id_usuario
-                                  LEFT JOIN Unidade un ON m.id_unidade = un.id_unidade
-                                  ORDER BY m.nome ASC";
-                        
-                        $resultado = $conexao->query($query);
-                        
-                        if ($resultado && $resultado->num_rows > 0) {
-                            while ($morador = $resultado->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $morador['id_morador'] . "</td>";
-                                echo "<td>" . htmlspecialchars($morador['nome']) . "</td>";
-                                echo "<td>" . htmlspecialchars($morador['email']) . "</td>";
-                                echo "<td>" . htmlspecialchars($morador['unidade']) . "</td>";
-                                echo "<td>" . htmlspecialchars($morador['telefone'] ?? 'N/A') . "</td>";
-                                echo "<td>";
-                                echo "<div class='action-buttons'>";
-                                echo "<a href='#' class='btn-icon btn-view' title='Visualizar'>";
-                                echo "<i class='fas fa-eye'></i>";
-                                echo "</a>";
-                                echo "<a href='#' class='btn-icon btn-edit' title='Editar'>";
-                                echo "<i class='fas fa-edit'></i>";
-                                echo "</a>";
-                                echo "<a href='#' class='btn-icon btn-delete' title='Excluir' onclick='return confirm(\"Tem certeza?\")'>";
-                                echo "<i class='fas fa-trash'></i>";
-                                echo "</a>";
-                                echo "</div>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='6' style='text-align:center; color:#6b7280;'>Nenhum morador cadastrado</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="card top">
+        <strong>Lista de moradores</strong>
+        <a href="novoUser.php" class="btn-success">
+            <i class="fas fa-user-plus"></i> Novo Morador
+        </a>
+    </div>
 
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Unidade</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $query = "
+                SELECT m.id_morador, m.nome, m.telefone,
+                       u.email, un.numero AS unidade
+                FROM Morador m
+                INNER JOIN Usuario u ON m.id_usuario = u.id_usuario
+                LEFT JOIN Unidade un ON m.id_unidade = un.id_unidade
+                ORDER BY m.nome
+            ";
+            $res = $conexao->query($query);
 
-        </td>
-        </tr>
-        </tbody>
+            if($res && $res->num_rows > 0):
+                while($m = $res->fetch_assoc()):
+            ?>
+                <tr>
+                    <td><?= $m['id_morador'] ?></td>
+                    <td><?= htmlspecialchars($m['nome']) ?></td>
+                    <td><?= htmlspecialchars($m['email']) ?></td>
+                    <td><?= htmlspecialchars($m['unidade'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($m['telefone'] ?? 'N/A') ?></td>
+                    <td class="actions">
+                        <a href="#" class="view" title="Ver">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#"
+   class="edit"
+   title="Editar"
+   onclick="abrirEditar(
+       '<?= $m['id_morador'] ?>',
+       '<?= htmlspecialchars($m['nome'], ENT_QUOTES) ?>',
+       '<?= htmlspecialchars($m['telefone'] ?? '', ENT_QUOTES) ?>',
+       '<?= $m['unidade'] ?>'
+   )">
+    <i class="fas fa-edit"></i>
+</a>
+
+                        <a href="#" class="delete" title="Excluir"
+                           onclick="return confirm('Tem certeza?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            <?php endwhile; else: ?>
+                <tr>
+                    <td colspan="6" style="text-align:center;color:#6b7280">
+                        Nenhum morador cadastrado
+                    </td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
         </table>
-        </div>
-        </div>
-    </main>
+    </div>
 
-    <footer class="dashboard-footer">
-        <p>Sistema Condomínio Digital &copy; <?php echo date('Y'); ?></p>
-        <p>Desenvolvido por Nelma Odair Bila</p>
-    </footer>
+</div>
+<!-- MODAL EDITAR MORADOR -->
+<div id="modalEditar" style="display:none;
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.55);
+    align-items:center;
+    justify-content:center;
+    z-index:999;">
 
-    <script>
-    document.getElementById('search').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('.data-table tbody tr');
+    <div style="
+        background:#fff;
+        border-radius:14px;
+        padding:25px;
+        width:100%;
+        max-width:450px;
+        box-shadow:0 20px 40px rgba(0,0,0,.25);">
 
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        });
-    });
+        <h3 style="margin-bottom:20px;display:flex;gap:10px;align-items:center">
+            <i class="fas fa-user-edit" style="color:#7e22ce"></i>
+            Editar Morador
+        </h3>
 
-    document.getElementById('status').addEventListener('change', function(e) {
-        const status = e.target.value;
-        const rows = document.querySelectorAll('.data-table tbody tr');
+        <form method="POST">
+            <input type="hidden" name="action" value="editar">
+            <input type="hidden" name="id_morador" id="edit_id">
 
-        rows.forEach(row => {
-            if (!status) {
-                row.style.display = '';
-                return;
-            }
+            <div style="margin-bottom:15px">
+                <label>Nome</label>
+                <input type="text" name="nome" id="edit_nome"
+                       style="width:100%;padding:12px;border-radius:8px;border:1px solid #d1d5db"
+                       required>
+            </div>
 
-            const statusCell = row.querySelector('.status-badge');
-            if (statusCell) {
-                const rowStatus = statusCell.textContent.toLowerCase();
-                row.style.display = rowStatus.includes(status) ? '' : 'none';
-            }
-        });
-    });
-    </script>
+            <div style="margin-bottom:15px">
+                <label>Telefone</label>
+                <input type="text" name="telefone" id="edit_telefone"
+                       style="width:100%;padding:12px;border-radius:8px;border:1px solid #d1d5db">
+            </div>
+
+            <div style="margin-bottom:20px">
+                <label>Unidade</label>
+                <select name="id_unidade" id="edit_unidade"
+                        style="width:100%;padding:12px;border-radius:8px;border:1px solid #d1d5db">
+                    <option value="">Sem unidade</option>
+                    <?php
+                    $unidades = $conexao->query("SELECT id_unidade, numero FROM Unidade ORDER BY numero");
+                    while ($u = $unidades->fetch_assoc()):
+                    ?>
+                        <option value="<?= $u['id_unidade'] ?>">
+                            <?= $u['numero'] ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px">
+                <button type="button"
+                        onclick="fecharEditar()"
+                        style="background:#6b7280;color:#fff;padding:10px 18px;border-radius:8px;border:none">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        style="background:#7e22ce;color:#fff;padding:10px 18px;border-radius:8px;border:none">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function abrirEditar(id, nome, telefone, unidade){
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_nome').value = nome;
+    document.getElementById('edit_telefone').value = telefone;
+    document.getElementById('edit_unidade').value = unidade || '';
+
+    document.getElementById('modalEditar').style.display = 'flex';
+}
+
+function fecharEditar(){
+    document.getElementById('modalEditar').style.display = 'none';
+}
+</script>
+
 </body>
-
 </html>

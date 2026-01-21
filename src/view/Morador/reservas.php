@@ -25,6 +25,7 @@ if ($resultado->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,8 +42,6 @@ if ($resultado->num_rows > 0) {
         }
 
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                        url('../../../assets/img/pic.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
@@ -234,7 +233,8 @@ if ($resultado->num_rows > 0) {
             text-align: center;
         }
 
-        .alert-success, .alert-error {
+        .alert-success,
+        .alert-error {
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -253,11 +253,95 @@ if ($resultado->num_rows > 0) {
             border-left: 4px solid #ef4444;
         }
 
+/* ===== LAYOUT ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 240px;
+    background: #9743d7;
+    color: #ffffff;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TÍTULO */
+.sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+/* NAV */
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+}
+
+/* LINKS */
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    transition: background 0.2s ease, color 0.2s ease;
+    background: transparent; /* IMPORTANTE */
+}
+
+/* ÍCONES */
+.sidebar nav a i {
+    color: #ffffff;
+}
+
+/* HOVER (somente quando NÃO ativo) */
+.sidebar nav a:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* ===== ITEM ATIVO — BRANCO REAL ===== */
+.sidebar nav a.active {
+    background: #ffffff !important;
+    color: #9743d7 !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ÍCONE DO ATIVO */
+.sidebar nav a.active i {
+    color: #9743d7 !important;
+}
+
+/* LOGOUT */
+.sidebar .logout {
+    margin-top: auto;
+    background: rgba(0,0,0,0.25);
+}
+
+/* ===== CONTEÚDO ===== */
+.content {
+    flex: 1;
+    padding: 40px;
+    background: #f4f6f9;
+}
+
         @keyframes slideDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -280,140 +364,183 @@ if ($resultado->num_rows > 0) {
         }
     </style>
 </head>
+
 <body>
-    <!-- Cabeçalho -->
-    <header class="dashboard-header">
-        <div class="header-left">
-            <h2><i class="fas fa-calendar-check"></i> Reservas</h2>
-            <div class="header-subtitle">Gerenciar minhas reservas de áreas comuns</div>
-        </div>
 
-        <div class="user-info">
-            <div class="user-avatar"><?php echo $iniciais; ?></div>
-            <div>
-                <strong><?php echo htmlspecialchars($nome_morador); ?></strong>
-            </div>
-            <a href="index.php" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Voltar
-            </a>
-        </div>
-    </header>
+    <div class="layout">
 
-    <!-- Conteúdo Principal -->
-    <div class="container">
-        <div class="content-wrapper">
-            <!-- Formulário de Nova Reserva -->
-            <div class="card fade-in">
-                <h3>
-                    <i class="fas fa-plus-circle"></i>
-                    Nova Reserva
-                </h3>
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h2>
+                <i class="fas fa-home"></i>
+                Morador
+            </h2>
 
-                <?php
-                if (isset($_SESSION['mensagem'])) {
-                    $tipo = $_SESSION['tipo_mensagem'] === 'sucesso' ? 'alert-success' : 'alert-error';
-                    echo "<div class='$tipo'>";
-                    echo $_SESSION['mensagem'];
-                    echo "</div>";
-                    unset($_SESSION['mensagem']);
-                    unset($_SESSION['tipo_mensagem']);
-                }
-                ?>
+            <nav>
+                <a href="index.php">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
 
-                <form action="../../controller/Morador/reservas.php" method="POST" id="form-reserva">
-                    <div class="form-group">
-                        <label for="area_comum">
-                            <i class="fas fa-door-open"></i> Área Comum
-                        </label>
-                        <select name="area_comum" id="area_comum" required>
-                            <option value="">-- Selecione uma área --</option>
-                            <option value="Salão de Festas">Salão de Festas</option>
-                            <option value="Piscina">Piscina</option>
-                            <option value="Churrasqueira">Churrasqueira</option>
-                            <option value="Quadra de Esportes">Quadra de Esportes</option>
-                            <option value="Sala de Reunião">Sala de Reunião</option>
-                            <option value="Sauna">Sauna</option>
-                            <option value="Ginásio">Ginásio</option>
-                            <option value="Outro">Outro</option>
-                        </select>
+                <a href="agendar_visita.php">
+                    <i class="fas fa-users"></i> Visitas
+                </a>
+
+                <a href="reservas.php" class="active" style="background: rgba(255,255,255,0.2);">
+                    <i class="fas fa-calendar-check"></i> Reservas
+                </a>
+
+                <a href="encomendas.php">
+                    <i class="fas fa-box"></i> Encomendas
+                </a>
+
+                <a href="avisos.php">
+                    <i class="fas fa-bullhorn"></i> Avisos
+                </a>
+
+                <a href="ocorrencias.php">
+                    <i class="fas fa-exclamation-triangle"></i> Ocorrências
+                </a>
+
+                <a href="../../logout.php?logout=1" class="logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+
+            <!-- Cabeçalho -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h2>
+                        <i class="fas fa-calendar-check"></i> Reservas
+                    </h2>
+                    <div class="header-subtitle">
+                        Gerenciar minhas reservas de áreas comuns
                     </div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="data">
-                                <i class="fas fa-calendar"></i> Data
-                            </label>
-                            <input type="date" name="data" id="data" required>
-                        </div>
+                <div class="user-info">
+                    <div class="user-avatar"><?= $iniciais ?></div>
+                    <strong><?= htmlspecialchars($nome_morador) ?></strong>
+                </div>
+            </header>
 
-                        <div class="form-group">
-                            <label for="hora_inicio">
-                                <i class="fas fa-clock"></i> Hora Início
-                            </label>
-                            <input type="time" name="hora_inicio" id="hora_inicio" required>
-                        </div>
-                    </div>
+            <!-- CONTEÚDO PRINCIPAL -->
+            <div class="container">
+                <div class="content-wrapper">
 
-                    <div class="form-group">
-                        <label for="hora_fim">
-                            <i class="fas fa-clock"></i> Hora Fim
-                        </label>
-                        <input type="time" name="hora_fim" id="hora_fim" required>
-                    </div>
+                    <!-- NOVA RESERVA -->
+                    <div class="card">
+                        <h3>
+                            <i class="fas fa-plus-circle"></i>
+                            Nova Reserva
+                        </h3>
 
-                    <button type="submit" class="btn-submit">
-                        <i class="fas fa-save"></i> Reservar Agora
-                    </button>
-                </form>
-            </div>
+                        <?php
+                        if (isset($_SESSION['mensagem'])) {
+                            $tipo = $_SESSION['tipo_mensagem'] === 'sucesso'
+                                ? 'alert-success'
+                                : 'alert-error';
 
-            <!-- Lista de Reservas -->
-            <div class="card fade-in">
-                <h3>
-                    <i class="fas fa-list"></i>
-                    Minhas Reservas
-                </h3>
-
-                <div class="reservas-list" id="reservas-container">
-                    <?php
-                    // Buscar reservas do morador
-                    $query = "SELECT id_reserva, area_comum, data, hora_inicio, hora_fim 
-                              FROM Reserva 
-                              WHERE id_morador = ? 
-                              ORDER BY data DESC, hora_inicio DESC";
-                    
-                    $stmt = $conexao->prepare($query);
-                    $stmt->bind_param("i", $id_morador);
-                    $stmt->execute();
-                    $resultado = $stmt->get_result();
-
-                    if ($resultado && $resultado->num_rows > 0) {
-                        while ($reserva = $resultado->fetch_assoc()) {
-                            $data_formatada = date('d/m/Y', strtotime($reserva['data']));
-                            $hora_inicio = date('H:i', strtotime($reserva['hora_inicio']));
-                            $hora_fim = date('H:i', strtotime($reserva['hora_fim']));
-                            
-                            echo "<div class='reserva-item'>";
-                            echo "<h4>" . htmlspecialchars($reserva['area_comum']) . "</h4>";
-                            echo "<div class='reserva-info'>";
-                            echo "<i class='fas fa-calendar-alt'></i> <strong>Data:</strong> " . $data_formatada;
-                            echo "</div>";
-                            echo "<div class='reserva-info'>";
-                            echo "<i class='fas fa-clock'></i> <strong>Horário:</strong> " . $hora_inicio . " às " . $hora_fim;
-                            echo "</div>";
-                            echo "</div>";
+                            echo "<div class='$tipo'>{$_SESSION['mensagem']}</div>";
+                            unset($_SESSION['mensagem'], $_SESSION['tipo_mensagem']);
                         }
-                    } else {
-                        echo "<div style='text-align: center; color: #999; padding: 20px;'>";
-                        echo "<i class='fas fa-inbox' style='font-size: 40px; margin-bottom: 10px; display: block;'></i>";
-                        echo "Você ainda não possui reservas";
-                        echo "</div>";
-                    }
-                    ?>
+                        ?>
+
+                        <form action="../../controller/Morador/reservas.php" method="POST" id="form-reserva">
+
+                            <div class="form-group">
+                                <label><i class="fas fa-door-open"></i> Área Comum</label>
+                                <select name="area_comum" required>
+                                    <option value="">-- Selecione --</option>
+                                    <option>Salão de Festas</option>
+                                    <option>Piscina</option>
+                                    <option>Churrasqueira</option>
+                                    <option>Quadra de Esportes</option>
+                                    <option>Sala de Reunião</option>
+                                    <option>Sauna</option>
+                                    <option>Ginásio</option>
+                                    <option>Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar"></i> Data</label>
+                                    <input type="date" name="data" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-clock"></i> Hora Início</label>
+                                    <input type="time" name="hora_inicio" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-clock"></i> Hora Fim</label>
+                                <input type="time" name="hora_fim" required>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-save"></i> Reservar Agora
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- LISTA DE RESERVAS -->
+                    <div class="card">
+                        <h3>
+                            <i class="fas fa-list"></i>
+                            Minhas Reservas
+                        </h3>
+
+                        <div class="reservas-list">
+                            <?php
+                            $stmt = $conexao->prepare("
+                            SELECT area_comum, data, hora_inicio, hora_fim
+                            FROM Reserva
+                            WHERE id_morador = ?
+                            ORDER BY data DESC
+                        ");
+                            $stmt->bind_param("i", $id_morador);
+                            $stmt->execute();
+                            $res = $stmt->get_result();
+
+                            if ($res->num_rows > 0):
+                                while ($r = $res->fetch_assoc()):
+                            ?>
+                                    <div class="reserva-item">
+                                        <h4><?= htmlspecialchars($r['area_comum']) ?></h4>
+                                        <div class="reserva-info">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <?= date('d/m/Y', strtotime($r['data'])) ?>
+                                        </div>
+                                        <div class="reserva-info">
+                                            <i class="fas fa-clock"></i>
+                                            <?= date('H:i', strtotime($r['hora_inicio'])) ?>
+                                            às
+                                            <?= date('H:i', strtotime($r['hora_fim'])) ?>
+                                        </div>
+                                    </div>
+                            <?php
+                                endwhile;
+                            else:
+                                echo "<p style='color:#777'>Nenhuma reserva encontrada</p>";
+                            endif;
+                            ?>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
+
+        </main>
     </div>
+
+
+
 
     <script>
         // Validar data mínima
@@ -421,7 +548,7 @@ if ($resultado->num_rows > 0) {
             const data = new Date(this.value);
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
-            
+
             if (data < hoje) {
                 alert('Não é possível reservar para datas passadas!');
                 this.value = '';
@@ -452,4 +579,5 @@ if ($resultado->num_rows > 0) {
         }
     </script>
 </body>
+
 </html>

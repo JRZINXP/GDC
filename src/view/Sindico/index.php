@@ -3,6 +3,10 @@ require_once __DIR__ . '/../../data/conector.php';
 
 session_start();
 
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
+    header('Location: ../../login.php');
+    exit();
+}
 $conector = new Conector();
 $conexao = $conector->getConexao();
 
@@ -26,10 +30,13 @@ if ($resultado->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Síndico</title>
     <link rel="stylesheet" href="../../../assets/css/sindico.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
-    <!-- Cabeçalho -->
+    <?php include_once 'sidebar.php'; ?>
     <header class="dashboard-header">
         <div>
             <h2><i class="fas fa-building"></i> Gestão Condominial</h2>
@@ -50,56 +57,48 @@ if ($resultado->num_rows > 0) {
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="dashboard-container">
-        <!-- Boas-vindas -->
         <section class="welcome-section">
             <h1><i class="fas fa-user-shield"></i> Bem-vindo, <?php echo $userName; ?>!</h1>
             <p>Painel de administração para gerenciamento completo do condomínio.</p>
-            <div class="quick-actions">
-                <a href="moradores.php" class="action-btn"><i class="fas fa-users"></i> Gerenciar Moradores</a>
-                <a href="reservas.php" class="action-btn"><i class="fas fa-calendar-check"></i> Aprovar Reservas</a>
-                <a href="ocorrencias.php" class="action-btn"><i class="fas fa-exclamation-triangle"></i> Gerenciar
-                    Ocorrências</a>
-                <a href="avisos.php" class="action-btn"><i class="fas fa-bullhorn"></i> Publicar Avisos</a>
-                <a href="areas.php" class="action-btn"><i class="fas fa-swimming-pool"></i> Áreas Comuns</a>
-                <a href="funcionarios.php" class="action-btn"><i class="fas fa-user-tie"></i> Funcionários</a>
-            </div>
+<div class="quick-actions">
+    <a href="moradores.php" class="action-btn"><i class="fas fa-users"></i> Gerir Moradores</a>
+    <a href="reservas.php" class="action-btn"><i class="fas fa-calendar-check"></i> Gerir Reservas</a>
+    <a href="ocorrencias.php" class="action-btn"><i class="fas fa-exclamation-triangle"></i> Gerir Ocorrências</a>
+    <a href="avisos.php" class="action-btn"><i class="fas fa-bullhorn"></i> Publicar Avisos</a>
+    <a href="novoVeiculo.php" class="action-btn"><i class="fas fa-car"></i> Gerir Veículos</a>
+    <a href="porteiros.php" class="action-btn"><i class="fas fa-user-tie"></i> Gerir Funcionários</a>
+    <a href="unidade.php" class="action-btn"><i class="fas fa-home"></i> Gerir Unidades</a> <!-- NOVO CARD -->
+</div>
         </section>
 
-        <!-- Cards -->
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <div class="card-title"><i class="fas fa-users"></i> Total de Moradores</div>
                 <div class="card-content">
-                    <p>156</p>
-                    <p>42 apartamentos • 12 casas</p>
+
                 </div>
             </div>
             <div class="dashboard-card">
                 <div class="card-title"><i class="fas fa-calendar-alt"></i> Reservas Pendentes</div>
                 <div class="card-content">
-                    <p>7</p>
-                    <p>3 hoje • 4 amanhã</p>
+
                 </div>
             </div>
             <div class="dashboard-card">
                 <div class="card-title"><i class="fas fa-exclamation-circle"></i> Ocorrências Ativas</div>
                 <div class="card-content">
-                    <p>12</p>
-                    <p>8 urgentes • 4 normais</p>
+
                 </div>
             </div>
             <div class="dashboard-card">
                 <div class="card-title"><i class="fas fa-bullhorn"></i> Avisos Publicados</div>
                 <div class="card-content">
-                    <p>24</p>
-                    <p>5 este mês • 2 não lidos</p>
+
                 </div>
             </div>
         </div>
 
-        <!-- Info -->
         <section class="info-section">
             <h3><i class="fas fa-info-circle"></i> Informações da Sessão</h3>
             <table class="info-table">
@@ -132,5 +131,4 @@ if ($resultado->num_rows > 0) {
         <p>Desenvolvido por Nelma Odair Bila</p>
     </footer>
 </body>
-
 </html>

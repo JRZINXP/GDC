@@ -1,194 +1,241 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../data/conector.php';
+
+/* PROTEÇÃO */
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] != 'Sindico') {
+    header('Location: ../../login.php');
+    exit();
+}
+
+$conexao = (new Conector())->getConexao();
+$stmt = $conexao->prepare("SELECT nome FROM Sindico WHERE id_usuario = ?");
+$stmt->bind_param("i", $_SESSION['id']);
+$stmt->execute();
+$sindico = $stmt->get_result()->fetch_assoc();
+
+$nomeSindico = $sindico['nome'] ?? 'Síndico';
+$iniciais = strtoupper(substr($nomeSindico, 0, 1));
+
+$erro = $_GET['erro'] ?? '';
+$success = $_GET['success'] ?? '';
+?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novo Porteiro - Condomínio Digital</title>
-    <link rel="stylesheet" href="../../../assets/css/colors.css">
-    <link rel="stylesheet" href="../../../assets/css/sindico.css">
-    <style>
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        .form-section {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
-            border-top: 4px solid var(--color-primary);
-        }
-        .form-section h2 {
-            color: var(--color-primary-dark);
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--color-primary);
-            padding-bottom: 10px;
-            font-size: var(--font-size-xl);
-        }
-        fieldset {
-            border: none;
-            padding: 0;
-        }
-        legend {
-            color: var(--color-primary-dark) !important;
-            font-weight: 600 !important;
-            margin-bottom: 15px !important;
-            font-size: var(--font-size-base) !important;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--color-dark);
-            font-weight: 500;
-            font-size: var(--font-size-sm);
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: var(--font-size-base);
-            box-sizing: border-box;
-            font-family: var(--font-family);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(152, 67, 215, 0.1);
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: var(--font-size-base);
-            font-weight: 600;
-            transition: all 0.3s;
-            font-family: var(--font-family);
-        }
-        .btn-submit {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-        }
-        .btn-submit:hover {
-            background-color: var(--color-primary-dark);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        .btn-cancel {
-            background-color: var(--color-light-gray);
-            color: var(--color-dark);
-            border: 1px solid #d1d5db;
-        }
-        .btn-cancel:hover {
-            background-color: #e5e7eb;
-            box-shadow: var(--shadow-sm);
-        }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 500;
-        }
-        .alert-success {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--color-success);
-            border: 1px solid var(--color-success);
-        }
-        .alert-error {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--color-error);
-            border: 1px solid var(--color-error);
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Novo Porteiro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#1f2937;
+}
+
+/* HEADER */
+.dashboard-header{
+    background:#ffffff;
+    padding:20px 32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:3px solid #7e22ce;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.header-left h2{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+}
+
+.header-left i{
+    color:#7e22ce;
+}
+
+.header-subtitle{
+    font-size:14px;
+    color:#6b7280;
+    margin-top:4px;
+}
+
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.user-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#7e22ce;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+}
+
+.back-btn{
+    background:#6b7280;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:14px;
+}
+
+/* CONTAINER */
+.container{
+    max-width:600px;
+    margin:40px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.container h3{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+/* ALERTAS */
+.alert{
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+.alert-error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.alert-success{
+    background:#dcfce7;
+    color:#065f46;
+}
+
+/* FORM */
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    font-size:14px;
+    font-weight:500;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border-radius:6px;
+    border:1px solid #d1d5db;
+}
+
+input:focus{
+    outline:none;
+    border-color:#7e22ce;
+    box-shadow:0 0 0 2px rgba(126,34,206,.15);
+}
+
+.btn-submit{
+    width:100%;
+    margin-top:10px;
+    padding:14px;
+    background:#7e22ce;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-submit:hover{
+    background:#5b21b6;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="form-section">
-            <h2>Adicionar Novo Porteiro</h2>
-            
-            <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success">
-                    <?php echo htmlspecialchars($_GET['success']); ?>
-                </div>
-            <?php endif; ?>
 
-            <?php if (isset($_GET['erro'])): ?>
-                <div class="alert alert-error">
-                    <?php echo htmlspecialchars($_GET['erro']); ?>
-                </div>
-            <?php endif; ?>
-
-            <form method="POST" action="../../controller/Sindico/novoPorteiro.php">
-                <!-- Dados de Login (Usuário) -->
-                <fieldset>
-                    <legend>Dados de Acesso</legend>
-                    
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required placeholder="exemplo@email.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="senha">Senha</label>
-                        <input type="password" id="senha" name="senha" required placeholder="Mínimo 6 caracteres" minlength="6">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirmar_senha">Confirmar Senha</label>
-                        <input type="password" id="confirmar_senha" name="confirmar_senha" required placeholder="Repita a senha">
-                    </div>
-                </fieldset>
-
-                <!-- Dados do Porteiro -->
-                <fieldset style="margin-top: 20px;">
-                    <legend>Dados Pessoais</legend>
-                    
-                    <div class="form-group">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" required placeholder="Nome do porteiro">
-                    </div>
-                </fieldset>
-
-                <div class="button-group">
-                    <button type="submit" class="btn btn-submit">Criar Porteiro</button>
-                    <button type="button" class="btn btn-cancel" onclick="window.history.back()">Cancelar</button>
-                </div>
-            </form>
-        </div>
+<header class="dashboard-header">
+    <div class="header-left">
+        <h2><i class="fas fa-user-shield"></i> Novo Porteiro</h2>
+        <div class="header-subtitle">Cadastro de funcionário da portaria</div>
     </div>
 
-    <script>
-        // Validação de senha
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const senha = document.getElementById('senha').value;
-            const confirmarSenha = document.getElementById('confirmar_senha').value;
+    <div class="user-info">
+        <div class="user-avatar"><?= $iniciais ?></div>
+        <strong><?= htmlspecialchars($nomeSindico) ?></strong>
+        <a href="index.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+</header>
 
-            if (senha !== confirmarSenha) {
-                e.preventDefault();
-                alert('As senhas não correspondem!');
-                return false;
-            }
+<div class="container">
 
-            if (senha.length < 6) {
-                e.preventDefault();
-                alert('A senha deve ter pelo menos 6 caracteres!');
-                return false;
-            }
-        });
-    </script>
+    <h3><i class="fas fa-user-plus"></i> Registrar Porteiro</h3>
+
+    <?php if ($erro): ?>
+        <div class="alert alert-error">
+            <?= htmlspecialchars($erro) ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($success): ?>
+        <div class="alert alert-success">
+            <?= htmlspecialchars($success) ?>
+        </div>
+    <?php endif; ?>
+
+    <form action="../../controller/Sindico/porteiro.php" method="POST">
+
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" name="nome" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" name="senha" required>
+        </div>
+
+        <div class="form-group">
+            <label>Confirmar Senha</label>
+            <input type="password" name="confirmar_senha" required>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-save"></i> Criar Porteiro
+        </button>
+    </form>
+</div>
+
 </body>
 </html>

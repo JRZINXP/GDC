@@ -1,0 +1,316 @@
+/* sidebarM.css - Sidebar branco para o Morador */
+
+:root {
+    --sidebar-width: 280px;
+    --sidebar-bg: #ffffff;
+    --sidebar-color: #4b5563;
+    --sidebar-hover: #9743d7;
+    --sidebar-active: #9743d7;
+    --sidebar-border: #e5e7eb;
+    --sidebar-header-color: #333333;
+    --primary-color: #9743d7;
+    --primary-dark: #8639c2;
+    --primary-light: #c084fc;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Container principal com sidebar */
+.dashboard-with-sidebar {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+                url('../img/pic.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Sidebar Styles - BRANCO E FIXO */
+.sidebar {
+    width: var(--sidebar-width);
+    background: #ffffff;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1000;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabeçalho do Sidebar */
+.sidebar-header {
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar-header h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.sidebar-header .subtitle {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 400;
+}
+
+/* Informações do usuário */
+.sidebar-user-info {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--sidebar-border);
+    background: #f9fafb;
+}
+
+.sidebar-user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(151, 67, 215, 0.2);
+}
+
+.sidebar-user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-user-name {
+    font-weight: 600;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.sidebar-user-role {
+    font-size: 0.8rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Container do menu */
+.sidebar-menu-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 0;
+}
+
+/* Estilização da scrollbar */
+.sidebar-menu-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-menu-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.sidebar-menu-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+}
+
+.sidebar-menu-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Menu de navegação */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin: 0;
+    position: relative;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    color: var(--sidebar-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    position: relative;
+    border-left: 3px solid transparent;
+    margin: 2px 0;
+}
+
+.sidebar-menu a:hover {
+    background: #f9fafb;
+    color: var(--sidebar-hover);
+    border-left-color: rgba(151, 67, 215, 0.3);
+}
+
+.sidebar-menu a.active {
+    background: rgba(151, 67, 215, 0.1);
+    color: var(--sidebar-active);
+    border-left-color: var(--sidebar-active);
+    font-weight: 600;
+}
+
+/* Ícones do menu */
+.sidebar-menu i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu a:hover i,
+.sidebar-menu a.active i {
+    color: var(--primary-color);
+}
+
+/* Footer do sidebar */
+.sidebar-footer {
+    padding: 1.25rem 1.5rem;
+    background: #f9fafb;
+    border-top: 1px solid var(--sidebar-border);
+}
+
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #dc2626;
+    text-decoration: none;
+    padding: 0.85rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    background: white;
+    border: 1px solid #fecaca;
+}
+
+.sidebar-footer a:hover {
+    background: #fee2e2;
+    transform: translateY(-1px);
+}
+
+/* Conteúdo principal */
+.main-content-with-sidebar {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content-with-sidebar {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+    
+    /* Botão de menu mobile */
+    .mobile-menu-toggle {
+        display: flex;
+        position: fixed;
+        top: 1.5rem;
+        left: 1.5rem;
+        z-index: 1100;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-md);
+        transition: all 0.2s ease;
+        font-size: 1.1rem;
+    }
+    
+    .mobile-menu-toggle:hover {
+        background: var(--primary-dark);
+    }
+    
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 900;
+    }
+    
+    .overlay.active {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content-with-sidebar {
+        padding: 1.25rem;
+    }
+    
+    .sidebar-header {
+        padding: 1.5rem 1.25rem 1rem;
+    }
+    
+    .sidebar-user-info {
+        padding: 1.25rem;
+    }
+    
+    .sidebar-menu a {
+        padding: 0.9rem 1.25rem;
+    }
+    
+    .sidebar-footer {
+        padding: 1rem 1.25rem;
+    }
+}

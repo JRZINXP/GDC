@@ -1,0 +1,168 @@
+/* sidebarP.css - Sidebar para o Porteiro */
+
+:root {
+    --sidebar-width: 280px;
+    --sidebar-bg: white;
+    --sidebar-color: #4b5563;
+    --sidebar-hover: #3b82f6;
+    --sidebar-active: #3b82f6;
+    --sidebar-border: #3b82f6;
+    --sidebar-header-color: #3b82f6;
+}
+
+/* ... o resto do CSS é igual ao do sidebarS.css, só muda as cores ... */
+
+/* Container principal com sidebar */
+.dashboard-with-sidebar {
+    display: flex;
+    min-height: calc(100vh - 180px);
+    margin-top: 1rem;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 3px solid var(--sidebar-border);
+    border-radius: .75rem 0 0 .75rem;
+    padding: 1.5rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 140px;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1rem;
+}
+
+.sidebar-header h3 {
+    color: var(--sidebar-header-color);
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    margin: .25rem 0;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1.5rem;
+    color: var(--sidebar-color);
+    text-decoration: none;
+    transition: all .3s ease;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-menu a:hover {
+    background: #f8fafc;
+    color: var(--sidebar-hover);
+    border-left-color: var(--sidebar-hover);
+}
+
+.sidebar-menu a.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--sidebar-active);
+    border-left-color: var(--sidebar-active);
+    font-weight: 500;
+}
+
+.sidebar-menu i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+}
+
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: #dc2626;
+    text-decoration: none;
+    padding: .5rem;
+    border-radius: .375rem;
+    transition: background .3s;
+}
+
+.sidebar-footer a:hover {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+/* Main content quando sidebar está presente */
+.main-content-with-sidebar {
+    flex: 1;
+    background: white;
+    border-radius: 0 .75rem .75rem 0;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+    .dashboard-with-sidebar {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-radius: .75rem .75rem 0 0;
+        border-right: none;
+        border-bottom: 3px solid var(--sidebar-border);
+        margin-bottom: 1rem;
+    }
+    
+    .main-content-with-sidebar {
+        border-radius: 0 0 .75rem .75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+    }
+    
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+    
+    .sidebar-menu li {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .sidebar-menu a {
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        justify-content: center;
+    }
+    
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+        border-left: none;
+        border-bottom-color: var(--sidebar-hover);
+    }
+}

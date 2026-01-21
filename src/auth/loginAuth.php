@@ -3,7 +3,6 @@ require_once "../data/conector.php";
 
 session_start();
 
-// Apenas aceita POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../login.php");
     exit();
@@ -29,12 +28,10 @@ if ($resultado && $resultado->num_rows === 1) {
     $user = $resultado->fetch_assoc();
 
     if (password_verify($senha, $user['senha_hash'])) {
-        // Armazena dados do usuário na sessão
         $_SESSION['id'] = $user['id_usuario'];
         $_SESSION['email'] = $user['email'];
-        $_SESSION['tipo'] = $user['tipo'];
+        $_SESSION['tipo_usuario'] = $user['tipo']; 
 
-        // Redireciona por tipo
         switch ($user['tipo']) {
             case 'Morador':
                 header("Location: ../view/Morador/index.php");
@@ -57,4 +54,3 @@ if ($resultado && $resultado->num_rows === 1) {
     header("Location: ../login.php?erro=" . urlencode("Usuário não encontrado."));
     exit();
 }
-

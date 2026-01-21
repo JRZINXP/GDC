@@ -50,6 +50,8 @@ CREATE TABLE Visitante (
     nome VARCHAR(100) NOT NULL,
     documento VARCHAR(50) NOT NULL
 );
+ALTER TABLE Visitante
+ADD COLUMN tipo_documento VARCHAR(50) NOT NULL;
 
 CREATE TABLE Agendamento (
     id_agendamento INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,6 +62,7 @@ CREATE TABLE Agendamento (
     FOREIGN KEY (id_morador) REFERENCES Morador(id_morador),
     FOREIGN KEY (id_visitante) REFERENCES Visitante(id_visitante)
 );
+
 
 CREATE TABLE Registro (
     id_registro INT AUTO_INCREMENT PRIMARY KEY,

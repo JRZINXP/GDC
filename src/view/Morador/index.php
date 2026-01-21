@@ -28,6 +28,8 @@ if($resultado->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Morador</title>
     <link rel="stylesheet" href="../../../assets/css/morador.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -64,7 +66,7 @@ if($resultado->num_rows > 0) {
                 e acompanhar todas as informações importantes do seu condomínio.</p>
 
             <div class="quick-actions">
-                <a href="visitas.php" class="action-btn">
+                <a href="agendar_visita.php" class="action-btn">
                     <i class="fas fa-calendar-plus"></i> Agendar Visita
                 </a>
                 <a href="reservas.php" class="action-btn">
@@ -84,8 +86,6 @@ if($resultado->num_rows > 0) {
                 </a>
             </div>
         </section>
-
-        <!-- Cards do Dashboard -->
         <div class="dashboard-grid">
             <!-- Card 1: Visitas -->
             <div class="dashboard-card">
@@ -144,10 +144,7 @@ if($resultado->num_rows > 0) {
                     <td><i class="fas fa-envelope"></i> Email</td>
                     <td><?php echo $_SESSION['email']; ?></td>
                 </tr>
-                <tr>
-                    <td><i class="fas fa-user-tag"></i> Tipo de Usuário</td>
-                    <td><?php echo $_SESSION["tipo"]; ?></td>
-                </tr>
+
                 <tr>
                     <td><i class="fas fa-id-card"></i> ID do Morador</td>
                     <td><?php echo $idMorador; ?></td>

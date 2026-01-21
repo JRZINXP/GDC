@@ -8,7 +8,7 @@ class Conector {
 
         $host = "localhost";
         $user = "root";
-        $pass = "12345678";
+        $pass = "";
         $dbname = "condominiodigital";
         $port = 3306;
 
