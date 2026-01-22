@@ -1,6 +1,8 @@
 CREATE DATABASE CondominioDigital;
 USE CondominioDigital;
 
+
+
 CREATE TABLE Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -67,7 +69,11 @@ ADD numero_documento VARCHAR(30) NOT NULL;
 ALTER TABLE Agendamento
 ADD motivo VARCHAR(100) NOT NULL;
 
+ALTER TABLE Registro
+DROP FOREIGN KEY registro_ibfk_2;
 
+ALTER TABLE Registro
+DROP COLUMN id_porteiro;
 
 CREATE TABLE Registro (
     id_registro INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,13 +90,13 @@ CREATE TABLE Aviso (
     titulo VARCHAR(100) NOT NULL,
     conteudo TEXT NOT NULL,
     prioridade ENUM('Baixa', 'Média', 'Alta') DEFAULT 'Baixa',
-    criado_por INT,
+    criado_por INT, -- Referência ao ID do Síndico ou Usuário Admin
     FOREIGN KEY (criado_por) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Leitura_Aviso (
     id_aviso INT,
-    id_usuario INT, 
+    id_usuario INT, -- Pode ser morador, porteiro ou síndico
     data_leitura DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_aviso, id_usuario),
     FOREIGN KEY (id_aviso) REFERENCES Aviso(id_aviso),
@@ -108,11 +114,11 @@ CREATE TABLE Reserva (
 );
 
 CREATE TABLE Entrega (
-    id_entrega INT AUTO_INCREMENT PRIMARY KEY, 
+    id_entrega INT AUTO_INCREMENT PRIMARY KEY,  -- Alterado de id_encomenda
     id_morador INT,
     descricao VARCHAR(255) NOT NULL,
     data_recepcao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    data_entrega DATETIME,                 
+    data_entrega DATETIME,                      -- Data em que o morador retirou o item
     status tinyint(1) default 0,
     FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
 );
