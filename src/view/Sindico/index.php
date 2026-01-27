@@ -20,6 +20,31 @@ if ($resultado->num_rows > 0) {
     $userName = $row['nome'];
     $iniciais = strtoupper(substr($userName, 0, 1));
 }
+/* =========================
+   DASHBOARD CONTADORES
+========================= */
+
+/* TOTAL MORADORES */
+$totalMoradores = $conexao->query("
+    SELECT COUNT(*) total FROM Morador
+")->fetch_assoc()['total'];
+
+/* TOTAL RESERVAS (SEM STATUS) */
+$totalReservas = $conexao->query("
+    SELECT COUNT(*) total FROM Reserva
+")->fetch_assoc()['total'];
+
+/* TOTAL OCORRÊNCIAS */
+$totalOcorrencias = $conexao->query("
+    SELECT COUNT(*) total FROM Ocorrencia
+")->fetch_assoc()['total'];
+
+/* TOTAL AVISOS */
+$totalAvisos = $conexao->query("
+    SELECT COUNT(*) total FROM Aviso
+")->fetch_assoc()['total'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -76,32 +101,46 @@ if ($resultado->num_rows > 0) {
         </section>
 
         <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <div class="card-title"><i class="fas fa-users"></i> Total de Moradores</div>
-                <div class="card-content">
 
-                </div>
-            </div>
-            <div class="dashboard-card">
-                
-                <div class="card-title"><i class="fas fa-calendar-alt"></i> Reservas Pendentes</div>
-                <div class="card-content">
-
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="card-title"><i class="fas fa-exclamation-circle"></i> Ocorrências Ativas</div>
-                <div class="card-content">
-
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="card-title"><i class="fas fa-bullhorn"></i> Avisos Publicados</div>
-                <div class="card-content">
-
-                </div>
-            </div>
+    <div class="dashboard-card">
+        <div class="card-title">
+            <i class="fas fa-users"></i> Total de Moradores
         </div>
+        <div class="card-content">
+            <strong><?= $totalMoradores ?></strong>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-title">
+            <i class="fas fa-calendar-alt"></i> Total de Reservas
+        </div>
+        <div class="card-content">
+            <strong><?= $totalReservas ?></strong>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-title">
+            <i class="fas fa-exclamation-circle"></i> Ocorrências
+        </div>
+        <div class="card-content">
+            <strong><?= $totalOcorrencias ?></strong>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-title">
+            <i class="fas fa-bullhorn"></i> Avisos Publicados
+        </div>
+        <div class="card-content">
+            <strong><?= $totalAvisos ?></strong>
+        </div>
+    </div>
+
+</div>
+
+
 
         <section class="info-section">
             <h3><i class="fas fa-info-circle"></i> Informações da Sessão</h3>

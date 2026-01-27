@@ -1,7 +1,14 @@
 CREATE DATABASE CondominioDigital;
 USE CondominioDigital;
 
-
+INSERT INTO Usuario (email, senha_hash, tipo)
+VALUES (
+    'sindico@email.com',
+    '$2y$10$JJ8R4rcLpl3tNiKqunw8k.dgf3J.Q9Ieyrn0iNsK3H8ad.Zu3EpBe',
+    'Sindico'
+);
+INSERT INTO Sindico (id_usuario, nome)
+VALUES (1, 'Nelma Bila');
 
 CREATE TABLE Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,7 +20,8 @@ CREATE TABLE Usuario (
 CREATE TABLE Unidade (
     id_unidade INT AUTO_INCREMENT PRIMARY KEY,
     numero VARCHAR(20) NOT NULL,
-    rua VARCHAR(100)
+    rua VARCHAR(100),
+    tipo_unidade NVARCHAR(100)
 );
 
 CREATE TABLE Porteiro (
@@ -32,7 +40,7 @@ CREATE TABLE Morador (
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
     FOREIGN KEY (id_unidade) REFERENCES Unidade(id_unidade)
 );
-select * from condominiodigital.porteiro;
+
 CREATE TABLE Sindico (
     id_sindico INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT,
@@ -42,9 +50,12 @@ CREATE TABLE Sindico (
 
 CREATE TABLE Veiculo (
     id_veiculo INT AUTO_INCREMENT PRIMARY KEY,
-    id_morador INT,
+    id_morador INT NULL,
+    id_visitante INT NULL,
     matricula VARCHAR(20) NOT NULL,
-    FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
+    cor NVARCHAR(50),
+    modelo NVARCHAR(100),
+    FOREIGN KEY (id_morador) REFERENCES Morador(id_morador),
 );
 
 CREATE TABLE Visitante (
@@ -65,7 +76,7 @@ CREATE TABLE Agendamento (
 );
 ALTER TABLE Agendamento
 ADD tipo_documento VARCHAR(30) NOT NULL,
-ADD numero_documento VARCHAR(30) NOT NULL;
+ADD documento VARCHAR(30) NOT NULL;
 ALTER TABLE Agendamento
 ADD motivo VARCHAR(100) NOT NULL;
 
@@ -90,13 +101,13 @@ CREATE TABLE Aviso (
     titulo VARCHAR(100) NOT NULL,
     conteudo TEXT NOT NULL,
     prioridade ENUM('Baixa', 'Média', 'Alta') DEFAULT 'Baixa',
-    criado_por INT, -- Referência ao ID do Síndico ou Usuário Admin
+    criado_por INT, 
     FOREIGN KEY (criado_por) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Leitura_Aviso (
     id_aviso INT,
-    id_usuario INT, -- Pode ser morador, porteiro ou síndico
+    id_usuario INT, 
     data_leitura DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_aviso, id_usuario),
     FOREIGN KEY (id_aviso) REFERENCES Aviso(id_aviso),
@@ -114,11 +125,11 @@ CREATE TABLE Reserva (
 );
 
 CREATE TABLE Entrega (
-    id_entrega INT AUTO_INCREMENT PRIMARY KEY,  -- Alterado de id_encomenda
+    id_entrega INT AUTO_INCREMENT PRIMARY KEY,  
     id_morador INT,
     descricao VARCHAR(255) NOT NULL,
     data_recepcao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    data_entrega DATETIME,                      -- Data em que o morador retirou o item
+    data_entrega DATETIME,                     
     status tinyint(1) default 0,
     FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
 );

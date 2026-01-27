@@ -8,9 +8,9 @@ class Conector {
 
         $host = "localhost";
         $user = "root";
-        $pass = "12345678";
+        $pass = "";
         $dbname = "condominiodigital";
-        $port = 3306;
+        $port = 3307;
 
         $this->conexao = mysqli_connect($host, $user, $pass, $dbname, $port);
     }
