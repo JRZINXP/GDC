@@ -64,7 +64,7 @@ $totalAvisos = $conexao->query("
     <?php include_once 'sidebar.php'; ?>
     <header class="dashboard-header">
         <div>
-            <h2><i class="fas fa-building"></i> Gestão Condominial</h2>
+            <h2><i class="fas fa-building"></i> Condominio Digital</h2>
             <div class="header-subtitle">Dashboard do Síndico</div>
         </div>
 
@@ -76,11 +76,11 @@ $totalAvisos = $conexao->query("
                 <div class="user-name"><?php echo $userName; ?></div>
                 <div class="user-role"><i class="fas fa-user-shield"></i> Síndico</div>
             </div>
-<a href="../../logout.php?logout=1" 
-   class="logout-btn" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+            <a href="../../logout.php?logout=1"
+                class="logout-btn"
+                onclick="return confirmarSaida();">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
 
         </div>
     </header>
@@ -89,58 +89,56 @@ $totalAvisos = $conexao->query("
         <section class="welcome-section">
             <h1><i class="fas fa-user-shield"></i> Bem-vindo, <?php echo $userName; ?>!</h1>
             <p>Painel de administração para gerenciamento completo do condomínio.</p>
-<div class="quick-actions">
-    <a href="moradores.php" class="action-btn"><i class="fas fa-users"></i> Gerir Moradores</a>
-    <a href="reservas.php" class="action-btn"><i class="fas fa-calendar-check"></i> Gerir Reservas</a>
-    <a href="ocorrencias.php" class="action-btn"><i class="fas fa-exclamation-triangle"></i> Gerir Ocorrências</a>
-    <a href="avisos.php" class="action-btn"><i class="fas fa-bullhorn"></i> Publicar Avisos</a>
-    <a href="novoVeiculo.php" class="action-btn"><i class="fas fa-car"></i> Gerir Veículos</a>
-    <a href="porteiros.php" class="action-btn"><i class="fas fa-user-tie"></i> Gerir Porteiros</a>
-    <a href="unidade.php" class="action-btn"><i class="fas fa-home"></i> Gerir Unidades</a> <!-- NOVO CARD -->
-</div>
+            <div class="quick-actions">
+                <a href="moradores.php" class="action-btn"><i class="fas fa-users"></i> Gerir Moradores</a>
+                <a href="reservas.php" class="action-btn"><i class="fas fa-calendar-check"></i> Gerir Reservas</a>
+                <a href="ocorrencias.php" class="action-btn"><i class="fas fa-exclamation-triangle"></i> Gerir Ocorrências</a>
+                <a href="avisos.php" class="action-btn"><i class="fas fa-bullhorn"></i> Publicar Avisos</a>
+                <a href="novoVeiculo.php" class="action-btn"><i class="fas fa-car"></i> Gerir Veículos</a>
+                <a href="porteiros.php" class="action-btn"><i class="fas fa-user-tie"></i> Gerir Porteiros</a>
+                <a href="unidade.php" class="action-btn"><i class="fas fa-home"></i> Gerir Unidades</a>
+            </div>
         </section>
 
         <div class="dashboard-grid">
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-users"></i> Total de Moradores
-        </div>
-        <div class="card-content">
-            <strong><?= $totalMoradores ?></strong>
-        </div>
-    </div>
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-users"></i> Total de Moradores
+                </div>
+                <div class="card-content">
+                    <strong><?= $totalMoradores ?></strong>
+                </div>
+            </div>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-calendar-alt"></i> Total de Reservas
-        </div>
-        <div class="card-content">
-            <strong><?= $totalReservas ?></strong>
-        </div>
-    </div>
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-calendar-alt"></i> Total de Reservas
+                </div>
+                <div class="card-content">
+                    <strong><?= $totalReservas ?></strong>
+                </div>
+            </div>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-exclamation-circle"></i> Ocorrências
-        </div>
-        <div class="card-content">
-            <strong><?= $totalOcorrencias ?></strong>
-        </div>
-    </div>
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-exclamation-circle"></i> Ocorrências
+                </div>
+                <div class="card-content">
+                    <strong><?= $totalOcorrencias ?></strong>
+                </div>
+            </div>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-bullhorn"></i> Avisos Publicados
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-bullhorn"></i> Avisos Publicados
+                </div>
+                <div class="card-content">
+                    <strong><?= $totalAvisos ?></strong>
+                </div>
+            </div>
+
         </div>
-        <div class="card-content">
-            <strong><?= $totalAvisos ?></strong>
-        </div>
-    </div>
-
-</div>
-
-
 
         <section class="info-section">
             <h3><i class="fas fa-info-circle"></i> Informações da Sessão</h3>
@@ -157,14 +155,6 @@ $totalAvisos = $conexao->query("
                     <td><i class="fas fa-calendar-alt"></i> Último Acesso</td>
                     <td><?php echo date('d/m/Y H:i:s'); ?></td>
                 </tr>
-                <tr>
-                    <td><i class="fas fa-building"></i> Condomínio</td>
-                    <td>Residencial das Flores</td>
-                </tr>
-                <tr>
-                    <td><i class="fas fa-tasks"></i> Tarefas Pendentes</td>
-                    <td>19 itens</td>
-                </tr>
             </table>
         </section>
     </main>
@@ -175,8 +165,9 @@ $totalAvisos = $conexao->query("
     </footer>
     <script>
         function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
+            return confirm("Tem a certeza que deseja sair?");
+        }
     </script>
 </body>
+
 </html>

@@ -60,30 +60,96 @@ $avisos = $conexao->query("
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{background:#f4f6f9;color:#1f2937}
 
-/* HEADER */
-.header{
-    background:#fff;
-    padding:20px 30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:3px solid #7e22ce;
-    box-shadow:0 4px 6px rgba(0,0,0,.08);
-}
-.header h2{display:flex;gap:10px;align-items:center}
-.header i{color:#7e22ce}
+.dashboard-header {
+            background: white;
+            color: #1f2937;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #7e22ce;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-.user{display:flex;align-items:center;gap:15px}
-.avatar{
-    width:45px;height:45px;border-radius:50%;
-    background:#7e22ce;color:#fff;
-    display:flex;align-items:center;justify-content:center;font-weight:600
-}
-.back-btn{
-    background:#6b7280;color:#fff;
-    padding:10px 18px;border-radius:6px;
-    text-decoration:none;display:flex;gap:8px
-}
+        .dashboard-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .dashboard-header h2 i {
+            color: #7e22ce;
+        }
+
+        .header-subtitle {
+            font-size: .875rem;
+            color: #6b7280;
+            margin-top: .25rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #7e22ce;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #1f2937;
+        }
+
+        .user-role {
+            font-size: .75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+            margin-top: .125rem;
+        }
+
+        .back-btn {
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: #6c757d;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
 .back-btn i{color:#fff}
 
 /* CONTAINER */
@@ -160,16 +226,25 @@ textarea{resize:vertical}
 
 <body>
 
-<header class="header">
-    <h2><i class="fas fa-bullhorn"></i> Gerir Avisos</h2>
-    <div class="user">
-        <div class="avatar"><?= $iniciais ?></div>
-        <strong><?= htmlspecialchars($userName) ?></strong>
-        <a href="index.php" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-    </div>
-</header>
+<header class="dashboard-header">
+        <div>
+            <h2><i class="fas fa-building"></i> Condominio Digital</h2>
+            <div class="header-subtitle">Avisos</div>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar"><?php echo $iniciais; ?></div>
+            <div class="user-details">
+                <div class="user-name"><?php echo $userName; ?></div>
+                <div class="user-role"><i class="fas fa-user-shield"></i> Síndico</div>
+            </div>
+            <a href="index.php" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+
+
+        </div>
+    </header>
 
 <div class="container">
 

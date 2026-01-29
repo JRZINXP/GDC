@@ -69,49 +69,82 @@ $ocorrencias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{background:#f4f6f9}
 
-/* LAYOUT */
-.layout{display:flex;min-height:100vh}
+/* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
 
-/* SIDEBAR */
-.sidebar{
-    width:240px;
-    background:#9743d7;
-    color:#fff;
-    padding:25px 20px;
-    display:flex;
-    flex-direction:column;
-}
-.sidebar h2{
-    font-size:20px;
-    margin-bottom:30px;
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-.sidebar nav a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:14px 16px;
-    color:#fff;
-    text-decoration:none;
-    border-radius:10px;
-    margin-bottom:10px;
-    transition:.2s;
-}
-.sidebar nav a:hover:not(.active){
-    background:rgba(255,255,255,.18);
-}
-.sidebar nav a.active{
-    background:#fff;
-    color:#9743d7;
-    font-weight:600;
-}
-.sidebar nav a.active i{color:#9743d7}
-.sidebar .logout{
-    margin-top:auto;
-    background:rgba(0,0,0,.25);
-}
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            background: #9743d7;
+            color: #ffffff;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TÍTULO */
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        /* NAV */
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* LINKS */
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            transition: background 0.2s ease, color 0.2s ease;
+            background: transparent;
+            /* IMPORTANTE */
+        }
+
+        /* ÍCONES */
+        .sidebar nav a i {
+            color: #ffffff;
+        }
+
+        /* HOVER (somente quando NÃO ativo) */
+        .sidebar nav a:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* ===== ITEM ATIVO — BRANCO REAL ===== */
+        .sidebar nav a.active {
+            background: #ffffff !important;
+            color: #9743d7 !important;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ÍCONE DO ATIVO */
+        .sidebar nav a.active i {
+            color: #9743d7 !important;
+        }
+
+        /* LOGOUT */
+        .sidebar .logout {
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.25);
+        }
 
 /* CONTENT */
 .content{flex:1;padding:40px}
