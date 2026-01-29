@@ -1,8 +1,6 @@
 CREATE DATABASE CondominioDigital;
 USE CondominioDigital;
 
-
-
 CREATE TABLE Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
