@@ -39,16 +39,14 @@ $avisos = $conexao->query("
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{background:#f4f6f9}
 
-/* ===== LAYOUT ===== */
+
 .layout{display:flex;min-height:100vh}
 
-/* ===== LAYOUT ===== */
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 240px;
             background: #9743d7;
@@ -58,7 +56,6 @@ body{background:#f4f6f9}
             flex-direction: column;
         }
 
-        /* TÍTULO */
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 30px;
@@ -68,13 +65,11 @@ body{background:#f4f6f9}
             font-weight: 600;
         }
 
-        /* NAV */
         .sidebar nav {
             display: flex;
             flex-direction: column;
         }
 
-        /* LINKS */
         .sidebar nav a {
             display: flex;
             align-items: center;
@@ -87,7 +82,7 @@ body{background:#f4f6f9}
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
             background: transparent;
-            /* IMPORTANTE */
+
         }
 
         /* ÍCONES */

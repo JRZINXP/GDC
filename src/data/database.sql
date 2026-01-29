@@ -1,7 +1,6 @@
 CREATE DATABASE CondominioDigital;
 USE CondominioDigital;
 
-<<<<<<< HEAD
 INSERT INTO Usuario (email, senha_hash, tipo)
 VALUES (
     'sindico@email.com',
@@ -11,8 +10,6 @@ VALUES (
 INSERT INTO Sindico (id_usuario, nome)
 VALUES (1, 'Nelma Bila');
 
-=======
->>>>>>> 1427ab7dfbd657e92a50d9cb05360137474d8e8c
 CREATE TABLE Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
