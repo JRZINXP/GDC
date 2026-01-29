@@ -27,6 +27,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'editar'
     }
 }
 
+/* DESATIVAR MORADOR */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'desativar') {
+    $id_morador = (int)$_POST['id_morador'];
+    // Desativa o morador
+    $stmt = $conexao->prepare("UPDATE Morador SET activo = 0 WHERE id_morador = ?");
+    $stmt->bind_param("i", $id_morador);
+    $stmt->execute();
+
+    // Busca o id_usuario relacionado
+    $stmt = $conexao->prepare("SELECT id_usuario FROM Morador WHERE id_morador = ?");
+    $stmt->bind_param("i", $id_morador);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $id_usuario = $row['id_usuario'];
+        // Desativa também o usuário
+        $stmt2 = $conexao->prepare("UPDATE Usuario SET activo = 0 WHERE id_usuario = ?");
+        $stmt2->bind_param("i", $id_usuario);
+        $stmt2->execute();
+    }
+}
+
 /* DADOS DO SÍNDICO */
 $stmt = $conexao->prepare("SELECT nome FROM Sindico WHERE id_usuario = ?");
 $stmt->bind_param("i", $_SESSION['id']);
@@ -243,6 +265,14 @@ input,select{
     color:#ffffff !important;
 }
 
+.delete{
+    background:#fee2e2;color:#991b1b;
+    transition:.3s;
+}
+.delete:hover{
+    background:#fca5a5;
+}
+
 </style>
 </head>
 
@@ -297,6 +327,7 @@ $res = $conexao->query("
     FROM Morador m
     INNER JOIN Usuario u ON m.id_usuario = u.id_usuario
     LEFT JOIN Unidade un ON m.id_unidade = un.id_unidade
+    WHERE m.activo = 1
     ORDER BY m.nome
 ");
 if($res->num_rows):
@@ -317,6 +348,10 @@ while($m = $res->fetch_assoc()):
                '<?= $m['unidade'] ?>'
            )">
            <i class="fas fa-edit"></i>
+        </a>
+        <a href="#" class="delete"
+           onclick="abrirDesativar('<?= $m['id_morador'] ?>', '<?= htmlspecialchars($m['nome'], ENT_QUOTES) ?>')">
+           <i class="fas fa-trash"></i>
         </a>
     </td>
 </tr>
@@ -400,6 +435,33 @@ while($m = $res->fetch_assoc()):
 </div>
 </div>
 
+<!-- MODAL DESATIVAR MORADOR -->
+<div class="modal" id="modalDesativar">
+<div class="box">
+<div class="modal-header">
+    <h3><i class="fas fa-exclamation-circle"></i> Desativar Morador</h3>
+</div>
+
+<p style="margin-bottom: 20px; color: #6b7280;">
+    Tem certeza que deseja desativar o morador <strong id="desativar_nome"></strong>? Esta ação não pode ser desfeita.
+</p>
+
+<form method="POST">
+    <input type="hidden" name="acao" value="desativar">
+    <input type="hidden" name="id_morador" id="desativar_id">
+
+    <div class="modal-actions">
+        <button class="btn-cancel" type="submit" style="background: #dc2626;">
+            <i class="fas fa-trash"></i> Desativar
+        </button>
+        <button type="button" class="btn-cancel" onclick="fecharDesativar()" style="background: #6c757d;">
+            Cancelar
+        </button>
+    </div>
+</form>
+</div>
+</div>
+
 <script>
 function abrirModalNovo(){document.getElementById('modalNovo').classList.add('active')}
 function fecharModalNovo(){document.getElementById('modalNovo').classList.remove('active')}
@@ -412,6 +474,13 @@ function abrirEditar(id,nome,telefone,unidade){
     document.getElementById('modalEditar').classList.add('active');
 }
 function fecharEditar(){document.getElementById('modalEditar').classList.remove('active')}
+
+function abrirDesativar(id, nome){
+    document.getElementById('desativar_id').value=id;
+    document.getElementById('desativar_nome').textContent=nome;
+    document.getElementById('modalDesativar').classList.add('active');
+}
+function fecharDesativar(){document.getElementById('modalDesativar').classList.remove('active')}
 </script>
 
 </body>
