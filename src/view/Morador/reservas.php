@@ -329,6 +329,90 @@ if ($resultado->num_rows > 0) {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
+
+        /* ===== CONTEÚDO ===== */
+        .content {
+            flex: 1;
+            padding: 40px;
+            background: #f4f6f9;
+        }
+
+        /* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            background: #9743d7;
+            color: #ffffff;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TÍTULO */
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        /* NAV */
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* LINKS */
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            transition: background 0.2s ease, color 0.2s ease;
+            background: transparent;
+            /* IMPORTANTE */
+        }
+
+        /* ÍCONES */
+        .sidebar nav a i {
+            color: #ffffff;
+        }
+
+        /* HOVER (somente quando NÃO ativo) */
+        .sidebar nav a:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* ===== ITEM ATIVO — BRANCO REAL ===== */
+        .sidebar nav a.active {
+            background: #ffffff !important;
+            color: #9743d7 !important;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ÍCONE DO ATIVO */
+        .sidebar nav a.active i {
+            color: #9743d7 !important;
+        }
+
+        /* LOGOUT */
+        .sidebar .logout {
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.25);
+        }
 /* ===== CONTEÚDO ===== */
 .content {
     flex: 1;
@@ -369,45 +453,23 @@ if ($resultado->num_rows > 0) {
 
     <div class="layout">
 
-        <!-- SIDEBAR -->
         <aside class="sidebar">
-            <h2>
-                <i class="fas fa-home"></i>
-                Morador
-            </h2>
-
-            <nav>
-                <a href="index.php">
-                    <i class="fas fa-chart-line"></i> Dashboard
-                </a>
-
-                <a href="agendar_visita.php">
-                    <i class="fas fa-users"></i> Visitas
-                </a>
-
-                <a href="reservas.php" class="active" style="background: rgba(255,255,255,0.2);">
-                    <i class="fas fa-calendar-check"></i> Reservas
-                </a>
-
-                <a href="encomendas.php">
-                    <i class="fas fa-box"></i> Encomendas
-                </a>
-
-                <a href="avisos.php">
-                    <i class="fas fa-bullhorn"></i> Avisos
-                </a>
-
-                <a href="ocorrencias.php">
-                    <i class="fas fa-exclamation-triangle"></i> Ocorrências
-                </a>
+        <h2><i class="fas fa-home"></i> Morador</h2>
+        <nav>
+            <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="agendar_visita.php" ><i class="fas fa-users"></i> Visitas</a>
+            <a href="reservas.php" class="active"><i class="fas fa-calendar-check"></i> Reservas</a>
+            <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
+            <a href="avisos.php"><i class="fas fa-bullhorn"></i> Avisos</a>
+            <a href="ocorrencias.php"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
 <a href="../../logout.php?logout=1" 
    class="logout" 
    onclick="return confirmarSaida();">
     <i class="fas fa-sign-out-alt"></i> Sair
 </a>
 
-            </nav>
-        </aside>
+        </nav>
+    </aside>
 
         <!-- CONTEÚDO -->
         <main class="content">

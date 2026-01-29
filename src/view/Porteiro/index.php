@@ -119,13 +119,6 @@ $entregasPendentes = $stmt->get_result()->fetch_assoc()['total'];
                 <i class="fas fa-bullhorn"></i> Avisos
             </a>
 
-            <a href="relatorio_diario.php" class="action-btn">
-                <i class="fas fa-file-alt"></i> Relatório Diário
-            </a>
-
-            <a href="emergencia.php" class="action-btn">
-                <i class="fas fa-phone-alt"></i> Emergência
-            </a>
         </div>
     </section>
 

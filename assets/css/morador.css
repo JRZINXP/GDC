@@ -212,6 +212,7 @@ body {
     color: #111;
     font-size: 14px;
     margin-top: 40px;
+    background: rgba(255, 255, 255, 0.6);
 }
 /* ===== SINO DE NOTIFICAÇÃO ===== */
 .notif-bell {

@@ -219,7 +219,7 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
                 <div class="card-content">
                     <p><?= $avisosNovos ?></p>
 
-                    <p>Avisos novs</p>
+                    <p>Avisos novos</p>
                 </div>
             </div>
         </div>

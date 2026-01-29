@@ -19,7 +19,7 @@ if ($resultado->num_rows > 0) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,7 @@ if ($resultado->num_rows > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos gerais (iguais ao moradores.php) */
+
         * {
             margin: 0;
             padding: 0;
@@ -114,9 +114,7 @@ if ($resultado->num_rows > 0) {
             margin-top: .125rem;
         }
 
-        .logout-btn,
         .back-btn {
-            background: #ff4757;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -128,20 +126,12 @@ if ($resultado->num_rows > 0) {
             gap: 8px;
             font-weight: 500;
             transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover,
-        .back-btn:hover {
-            background: #ff3742;
-            transform: translateY(-2px);
-        }
-
-        .back-btn {
             background: #6c757d;
         }
 
         .back-btn:hover {
             background: #5a6268;
+            transform: translateY(-2px);
         }
 
         /* Main container */
@@ -440,7 +430,7 @@ if ($resultado->num_rows > 0) {
     <!-- Cabeçalho -->
     <header class="dashboard-header">
         <div>
-            <h2><i class="fas fa-building"></i> Gestão Condominial</h2>
+            <h2><i class="fas fa-building"></i> Condominio Digital</h2>
             <div class="header-subtitle">Aprovação de Reservas</div>
         </div>
 
@@ -453,11 +443,7 @@ if ($resultado->num_rows > 0) {
             <a href="index.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
-<a href="../../logout.php?logout=1" 
-   class="logout-btn" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+
 
         </div>
     </header>
@@ -660,9 +646,7 @@ function nextMonth() {
 }
 
 renderCalendar();
-function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
+
 </script>
 
 
