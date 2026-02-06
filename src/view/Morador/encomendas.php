@@ -38,7 +38,7 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">

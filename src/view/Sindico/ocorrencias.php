@@ -49,285 +49,379 @@ $ocorrencias = $conexao->query("
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<title>Ocorrências</title>
+    <meta charset="UTF-8">
+    <title>Ocorrências – Síndico</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f4f6f9;color:#1f2937}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif
+        }
 
-.dashboard-header {
-            background: white;
-            color: #1f2937;
-            padding: 1.5rem 2rem;
+        body {
+            background: linear-gradient(180deg, #f4f6f9, #eef1f6);
+            color: #1f2937
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            background: #fff;
+            padding: 22px 36px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-bottom: 3px solid #7e22ce;
+            border-bottom: 5px solid #7e22ce;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 10
         }
 
         .dashboard-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: .75rem;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 600
         }
 
-        .dashboard-header h2 i {
-            color: #7e22ce;
+        .dashboard-header i {
+            color: #7e22ce
         }
 
         .header-subtitle {
-            font-size: .875rem;
+            font-size: 14px;
             color: #6b7280;
-            margin-top: .25rem;
+            margin-top: 4px
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 16px
         }
 
         .user-avatar {
-            width: 50px;
-            height: 50px;
-            background: #7e22ce;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
+            background: #7e22ce;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: 600
         }
 
         .user-details {
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 500;
-            font-size: 1rem;
-            color: #1f2937;
+            text-align: right
         }
 
         .user-role {
-            font-size: .75rem;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: .25rem;
-            margin-top: .125rem;
+            font-size: 12px;
+            color: #6b7280
         }
 
         .back-btn {
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
+            margin-left: 20px;
             text-decoration: none;
+            background: #ede9fe;
+            color: #7e22ce;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            background: #6c757d;
+            transition: .3s
         }
 
         .back-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+            background: #ddd6fe;
+            transform: translateX(-3px)
         }
-.back-btn i{color:#fff}
 
-/* CONTAINER */
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 24px
+        }
 
-/* CARD */
-.card{
-    background:#fff;border-radius:12px;padding:25px;
-    box-shadow:0 6px 15px rgba(0,0,0,.08);margin-bottom:25px
-}
+        /* ===== GRID ===== */
+        .ocorrencias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 26px
+        }
 
-/* TABLE */
-table{width:100%;border-collapse:collapse}
-th{background:#f3f4f6;padding:16px;text-align:left}
-td{padding:16px;border-bottom:1px solid #e5e7eb}
+        /* ===== CARD ===== */
+        .ocorrencia-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 22px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .12);
+            border-left: 6px solid #d1d5db;
+            transition: .3s
+        }
 
-/* STATUS */
-.status{
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-}
-.status-Pendente{background:#fff3cd;color:#856404}
-.status-EmAnalise{background:#ede9fe;color:#4a148c}
-.status-Resolvido{background:#dcfce7;color:#166534}
+        .ocorrencia-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .16)
+        }
 
-/* BOTÃO */
-.btn-primary{
-    background:#7e22ce;
-    color:#fff;
-    padding:10px 16px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
+        /* STATUS CORES */
+        .ocorrencia-card.status-Pendente {
+            border-color: #f59e0b
+        }
 
-/* MODAL */
-.modal{
-    display:none;position:fixed;inset:0;
-    background:rgba(15,23,42,.6);
-    backdrop-filter:blur(4px);
-    align-items:center;justify-content:center;
-    z-index:999
-}
-.modal.active{display:flex}
-.modal-box{
-    background:#fff;border-radius:16px;
-    width:100%;max-width:520px;
-    padding:28px;
-    box-shadow:0 25px 50px rgba(0,0,0,.25)
-}
-.modal-header{
-    display:flex;align-items:center;
-    gap:10px;margin-bottom:20px
-}
-.modal-header i{color:#7e22ce}
-textarea,select{
-    width:100%;padding:14px;
-    border-radius:10px;border:1px solid #d1d5db;
-    margin-bottom:14px
-}
-</style>
+        .ocorrencia-card.status-EmAnalise {
+            border-color: #7c3aed
+        }
+
+        .ocorrencia-card.status-Resolvido {
+            border-color: #10b981
+        }
+
+        /* HEADER DO CARD */
+        .ocorrencia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px
+        }
+
+        .ocorrencia-header h3 {
+            font-size: 18px;
+            font-weight: 600
+        }
+
+        .tipo {
+            background: #ede9fe;
+            color: #4a148c;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        /* TEXTO */
+        .descricao {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 18px
+        }
+
+        /* FOOTER */
+        .ocorrencia-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .status {
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        .status-Pendente {
+            background: #fff7ed;
+            color: #9a3412
+        }
+
+        .status-EmAnalise {
+            background: #ede9fe;
+            color: #4a148c
+        }
+
+        .status-Resolvido {
+            background: #ecfdf5;
+            color: #065f46
+        }
+
+        .btn-primary {
+            background: #7e22ce;
+            color: #fff;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: .3s
+        }
+
+        .btn-primary:hover {
+            background: #5b21b6
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999
+        }
+
+        .modal.active {
+            display: flex
+        }
+
+        .modal-box {
+            background: #fff;
+            width: 100%;
+            max-width: 520px;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .25)
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px
+        }
+
+        .modal-header i {
+            color: #7e22ce
+        }
+
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            margin-bottom: 14px
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="dashboard-header">
+    <header class="dashboard-header">
         <div>
-            <h2><i class="fas fa-building"></i> Condominio Digital</h2>
+            <h2><i class="fas fa-building"></i> Condomínio Digital</h2>
             <div class="header-subtitle">Ocorrências</div>
         </div>
 
         <div class="user-info">
-            <div class="user-avatar"><?php echo $iniciais; ?></div>
+            <div class="user-avatar"><?= $iniciais ?></div>
             <div class="user-details">
-                <div class="user-name"><?php echo $userName; ?></div>
+                <div><?= htmlspecialchars($userName) ?></div>
                 <div class="user-role"><i class="fas fa-user-shield"></i> Síndico</div>
             </div>
             <a href="index.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
-
-
         </div>
     </header>
 
-<div class="container">
+    <div class="container">
 
-<div class="card">
+        <div class="ocorrencias-grid">
 
-<table>
-<thead>
-<tr>
-    <th>Morador</th>
-    <th>Tipo</th>
-    <th>Título</th>
-    <th>Status</th>
-    <th>Ação</th>
-</tr>
-</thead>
-<tbody>
+            <?php foreach ($ocorrencias as $o): ?>
+                <div class="ocorrencia-card status-<?= str_replace(' ', '', $o['status']) ?>">
 
-<?php foreach($ocorrencias as $o): ?>
-<tr>
-    <td><?= htmlspecialchars($o['morador']) ?></td>
-    <td><?= $o['tipo'] ?></td>
-    <td><?= htmlspecialchars($o['titulo']) ?></td>
-    <td>
-        <span class="status status-<?= str_replace(' ', '', $o['status']) ?>">
-            <?= $o['status'] ?>
-        </span>
-    </td>
-    <td>
-        <button class="btn-primary"
-            onclick='abrirModal(<?= json_encode($o) ?>)'>
-            <i class="fas fa-reply"></i> Responder
-        </button>
-    </td>
-</tr>
-<?php endforeach; ?>
+                    <div class="ocorrencia-header">
+                        <h3><?= htmlspecialchars($o['titulo']) ?></h3>
+                        <span class="tipo"><?= htmlspecialchars($o['tipo']) ?></span>
+                    </div>
 
-</tbody>
-</table>
+                    <p class="descricao">
+                        <?= nl2br(htmlspecialchars($o['descricao'])) ?>
+                    </p>
 
-</div>
-</div>
+                    <p style="font-size:13px;color:#6b7280;margin-bottom:16px">
+                        <strong>Morador:</strong> <?= htmlspecialchars($o['morador']) ?>
+                    </p>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-<div class="modal-box">
+                    <div class="ocorrencia-footer">
+                        <span class="status status-<?= str_replace(' ', '', $o['status']) ?>">
+                            <?= $o['status'] ?>
+                        </span>
 
-<div class="modal-header">
-    <i class="fas fa-reply"></i>
-    <strong>Responder Ocorrência</strong>
-</div>
+                        <?php if ($o['status'] !== 'Resolvido'): ?>
+                            <button class="btn-primary"
+                                onclick='abrirModal(<?= json_encode($o) ?>)'>
+                                <i class="fas fa-reply"></i> Responder
+                            </button>
+                        <?php endif; ?>
 
-<form method="POST">
-<input type="hidden" name="action" value="responder">
-<input type="hidden" name="id_ocorrencia" id="id_ocorrencia">
+                    </div>
 
-<label>Status</label>
-<select name="status" id="status">
-    <option value="Pendente">Pendente</option>
-    <option value="Em Analise">Em Analise</option>
-    <option value="Resolvido">Resolvido</option>
-</select>
+                </div>
+            <?php endforeach; ?>
 
-<label>Resposta</label>
-<textarea name="resposta" id="resposta" rows="4" required></textarea>
+        </div>
+    </div>
 
-<button class="btn-primary" type="submit">
-    <i class="fas fa-save"></i> Enviar
-</button>
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
 
-<button type="button" class="btn-primary" style="background:#6b7280;margin-top:10px"
-        onclick="fecharModal()">
-    Cancelar
-</button>
+            <div class="modal-header">
+                <i class="fas fa-reply"></i>
+                <strong>Responder Ocorrência</strong>
+            </div>
 
-</form>
-</div>
-</div>
+            <form method="POST">
+                <input type="hidden" name="action" value="responder">
+                <input type="hidden" name="id_ocorrencia" id="id_ocorrencia">
 
-<script>
-function abrirModal(o){
-    document.getElementById('modal').classList.add('active');
-    document.getElementById('id_ocorrencia').value = o.id_ocorrencia;
-    document.getElementById('status').value = o.status;
-    document.getElementById('resposta').value = o.resposta_sindico ?? '';
-}
-function fecharModal(){
-    document.getElementById('modal').classList.remove('active');
-}
-</script>
+                <label>Status</label>
+                <select name="status" id="status">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Em Analise">Em Analise</option>
+                    <option value="Resolvido">Resolvido</option>
+                </select>
+
+                <label>Resposta</label>
+                <textarea name="resposta" id="resposta" rows="4" required></textarea>
+
+                <button class="btn-primary" type="submit">
+                    <i class="fas fa-save"></i> Enviar
+                </button>
+
+                <button type="button" class="btn-primary" style="background:#6b7280;margin-top:10px"
+                    onclick="fecharModal()">
+                    Cancelar
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function abrirModal(o) {
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('id_ocorrencia').value = o.id_ocorrencia;
+            document.getElementById('status').value = o.status;
+            document.getElementById('resposta').value = o.resposta_sindico ?? '';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
 
 </body>
+
 </html>

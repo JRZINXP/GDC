@@ -30,19 +30,29 @@ $porteiros = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<title>Gestão de Porteiros</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Gestão de Porteiros</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f4f6f9;color:#1f2937}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif
+        }
 
-.dashboard-header {
+        body {
+            background: #f4f6f9;
+            color: #1f2937
+        }
+
+        .dashboard-header {
             background: white;
             color: #1f2937;
             padding: 1.5rem 2rem;
@@ -133,117 +143,165 @@ body{background:#f4f6f9;color:#1f2937}
             transform: translateY(-2px);
         }
 
-/* CONTAINER */
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px
+        }
 
-/* CARD */
-.card{
-    background:#fff;border-radius:14px;
-    padding:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-    margin-bottom:25px;
-}
+        /* CARD */
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+            margin-bottom: 25px;
+        }
 
-.top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.btn-primary{
-    background:#7e22ce;color:#fff;
-    padding:12px 20px;border-radius:8px;
-    border:none;cursor:pointer;
-    display:flex;align-items:center;gap:8px;
-}
-.btn-primary:hover{background:#5b21b6}
+        .btn-primary {
+            background: #7e22ce;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* TABLE */
-table{width:100%;border-collapse:collapse}
-th{background:#f3f4f6;padding:16px;text-align:left}
-td{padding:16px;border-top:1px solid #e5e7eb}
+        .btn-primary:hover {
+            background: #5b21b6
+        }
 
-.actions{display:flex;gap:10px}
-.btn-icon{
-    width:36px;height:36px;border-radius:8px;
-    display:flex;align-items:center;justify-content:center;
-    text-decoration:none;
-}
-.btn-reset{background:#7e22ce;color:#fff}
-.btn-delete{background:#fee2e2;color:#dc2626}
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
 
-/* MODAL */
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,.6);
-    backdrop-filter: blur(4px);
-    align-items:center;
-    justify-content:center;
-    z-index:999;
-}
-.modal.active{display:flex}
+        th {
+            background: #f3f4f6;
+            padding: 16px;
+            text-align: left
+        }
 
-.box{
-    background:#fff;
-    border-radius:16px;
-    width:100%;
-    max-width:450px;
-    padding:28px;
-    box-shadow:0 25px 50px rgba(0,0,0,.25);
-}
+        td {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb
+        }
 
-.modal-header{
-    margin-bottom:20px;
-}
-.modal-header h3{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-.modal-header i{color:#7e22ce}
+        .actions {
+            display: flex;
+            gap: 10px
+        }
 
-input{
-    width:100%;
-    padding:14px;
-    border-radius:10px;
-    border:1px solid #d1d5db;
-    margin-bottom:14px;
-}
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
 
-/* BOTÕES DO MODAL */
-.modal-actions{
-    margin-top:10px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
+        .btn-reset {
+            background: #7e22ce;
+            color: #fff
+        }
 
-.modal-actions .btn-primary{
-    width:100%;
-}
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626
+        }
 
-.btn-cancel{
-    width:100%;
-    background:#ef4444;
-    color:#fff;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    transition:.3s;
-}
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
 
-.btn-cancel:hover{
-    background:#dc2626;
-}
-</style>
+        .modal.active {
+            display: flex
+        }
+
+        .box {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            padding: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .25);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header i {
+            color: #7e22ce
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            margin-bottom: 14px;
+        }
+
+        /* BOTÕES DO MODAL */
+        .modal-actions {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-actions .btn-primary {
+            width: 100%;
+        }
+
+        .btn-cancel {
+            width: 100%;
+            background: #ef4444;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .btn-cancel:hover {
+            background: #dc2626;
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="dashboard-header">
+    <header class="dashboard-header">
         <div>
             <h2><i class="fas fa-building"></i> Condominio Digital</h2>
             <div class="header-subtitle">Gestão de Porteiros</div>
@@ -263,86 +321,88 @@ input{
         </div>
     </header>
 
-<div class="container">
+    <div class="container">
 
-<div class="card top">
-    <strong>Porteiros cadastrados</strong>
-    <button class="btn-primary" onclick="abrirModalNovo()">
-        <i class="fas fa-user-plus"></i> Novo Porteiro
-    </button>
-</div>
+        <div class="card top">
+            <strong>Porteiros cadastrados</strong>
+            <button class="btn-primary" onclick="abrirModalNovo()">
+                <i class="fas fa-user-plus"></i> Novo Porteiro
+            </button>
+        </div>
 
-<div class="card">
-<?php if(empty($porteiros)): ?>
-    <p style="text-align:center;color:#6b7280">Nenhum porteiro cadastrado</p>
-<?php else: ?>
-<table>
-<thead>
-<tr>
-    <th>Nome</th>
-    <th>Email</th>
-    <th>Ações</th>
-</tr>
-</thead>
-<tbody>
-<?php foreach($porteiros as $p): ?>
-<tr>
-    <td><?= htmlspecialchars($p['nome']) ?></td>
-    <td><?= htmlspecialchars($p['email']) ?></td>
-    <td class="actions">
-        <a href="../../controller/Sindico/porteiro.php?action=reset&id=<?= $p['id_porteiro'] ?>"
-           class="btn-icon btn-reset">
-            <i class="fas fa-key"></i>
-        </a>
-        <a href="../../controller/Sindico/porteiro.php?action=delete&id=<?= $p['id_porteiro'] ?>"
-           class="btn-icon btn-delete"
-           onclick="return confirm('Excluir porteiro?')">
-            <i class="fas fa-trash"></i>
-        </a>
-    </td>
-</tr>
-<?php endforeach ?>
-</tbody>
-</table>
-<?php endif ?>
-</div>
-</div>
-
-<!-- MODAL NOVO PORTEIRO -->
-<div class="modal" id="modalNovo">
-<div class="box">
-
-<div class="modal-header">
-    <h3><i class="fas fa-user-plus"></i> Novo Porteiro</h3>
-</div>
-
-<form action="../../controller/Sindico/porteiro.php" method="POST">
-    <input type="text" name="nome" placeholder="Nome completo" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="senha" placeholder="Senha" required>
-    <input type="password" name="confirmar_senha" placeholder="Confirmar senha" required>
-
-    <div class="modal-actions">
-        <button class="btn-primary" type="submit">
-            <i class="fas fa-save"></i> Criar Porteiro
-        </button>
-        <button type="button" class="btn-cancel" onclick="fecharModal()">
-            Cancelar
-        </button>
+        <div class="card">
+            <?php if (empty($porteiros)): ?>
+                <p style="text-align:center;color:#6b7280">Nenhum porteiro cadastrado</p>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($porteiros as $p): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($p['nome']) ?></td>
+                                <td><?= htmlspecialchars($p['email']) ?></td>
+                                <td class="actions">
+                                    <a href="../../controller/Sindico/porteiro.php?action=reset&id=<?= $p['id_porteiro'] ?>"
+                                        class="btn-icon btn-reset">
+                                        <i class="fas fa-key"></i>
+                                    </a>
+                                    <a href="../../controller/Sindico/porteiro.php?action=delete&id=<?= $p['id_porteiro'] ?>"
+                                        class="btn-icon btn-delete"
+                                        onclick="return confirm('Excluir porteiro?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php endif ?>
+        </div>
     </div>
-</form>
 
-</div>
-</div>
+    <!-- MODAL NOVO PORTEIRO -->
+    <div class="modal" id="modalNovo">
+        <div class="box">
 
-<script>
-function abrirModalNovo(){
-    document.getElementById('modalNovo').classList.add('active');
-}
-function fecharModal(){
-    document.getElementById('modalNovo').classList.remove('active');
-}
-</script>
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Novo Porteiro</h3>
+            </div>
+
+            <form action="../../controller/Sindico/porteiro.php" method="POST">
+                <input type="text" name="nome" placeholder="Nome completo" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="senha" placeholder="Senha" required>
+                <input type="password" name="confirmar_senha" placeholder="Confirmar senha" required>
+
+                <div class="modal-actions">
+                    <button class="btn-primary" type="submit">
+                        <i class="fas fa-save"></i> Criar Porteiro
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="fecharModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function abrirModalNovo() {
+            document.getElementById('modalNovo').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalNovo').classList.remove('active');
+        }
+    </script>
 
 </body>
+
 </html>

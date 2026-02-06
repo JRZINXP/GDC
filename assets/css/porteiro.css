@@ -8,9 +8,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* =========================================================
-   VARIÁVEIS – PORTEIRO
-========================================================= */
+
 :root {
     --primary: #4a148c;
     --primary-dark: #311b92;
@@ -199,35 +197,57 @@ body {
 /* =========================================================
    DASHBOARD GRID
 ========================================================= */
+/* ===== GRID ===== */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
 }
 
+/* ===== CARD ===== */
 .dashboard-card {
-    background: var(--bg-glass);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 1.6rem;
+    transition: 0.3s ease;
 }
 
 .dashboard-card:hover {
-    border: 2px solid var(--primary);
     transform: translateY(-5px);
+    border-color: var(--primary-dark);
+    box-shadow: 0 12px 25px rgba(168, 85, 247, 0.18);
 }
 
+/* ===== TÍTULO ===== */
 .card-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.6rem;
+    font-size: 0.9rem;
     font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 1.2rem;
 }
 
 .card-title i {
+    font-size: 1.2rem;
     color: var(--primary);
+}
+
+/* ===== CONTEÚDO ===== */
+.card-content p:first-child {
+    font-size: 3.2rem;   
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+}
+
+.card-content p:last-child {
+    font-size: 0.85rem;
+    color: #363e4d;
 }
 
 /* =========================================================

@@ -27,7 +27,7 @@ $nomeMorador = $morador['nome'];
 $iniciais    = strtoupper(substr($nomeMorador, 0, 1));
 
 /* REGISTAR OCORRÊNCIA */
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo'])) {
     $tipo = $_POST['tipo'];
     $titulo = trim($_POST['titulo']);
     $descricao = trim($_POST['descricao']);
@@ -57,96 +57,55 @@ $stmt->execute();
 $ocorrencias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Ocorrências</title>
+<title>Minhas Ocorrências</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{background:#f4f6f9}
 
 /* ===== LAYOUT ===== */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
+.layout{display:flex;min-height:100vh}
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 240px;
-            background: #9743d7;
-            color: #ffffff;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-        }
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:240px;
+    background:#9743d7;
+    color:#fff;
+    padding:25px 20px;
+    display:flex;
+    flex-direction:column
+}
+.sidebar h2{
+    font-size:20px;
+    margin-bottom:30px;
+    display:flex;
+    gap:10px;
+    align-items:center
+}
+.sidebar nav a{
+    color:#fff;
+    text-decoration:none;
+    padding:14px 16px;
+    border-radius:10px;
+    display:flex;
+    gap:12px;
+    margin-bottom:10px
+}
+.sidebar nav a.active{
+    background:#fff;
+    color:#9743d7;
+    font-weight:600
+}
+.sidebar nav a.active i{color:#9743d7}
+.sidebar .logout{margin-top:auto;background:rgba(0,0,0,.25)}
 
-        /* TÍTULO */
-        .sidebar h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        /* NAV */
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* LINKS */
-        .sidebar nav a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-size: 15px;
-            transition: background 0.2s ease, color 0.2s ease;
-            background: transparent;
-            /* IMPORTANTE */
-        }
-
-        /* ÍCONES */
-        .sidebar nav a i {
-            color: #ffffff;
-        }
-
-        /* HOVER (somente quando NÃO ativo) */
-        .sidebar nav a:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        /* ===== ITEM ATIVO — BRANCO REAL ===== */
-        .sidebar nav a.active {
-            background: #ffffff !important;
-            color: #9743d7 !important;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* ÍCONE DO ATIVO */
-        .sidebar nav a.active i {
-            color: #9743d7 !important;
-        }
-
-        /* LOGOUT */
-        .sidebar .logout {
-            margin-top: auto;
-            background: rgba(0, 0, 0, 0.25);
-        }
-
-/* CONTENT */
+/* ===== CONTENT ===== */
 .content{flex:1;padding:40px}
 
 /* HEADER */
@@ -157,14 +116,14 @@ body{background:#f4f6f9}
     justify-content:space-between;
     align-items:center;
     border-bottom:3px solid #9743d7;
-    margin-bottom:30px;
+    margin-bottom:30px
 }
 .header-left h2{
     display:flex;
     gap:10px;
-    align-items:center;
+    align-items:center
 }
-.header-left h2 i{color:#9743d7}
+.header-left i{color:#9743d7}
 .header-subtitle{font-size:14px;color:#555}
 .user-info{display:flex;gap:10px;align-items:center}
 .user-avatar{
@@ -175,7 +134,7 @@ body{background:#f4f6f9}
     display:flex;
     align-items:center;
     justify-content:center;
-    font-weight:600;
+    font-weight:600
 }
 
 /* CONTAINER */
@@ -183,14 +142,14 @@ body{background:#f4f6f9}
     background:#fff;
     padding:30px;
     border-radius:14px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    box-shadow:0 10px 25px rgba(0,0,0,.08)
 }
 
 /* ACTIONS */
 .page-actions{
     display:flex;
     justify-content:flex-end;
-    margin-bottom:20px;
+    margin-bottom:20px
 }
 .btn-primary{
     background:#9743d7;
@@ -201,7 +160,7 @@ body{background:#f4f6f9}
     cursor:pointer;
     display:flex;
     gap:8px;
-    align-items:center;
+    align-items:center
 }
 .btn-primary:hover{background:#7e22ce}
 
@@ -212,14 +171,14 @@ td{padding:14px;border-bottom:1px solid #e5e7eb}
 
 /* STATUS */
 .status{
-    padding:5px 12px;
-    border-radius:20px;
+    padding:6px 14px;
+    border-radius:999px;
     font-size:12px;
-    font-weight:600;
+    font-weight:600
 }
-.status-Pendente{background:#fff3cd;color:#856404}
-.status-Em{background:#ede9fe;color:#4a148c}
-.status-Resolvido{background:#dcfce7;color:#166534}
+.status-Pendente{background:#fff7ed;color:#9a3412}
+.status-EmAnalise{background:#ede9fe;color:#4a148c}
+.status-Resolvido{background:#ecfdf5;color:#065f46}
 
 /* MODAL */
 .modal-overlay{
@@ -229,37 +188,30 @@ td{padding:14px;border-bottom:1px solid #e5e7eb}
     background:rgba(0,0,0,.55);
     justify-content:center;
     align-items:center;
-    z-index:1000;
+    z-index:1000
 }
 .modal{
     background:#fff;
-    width:500px;
+    width:520px;
     padding:30px;
-    border-radius:14px;
+    border-radius:16px
 }
 .modal h3{
     display:flex;
     gap:10px;
-    margin-bottom:20px;
+    margin-bottom:20px
 }
 .form-group{margin-bottom:15px}
 label{font-weight:500}
-input,select{
+input,select,textarea{
     width:100%;
     padding:12px;
     margin-top:6px;
     border-radius:8px;
-    border:1px solid #d1d5db;
+    border:1px solid #d1d5db
 }
-input:focus,select:focus{
-    outline:none;
-    border-color:#9743d7;
-}
-.close{
-    background:#6c757d;
-    color:#fff;
-    margin-top:10px;
-}
+textarea{resize:none}
+.close{background:#6b7280}
 </style>
 </head>
 
@@ -271,16 +223,16 @@ input:focus,select:focus{
         <h2><i class="fas fa-home"></i> Morador</h2>
         <nav>
             <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="agendar_visita.php" ><i class="fas fa-users"></i> Visitas</a>
+            <a href="agendar_visita.php"><i class="fas fa-users"></i> Visitas</a>
             <a href="reservas.php"><i class="fas fa-calendar-check"></i> Reservas</a>
             <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
             <a href="avisos.php"><i class="fas fa-bullhorn"></i> Avisos</a>
-            <a href="ocorrencias.php" class="active"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
-        <a href="../../logout.php?logout=1" class="logout">
-            <i class="fas fa-sign-out-alt"></i> Sair
-        </a>
-    </nav>
-</aside>
+             <a href="ocorrencias.php" class="active"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
+            <a href="../../logout.php?logout=1" class="logout">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+        </nav>
+    </aside>
 
 <main class="content">
 
@@ -298,7 +250,7 @@ input:focus,select:focus{
 <div class="container">
 
 <div class="page-actions">
-    <button class="btn-primary" onclick="abrirModal()">
+    <button class="btn-primary" onclick="abrirNova()">
         <i class="fas fa-plus"></i> Nova Ocorrência
     </button>
 </div>
@@ -306,6 +258,7 @@ input:focus,select:focus{
 <?php if(empty($ocorrencias)): ?>
     <p style="color:#777">Nenhuma ocorrência registada.</p>
 <?php else: ?>
+
 <table>
 <thead>
 <tr>
@@ -313,12 +266,14 @@ input:focus,select:focus{
     <th>Título</th>
     <th>Status</th>
     <th>Data</th>
+    <th>Resposta</th>
 </tr>
 </thead>
 <tbody>
+
 <?php foreach($ocorrencias as $o): ?>
 <tr>
-    <td><?= $o['tipo'] ?></td>
+    <td><?= htmlspecialchars($o['tipo']) ?></td>
     <td><?= htmlspecialchars($o['titulo']) ?></td>
     <td>
         <span class="status status-<?= str_replace(' ', '', $o['status']) ?>">
@@ -326,20 +281,31 @@ input:focus,select:focus{
         </span>
     </td>
     <td><?= date('d/m/Y H:i', strtotime($o['data_abertura'])) ?></td>
+    <td>
+        <?php if (!empty($o['resposta_sindico'])): ?>
+            <button class="btn-primary"
+                onclick='verResposta(<?= json_encode($o) ?>)'>
+                <i class="fas fa-eye"></i> Ver
+            </button>
+        <?php else: ?>
+            <span style="color:#777;font-size:13px">Aguardando</span>
+        <?php endif; ?>
+    </td>
 </tr>
-<?php endforeach ?>
+<?php endforeach; ?>
+
 </tbody>
 </table>
-<?php endif ?>
+<?php endif; ?>
 
 </div>
 </main>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal">
+<!-- MODAL NOVA -->
+<div class="modal-overlay" id="modalNova">
 <div class="modal">
-<h3><i class="fas fa-exclamation-circle"></i> Nova Ocorrência</h3>
+<h3><i class="fas fa-plus"></i> Nova Ocorrência</h3>
 
 <form method="POST">
 <div class="form-group">
@@ -360,23 +326,62 @@ input:focus,select:focus{
 
 <div class="form-group">
 <label>Descrição</label>
-<input type="text" name="descricao" required>
+<textarea name="descricao" rows="4" required></textarea>
 </div>
 
 <button class="btn-primary">
 <i class="fas fa-check"></i> Registar
 </button>
 
-<button type="button" class="btn-primary close" onclick="fecharModal()">
+<button type="button" class="btn-primary close" onclick="fecharNova()">
 Cancelar
 </button>
 </form>
 </div>
 </div>
 
+<!-- MODAL RESPOSTA -->
+<div class="modal-overlay" id="modalResposta">
+<div class="modal">
+<h3><i class="fas fa-reply"></i> Resposta do Síndico</h3>
+
+<p><strong>Status:</strong> <span id="rStatus"></span></p>
+<p><strong>Respondido em:</strong> <span id="rData"></span></p>
+
+<hr style="margin:15px 0">
+
+<p id="rTexto"></p>
+
+<button class="btn-primary close" onclick="fecharResposta()">
+Fechar
+</button>
+</div>
+</div>
+
 <script>
-function abrirModal(){document.getElementById('modal').style.display='flex'}
-function fecharModal(){document.getElementById('modal').style.display='none'}
+function abrirNova(){
+    document.getElementById('modalNova').style.display='flex'
+}
+function fecharNova(){
+    document.getElementById('modalNova').style.display='none'
+}
+
+function verResposta(o){
+    document.getElementById('modalResposta').style.display='flex'
+    document.getElementById('rStatus').innerText = o.status
+    document.getElementById('rTexto').innerText = o.resposta_sindico
+
+    if(o.data_resolucao){
+        const d = new Date(o.data_resolucao)
+        document.getElementById('rData').innerText =
+            d.toLocaleDateString() + ' ' + d.toLocaleTimeString()
+    }else{
+        document.getElementById('rData').innerText = '--'
+    }
+}
+function fecharResposta(){
+    document.getElementById('modalResposta').style.display='none'
+}
 </script>
 
 </body>

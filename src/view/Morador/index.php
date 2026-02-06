@@ -2,19 +2,15 @@
 require_once __DIR__ . '/../../auth/session.php';
 require_once __DIR__ . '/../../data/conector.php';
 
-/* =========================
-   PROTEÇÃO POR PERFIL
-========================= */
-if (!isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'Morador') {
-    header("Location: ../../login.php");
-    exit;
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'Morador') {
+    header('Location: ../../login.php');
+    exit();
 }
-
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 $conexao = (new Conector())->getConexao();
 
-/* =========================
-   BUSCAR MORADOR
-========================= */
 $stmt = $conexao->prepare("
     SELECT id_morador, id_unidade, nome
     FROM Morador
@@ -35,14 +31,8 @@ $idUnidade = $morador['id_unidade'];
 $userName  = $morador['nome'];
 $iniciais  = strtoupper(substr($userName, 0, 1));
 
-/* =========================
-   DATA ATUAL
-========================= */
 $hoje = date('Y-m-d');
 
-/* =========================
-   VISITAS AGENDADAS (HOJE)
-========================= */
 $stmt = $conexao->prepare("
     SELECT COUNT(*) AS total
     FROM Agendamento
@@ -53,9 +43,7 @@ $stmt->bind_param("is", $idMorador, $hoje);
 $stmt->execute();
 $visitasAgendadas = $stmt->get_result()->fetch_assoc()['total'];
 
-/* =========================
-   RESERVAS ATIVAS (HOJE)
-========================= */
+
 $stmt = $conexao->prepare("
     SELECT COUNT(*) AS total
     FROM Reserva
@@ -66,10 +54,6 @@ $stmt->bind_param("is", $idMorador, $hoje);
 $stmt->execute();
 $reservasAtivas = $stmt->get_result()->fetch_assoc()['total'];
 
-/* =========================
-   ENTREGAS PENDENTES
-   status = 0 → pendente
-========================= */
 $stmt = $conexao->prepare("
     SELECT COUNT(*) AS total
     FROM Entrega
@@ -80,9 +64,6 @@ $stmt->bind_param("i", $idMorador);
 $stmt->execute();
 $entregasPendentes = $stmt->get_result()->fetch_assoc()['total'];
 
-/* =========================
-   AVISOS NÃO LIDOS
-========================= */
 $stmt = $conexao->prepare("
     SELECT COUNT(*) AS total
     FROM Aviso a
@@ -100,7 +81,7 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -112,7 +93,7 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
 </head>
 
 <body>
-    <!-- Cabeçalho do Dashboard -->
+
     <header class="dashboard-header">
         <div class="header-left">
             <h2><i class="fas fa-building"></i> Condomínio Digital</h2>
@@ -129,18 +110,17 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
                     <i class="fas fa-home"></i> Morador
                 </div>
             </div>
-           <a href="../../logout.php?logout=1" 
-   class="logout-btn" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+            <a href="../../logout.php?logout=1"
+                class="logout-btn"
+                onclick="return confirmarSaida();">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
 
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="dashboard-container">
-        <!-- Seção de Boas-vindas -->
+
         <section class="welcome-section">
             <h1><i class="fas fa-home"></i> Bem-vindo, <?php echo $userName; ?>!</h1>
             <p>Seu painel de controle para gerenciar todas as atividades do condomínio.
@@ -163,24 +143,21 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
                 <a href="ocorrencias.php" class="action-btn">
                     <i class="fas fa-exclamation-triangle"></i> Reportar Problema
                 </a>
-                <a href="perfil.php" class="action-btn">
-                    <i class="fas fa-user-edit"></i> Meu Perfil
-                </a>
+
             </div>
         </section>
         <div class="dashboard-grid">
-            <!-- Card 1: Visitas -->
+
             <div class="dashboard-card">
                 <div class="card-title">
                     <i class="fas fa-users"></i> Visitas Agendadas
                 </div>
                 <div class="card-content">
                     <p><?= $visitasAgendadas ?></p>
-        <p>Visitas agendadas para hoje</p>
+                    <p>Visitas agendadas para hoje</p>
                 </div>
             </div>
 
-            <!-- Card 2: Reservas -->
             <div class="dashboard-card">
                 <div class="card-title">
                     <i class="fas fa-calendar-check"></i> Reservas Ativas
@@ -193,28 +170,34 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
             </div>
 
             <div class="dashboard-card">
-    <div class="card-title">
-        <i class="fas fa-box-open"></i> Encomendas Pendentes
-
-        <?php if ($entregasPendentes > 0): ?>
-            <span class="notif-bell">
-                <i class="fas fa-bell"></i>
-                <span class="notif-count"><?= $entregasPendentes ?></span>
-            </span>
-        <?php endif; ?>
-    </div>
-
-    <div class="card-content">
-        <p><?= $entregasPendentes ?></p>
-        <p>Encomendas para hoje</p>
-    </div>
-</div>
-
-
-            <!-- Card 4: Avisos -->
+                <div class="card-title">
+                    <i class="fas fa-box-open"></i> Encomendas Pendentes
+                    <a href="encomendas.php">
+                        <?php if ($entregasPendentes > 0): ?>
+                            <span class="notif-bell">
+                                <i class="fas fa-bell"></i>
+                                <span class="notif-count"><?= $entregasPendentes ?></span>
+                            </span>
+                        <?php endif; ?>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <p><?= $entregasPendentes ?></p>
+                    <p>Encomendas para hoje</p>
+                </div>
+            </div>
             <div class="dashboard-card">
                 <div class="card-title">
                     <i class="fas fa-bullhorn"></i> Avisos Novos
+                    <a href="avisos.php">
+                        <?php if ($avisosNovos > 0): ?>
+                            <span class="notif-bell">
+                                <i class="fas fa-bell"></i>
+                                <span class="notif-count"><?= $avisosNovos ?></span>
+                            
+                            </span>
+                            <?php endif; ?>
+                    </a>
                 </div>
                 <div class="card-content">
                     <p><?= $avisosNovos ?></p>
@@ -224,7 +207,6 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
             </div>
         </div>
 
-        <!-- Informações da Sessão -->
         <section class="info-section">
             <h3><i class="fas fa-info-circle"></i> Informações da Sessão</h3>
             <table class="info-table">
@@ -255,17 +237,17 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
     </footer>
 
     <script>
-    // Adicionar animação aos cards
-    document.addEventListener('DOMContentLoaded', function() {
-        const cards = document.querySelectorAll('.dashboard-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-            card.classList.add('fade-in');
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
         });
-    });
-    function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
+
+        function confirmarSaida() {
+            return confirm("Tem a certeza que deseja sair?");
+        }
     </script>
 </body>
 
