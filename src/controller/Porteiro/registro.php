@@ -31,14 +31,12 @@ if (!isset($_POST['acao'], $_POST['id_agendamento'])) {
 
 $acao = $_POST['acao'];
 $idAgendamento = (int) $_POST['id_agendamento'];
-$idPorteiro = (int) $_SESSION['id'];
 
 $conexao = (new Conector())->getConexao();
 
-
 try {
 
-    /* BUSCAR AGENDAMENTO */
+    /* VERIFICAR AGENDAMENTO */
     $stmt = $conexao->prepare("
         SELECT id_agendamento
         FROM Agendamento
@@ -51,7 +49,7 @@ try {
         throw new Exception('Agendamento não encontrado');
     }
 
-    /* BUSCAR REGISTRO (se existir) */
+    /* BUSCAR REGISTRO */
     $stmt = $conexao->prepare("
         SELECT id_registro, entrada, saida
         FROM Registro
@@ -61,18 +59,16 @@ try {
     $stmt->execute();
     $registro = $stmt->get_result()->fetch_assoc();
 
-    /* ===== ENTRADA ===== */
+    /* ===== REGISTRAR ENTRADA ===== */
     if ($acao === 'entrada') {
 
         if ($registro) {
-            throw new Exception('Entrada já foi registrada');
+            throw new Exception('Entrada já registrada');
         }
 
         $stmt = $conexao->prepare("
-            INSERT INTO Registro (
-                id_agendamento,
-                entrada
-            ) VALUES (?, NOW())
+            INSERT INTO Registro (id_agendamento, entrada)
+            VALUES (?, NOW())
         ");
         $stmt->bind_param("i", $idAgendamento);
         $stmt->execute();
@@ -84,6 +80,7 @@ try {
         exit;
     }
 
+    /* ===== REGISTRAR SAÍDA ===== */
     if ($acao === 'saida') {
 
         if (!$registro || !$registro['entrada']) {

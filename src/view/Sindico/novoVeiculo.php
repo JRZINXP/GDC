@@ -87,20 +87,30 @@ $veiculos = $conexao->query("
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<title>Gerir Veículos</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Gerir Veículos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f4f6f9;color:#1f2937}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif
+        }
 
-/* HEADER */
-.dashboard-header {
+        body {
+            background: #f4f6f9;
+            color: #1f2937
+        }
+
+        /* HEADER */
+        .dashboard-header {
             background: white;
             color: #1f2937;
             padding: 1.5rem 2rem;
@@ -191,74 +201,134 @@ body{background:#f4f6f9;color:#1f2937}
             transform: translateY(-2px);
         }
 
-/* CONTAINER */
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px
+        }
 
-/* CARD */
-.card{
-    background:#fff;border-radius:14px;padding:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-    margin-bottom:25px
-}
-.top{display:flex;justify-content:space-between;align-items:center}
+        /* CARD */
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+            margin-bottom: 25px
+        }
 
-/* BOTÕES */
-.btn-success{
-    background:#7e22ce;color:#fff;
-    padding:14px;border-radius:10px;
-    border:none;cursor:pointer;
-    display:flex;gap:8px;align-items:center;
-    justify-content:center;width:100%;
-}
-.btn-success:hover{background:#5b21b6}
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
 
-.btn-cancel{
-    background:#e5e7eb;color:#374151;
-    padding:14px;border-radius:10px;
-    border:none;cursor:pointer;
-    width:100%;margin-top:10px;
-}
-.btn-cancel:hover{background:#d1d5db}
+        /* BOTÕES */
+        .btn-success {
+            background: #7e22ce;
+            color: #fff;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
 
-/* TABLE */
-table{width:100%;border-collapse:collapse}
-th{background:#f3f4f6;padding:16px;text-align:left}
-td{padding:16px;border-top:1px solid #e5e7eb}
+        .btn-success:hover {
+            background: #5b21b6
+        }
 
-.badge{
-    background:#e0e7ff;color:#3730a3;
-    padding:6px 12px;border-radius:8px;
-    font-family:monospace
-}
+        .btn-cancel {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
 
-/* MODAL */
-.modal{
-    display:none;position:fixed;inset:0;
-    background:rgba(0,0,0,.6);
-    align-items:center;justify-content:center;
-}
-.modal.active{display:flex}
-.box{
-    background:#fff;border-radius:16px;
-    width:100%;max-width:480px;
-    padding:25px
-}
-.modal-header{
-    display:flex;align-items:center;
-    gap:10px;margin-bottom:20px
-}
-.modal-header i{color:#7e22ce}
+        .btn-cancel:hover {
+            background: #d1d5db
+        }
 
-input,select{
-    width:100%;padding:12px;margin-bottom:14px;
-    border-radius:8px;border:1px solid #d1d5db
-}
-</style>
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 16px;
+            text-align: left
+        }
+
+        td {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb
+        }
+
+        .badge {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: monospace
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex
+        }
+
+        .box {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            padding: 25px
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px
+        }
+
+        .modal-header i {
+            color: #7e22ce
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="dashboard-header">
+    <header class="dashboard-header">
         <div>
             <h2><i class="fas fa-building"></i> Condominio Digital</h2>
             <div class="header-subtitle">Gestão de veículos</div>
@@ -278,96 +348,103 @@ input,select{
         </div>
     </header>
 
-<div class="container">
+    <div class="container">
 
-<div class="card top">
-    <strong>Total de veículos: <?= count($veiculos) ?></strong>
-    <button class="btn-success" style="width:auto" onclick="abrirModal()">
-        <i class="fas fa-plus"></i> Novo Veículo
-    </button>
-</div>
+        <div class="card top">
+            <strong>Total de veículos: <?= count($veiculos) ?></strong>
+            <button class="btn-success" style="width:auto" onclick="abrirModal()">
+                <i class="fas fa-plus"></i> Novo Veículo
+            </button>
+        </div>
 
-<div class="card">
-<table>
-<thead>
-<tr>
-<th>Matrícula</th><th>Morador</th><th>Unidade</th>
-<th>Cor</th><th>Modelo</th><th>Ações</th>
-</tr>
-</thead>
-<tbody>
-<?php foreach($veiculos as $v): ?>
-<tr>
-<td><span class="badge"><?= $v['matricula'] ?></span></td>
-<td><?= $v['morador_nome'] ?></td>
-<td><?= $v['unidade'] ?? 'N/A' ?></td>
-<td><?= $v['cor'] ?></td>
-<td><?= $v['modelo'] ?></td>
-<td>
-    <a href="#" onclick='editar(<?= json_encode($v) ?>)'><i class="fas fa-edit"></i></a>
-</td>
-</tr>
-<?php endforeach ?>
-</tbody>
-</table>
-</div>
-</div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Morador</th>
+                        <th>Unidade</th>
+                        <th>Cor</th>
+                        <th>Modelo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($veiculos as $v): ?>
+                        <tr>
+                            <td><span class="badge"><?= $v['matricula'] ?></span></td>
+                            <td><?= $v['morador_nome'] ?></td>
+                            <td><?= $v['unidade'] ?? 'N/A' ?></td>
+                            <td><?= $v['cor'] ?></td>
+                            <td><?= $v['modelo'] ?></td>
+                            <td>
+                                <a href="#" onclick='editar(<?= json_encode($v) ?>)'><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-<div class="box">
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="box">
 
-<div class="modal-header">
-    <i class="fas fa-car"></i>
-    <h3 id="modalTitulo">Novo Veículo</h3>
-</div>
+            <div class="modal-header">
+                <i class="fas fa-car"></i>
+                <h3 id="modalTitulo">Novo Veículo</h3>
+            </div>
 
-<form method="POST">
-<input type="hidden" name="id_veiculo" id="id_veiculo">
+            <form method="POST">
+                <input type="hidden" name="id_veiculo" id="id_veiculo">
 
-<select name="id_morador" id="id_morador" required>
-<option value="">Selecione o morador</option>
-<?php foreach($moradores as $m): ?>
-<option value="<?= $m['id_morador'] ?>"><?= $m['nome'] ?> (<?= $m['numero'] ?>)</option>
-<?php endforeach ?>
-</select>
+                <select name="id_morador" id="id_morador" required>
+                    <option value="">Selecione o morador</option>
+                    <?php foreach ($moradores as $m): ?>
+                        <option value="<?= $m['id_morador'] ?>"><?= $m['nome'] ?> (<?= $m['numero'] ?>)</option>
+                    <?php endforeach ?>
+                </select>
 
-<input type="text" name="matricula" id="matricula" placeholder="ABC-123-XY" required>
-<input type="text" name="cor" id="cor" placeholder="Cor">
-<input type="text" name="modelo" id="modelo" placeholder="Modelo">
+                <input type="text" name="matricula" id="matricula" placeholder="ABC-123-XY" required>
+                <input type="text" name="cor" id="cor" placeholder="Cor">
+                <input type="text" name="modelo" id="modelo" placeholder="Modelo">
 
-<button class="btn-success" type="submit">
-<i class="fas fa-save"></i> Salvar
-</button>
+                <button class="btn-success" type="submit">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
 
-<button type="button" class="btn-cancel" onclick="fecharModal()">
-Cancelar
-</button>
-</form>
+                <button type="button" class="btn-cancel" onclick="fecharModal()">
+                    Cancelar
+                </button>
+            </form>
 
-</div>
-</div>
+        </div>
+    </div>
 
-<script>
-function abrirModal(){
-    modal.classList.add('active');
-    document.getElementById('modalTitulo').innerText='Novo Veículo';
-    document.querySelector('form').reset();
-    id_veiculo.value='';
-}
-function fecharModal(){
-    modal.classList.remove('active');
-}
-function editar(v){
-    abrirModal();
-    document.getElementById('modalTitulo').innerText='Editar Veículo';
-    id_veiculo.value=v.id_veiculo;
-    id_morador.value=v.id_morador;
-    matricula.value=v.matricula;
-    cor.value=v.cor;
-    modelo.value=v.modelo;
-}
-</script>
+    <script>
+        function abrirModal() {
+            modal.classList.add('active');
+            document.getElementById('modalTitulo').innerText = 'Novo Veículo';
+            document.querySelector('form').reset();
+            id_veiculo.value = '';
+        }
+
+        function fecharModal() {
+            modal.classList.remove('active');
+        }
+
+        function editar(v) {
+            abrirModal();
+            document.getElementById('modalTitulo').innerText = 'Editar Veículo';
+            id_veiculo.value = v.id_veiculo;
+            id_morador.value = v.id_morador;
+            matricula.value = v.matricula;
+            cor.value = v.cor;
+            modelo.value = v.modelo;
+        }
+    </script>
 
 </body>
+
 </html>

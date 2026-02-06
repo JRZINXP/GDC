@@ -7,6 +7,10 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['t
     header('Location: ../../login.php');
     exit();
 }
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 $conector = new Conector();
 $conexao = $conector->getConexao();
 
@@ -20,26 +24,21 @@ if ($resultado->num_rows > 0) {
     $userName = $row['nome'];
     $iniciais = strtoupper(substr($userName, 0, 1));
 }
-/* =========================
-   DASHBOARD CONTADORES
-========================= */
 
-/* TOTAL MORADORES */
 $totalMoradores = $conexao->query("
     SELECT COUNT(*) total FROM Morador
 ")->fetch_assoc()['total'];
 
-/* TOTAL RESERVAS (SEM STATUS) */
+
 $totalReservas = $conexao->query("
     SELECT COUNT(*) total FROM Reserva
 ")->fetch_assoc()['total'];
 
-/* TOTAL OCORRÊNCIAS */
+
 $totalOcorrencias = $conexao->query("
     SELECT COUNT(*) total FROM Ocorrencia
 ")->fetch_assoc()['total'];
 
-/* TOTAL AVISOS */
 $totalAvisos = $conexao->query("
     SELECT COUNT(*) total FROM Aviso
 ")->fetch_assoc()['total'];
@@ -61,7 +60,6 @@ $totalAvisos = $conexao->query("
 </head>
 
 <body>
-    <?php include_once 'sidebar.php'; ?>
     <header class="dashboard-header">
         <div>
             <h2><i class="fas fa-building"></i> Condominio Digital</h2>

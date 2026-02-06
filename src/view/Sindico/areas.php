@@ -19,7 +19,8 @@ if ($resultado->num_rows > 0) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,45 +29,92 @@ if ($resultado->num_rows > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos gerais (iguais às páginas anteriores) */
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg,#f3f4f6 0%,#e5e7eb 100%); color:#1f2937; min-height:100vh; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #1f2937;
+            min-height: 100vh;
+        }
 
         .dashboard-header {
-            background:white;
-            color:#1f2937;
-            padding:1.5rem 2rem;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            box-shadow:0 4px 6px rgba(0,0,0,0.1);
-            border-bottom:3px solid #7e22ce;
-            position:sticky;
-            top:0;
-            z-index:100;
+            background: white;
+            color: #1f2937;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #7e22ce;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .dashboard-header h2 { font-size:1.5rem; font-weight:600; display:flex; align-items:center; gap:.75rem; }
-        .dashboard-header h2 i { color:#7e22ce; }
-        .header-subtitle { font-size:.875rem; color:#6b7280; margin-top:.25rem; }
 
-        .user-info { display:flex; align-items:center; gap:1.25rem; }
-        .user-avatar {
-            width:50px; height:50px;
-            background:#7e22ce;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:white;
-            font-weight:600;
-            font-size:1rem;
-            box-shadow:0 1px 3px rgba(0,0,0,0.1);
+        .dashboard-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
         }
-        .user-details { text-align:right; }
-        .user-name { font-weight:500; font-size:1rem; color:#1f2937; }
-        .user-role { font-size:.75rem; color:#6b7280; display:flex; align-items:center; gap:.25rem; margin-top:.125rem; }
-        
-        .logout-btn, .back-btn {
+
+        .dashboard-header h2 i {
+            color: #7e22ce;
+        }
+
+        .header-subtitle {
+            font-size: .875rem;
+            color: #6b7280;
+            margin-top: .25rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #7e22ce;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #1f2937;
+        }
+
+        .user-role {
+            font-size: .75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+            margin-top: .125rem;
+        }
+
+        .logout-btn,
+        .back-btn {
             background: #ff4757;
             color: white;
             border: none;
@@ -80,33 +128,41 @@ if ($resultado->num_rows > 0) {
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        .logout-btn:hover, .back-btn:hover {
+
+        .logout-btn:hover,
+        .back-btn:hover {
             background: #ff3742;
             transform: translateY(-2px);
         }
+
         .back-btn {
             background: #6c757d;
         }
+
         .back-btn:hover {
             background: #5a6268;
         }
 
-        /* Main container */
-        .dashboard-container { max-width:1400px; margin:2rem auto; padding:0 1.25rem; }
 
-        /* Page header */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.25rem;
+        }
+
         .page-header {
             background: white;
             border-radius: .75rem;
             padding: 1.5rem 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
         }
+
         .page-header h1 {
             color: #1f2937;
             font-size: 1.75rem;
@@ -114,12 +170,17 @@ if ($resultado->num_rows > 0) {
             align-items: center;
             gap: .75rem;
         }
-        .page-header h1 i { color: #7e22ce; }
+
+        .page-header h1 i {
+            color: #7e22ce;
+        }
+
         .page-actions {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
+
         .btn {
             padding: 10px 20px;
             border-radius: 6px;
@@ -132,41 +193,47 @@ if ($resultado->num_rows > 0) {
             border: none;
             cursor: pointer;
         }
+
         .btn-primary {
             background: #7e22ce;
             color: white;
         }
+
         .btn-primary:hover {
             background: #5b21b6;
             transform: translateY(-2px);
         }
+
         .btn-success {
             background: #10b981;
             color: white;
         }
+
         .btn-success:hover {
             background: #059669;
         }
 
-        /* Áreas Comuns */
         .areas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
+
         .area-card {
             background: white;
             border-radius: .75rem;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border: 1px solid #e5e7eb;
         }
+
         .area-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
+
         .area-image {
             height: 200px;
             background: #7e22ce;
@@ -176,9 +243,11 @@ if ($resultado->num_rows > 0) {
             color: white;
             font-size: 3rem;
         }
+
         .area-content {
             padding: 1.5rem;
         }
+
         .area-title {
             font-size: 1.25rem;
             font-weight: 600;
@@ -188,6 +257,7 @@ if ($resultado->num_rows > 0) {
             align-items: center;
             gap: .75rem;
         }
+
         .area-status {
             display: inline-flex;
             align-items: center;
@@ -197,9 +267,22 @@ if ($resultado->num_rows > 0) {
             font-weight: 500;
             margin-bottom: 1rem;
         }
-        .status-disponivel { background: #d1fae5; color: #065f46; }
-        .status-manutencao { background: #fef3c7; color: #92400e; }
-        .status-indisponivel { background: #fee2e2; color: #991b1b; }
+
+        .status-disponivel {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-manutencao {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-indisponivel {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         .area-info {
             color: #6b7280;
             font-size: 0.875rem;
@@ -208,83 +291,120 @@ if ($resultado->num_rows > 0) {
             align-items: center;
             gap: .5rem;
         }
-        .area-info i { color: #7e22ce; width: 20px; }
+
+        .area-info i {
+            color: #7e22ce;
+            width: 20px;
+        }
+
         .area-actions {
             display: flex;
             gap: .5rem;
             margin-top: 1rem;
             flex-wrap: wrap;
         }
+
         .btn-sm {
             padding: 6px 12px;
             font-size: 0.875rem;
             flex: 1;
         }
 
-        /* Calendário */
         .calendar-card {
             background: white;
             border-radius: .75rem;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
+
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 4px;
         }
+
         .calendar-day {
             text-align: center;
             font-weight: 500;
             color: #6b7280;
             padding: .5rem;
         }
+
         .calendar-cell {
             height: 60px;
             border: 1px solid #e5e7eb;
             padding: .25rem;
             font-size: 0.875rem;
         }
+
         .calendar-cell.today {
             background: #7e22ce;
             color: white;
             font-weight: 600;
         }
+
         .calendar-cell.reserved {
             background: #fef3c7;
             border-color: #f59e0b;
         }
 
-        /* Footer */
-        .dashboard-footer { 
-            background:white; 
-            color:#6b7280; 
-            text-align:center; 
-            padding:1.5rem; 
-            margin-top:3rem; 
-            border-top:1px solid #e5e7eb; 
+        .dashboard-footer {
+            background: white;
+            color: #6b7280;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid #e5e7eb;
         }
 
         @media (max-width:768px) {
-            .dashboard-header { flex-direction:column; padding:1.25rem; text-align:center; gap:1rem; }
-            .user-info { flex-direction:column; gap:1rem; }
-            .user-details { text-align:center; }
-            .page-header { flex-direction: column; align-items: flex-start; }
-            .page-actions { width: 100%; justify-content: center; }
-            .areas-grid { grid-template-columns: 1fr; }
-            .calendar-grid { font-size: 0.75rem; }
+            .dashboard-header {
+                flex-direction: column;
+                padding: 1.25rem;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-details {
+                text-align: center;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .areas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Cabeçalho -->
+
     <header class="dashboard-header">
         <div>
             <h2><i class="fas fa-building"></i> Gestão Condominial</h2>
@@ -300,18 +420,17 @@ if ($resultado->num_rows > 0) {
             <a href="index.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
-<a href="../../logout.php?logout=1" 
-   class="logout-btn" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+            <a href="../../logout.php?logout=1"
+                class="logout-btn"
+                onclick="return confirmarSaida();">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
 
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
+
     <main class="dashboard-container">
-        <!-- Cabeçalho da Página -->
         <div class="page-header">
             <h1><i class="fas fa-swimming-pool"></i> Áreas Comuns</h1>
             <div class="page-actions">
@@ -324,9 +443,7 @@ if ($resultado->num_rows > 0) {
             </div>
         </div>
 
-        <!-- Grid de Áreas Comuns -->
         <div class="areas-grid">
-            <!-- Salão de Festas -->
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #7e22ce 0%, #a855f7 100%);">
                     <i class="fas fa-glass-cheers"></i>
@@ -359,7 +476,6 @@ if ($resultado->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Churrasqueira -->
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
                     <i class="fas fa-fire"></i>
@@ -392,7 +508,6 @@ if ($resultado->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Piscina -->
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);">
                     <i class="fas fa-swimming-pool"></i>
@@ -425,7 +540,6 @@ if ($resultado->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Quadra Poliesportiva -->
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
                     <i class="fas fa-basketball-ball"></i>
@@ -458,7 +572,7 @@ if ($resultado->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Academia -->
+
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);">
                     <i class="fas fa-dumbbell"></i>
@@ -491,7 +605,6 @@ if ($resultado->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Espaço Kids -->
             <div class="area-card">
                 <div class="area-image" style="background: linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%);">
                     <i class="fas fa-child"></i>
@@ -525,7 +638,6 @@ if ($resultado->num_rows > 0) {
             </div>
         </div>
 
-        <!-- Calendário de Reservas -->
         <div class="calendar-card">
             <h3><i class="fas fa-calendar-alt"></i> Calendário de Reservas - Março 2026</h3>
             <div class="calendar-header">
@@ -541,8 +653,7 @@ if ($resultado->num_rows > 0) {
                 <div class="calendar-day">Qui</div>
                 <div class="calendar-day">Sex</div>
                 <div class="calendar-day">Sáb</div>
-                
-                <!-- Dias do mês (simplificado) -->
+
                 <?php
                 for ($i = 1; $i <= 31; $i++) {
                     $classes = 'calendar-cell';
@@ -554,7 +665,6 @@ if ($resultado->num_rows > 0) {
             </div>
         </div>
 
-        <!-- Estatísticas -->
         <div style="background: white; border-radius: .75rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <h3><i class="fas fa-chart-pie"></i> Estatísticas das Áreas</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
@@ -586,12 +696,11 @@ if ($resultado->num_rows > 0) {
     <script>
         function verReservas(area) {
             alert('Abrindo reservas da área: ' + area);
-            // Redirecionar para página de reservas filtrada
+
         }
 
         function editarArea(area) {
             alert('Editando área: ' + area);
-            // Abrir modal de edição
         }
 
         function verManutencao(area) {
@@ -606,15 +715,15 @@ if ($resultado->num_rows > 0) {
             alert('Ver detalhes da reforma do: ' + area);
         }
 
-        // Simulação de calendário
         document.querySelectorAll('.calendar-cell.reserved').forEach(cell => {
             cell.addEventListener('click', function() {
                 alert('Dia ' + this.textContent + ' tem reservas agendadas!');
             });
         });
+
         function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
+            return confirm("Tem a certeza que deseja sair?");
+        }
     </script>
 </body>
 </html>

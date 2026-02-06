@@ -42,14 +42,21 @@ if ($resultado && $resultado->num_rows === 1) {
 
         $_SESSION['tentativas'] = 0;
 
-        // Criar sessão com timeout de 24h
         $_SESSION['id'] = $user['id_usuario'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['tipo_usuario'] = $user['tipo'];
         $_SESSION['login_time'] = time();
-        $_SESSION['session_timeout'] = 24 * 60 * 60; // 24 horas
+        $_SESSION['session_timeout'] = 24 * 60 * 60;
+        $id_usuario = $user['id_usuario'];
 
-        // Criar cookie persistente por 24h
+        $stmtLog = $conexao->prepare("
+INSERT INTO logs (id_usuario, acao) 
+VALUES (?, 'Login no sistema')
+");
+        $stmtLog->bind_param("i", $id_usuario);
+        $stmtLog->execute();
+
+
         $cookie_name = 'gdc_session_' . md5($user['id_usuario']);
         $cookie_value = json_encode([
             'id_usuario' => $user['id_usuario'],
@@ -58,6 +65,7 @@ if ($resultado && $resultado->num_rows === 1) {
             'login_time' => time()
         ]);
         setcookie($cookie_name, $cookie_value, time() + (24 * 60 * 60), '/', '', false, true);
+
 
         switch ($user['tipo']) {
             case 'Morador':
@@ -76,9 +84,16 @@ if ($resultado && $resultado->num_rows === 1) {
                 header("Location: ../login.php?erro=" . urlencode("Tipo de usuário inválido."));
         }
         exit();
-
     } else {
         $_SESSION['tentativas']++;
+
+        $stmtLog = $conexao->prepare("
+INSERT INTO logs (id_usuario, acao) 
+VALUES (?, 'Tentativa de login com senha errada')
+");
+        $stmtLog->bind_param("i", $user['id_usuario']);
+        $stmtLog->execute();
+
 
         $restantes = 5 - $_SESSION['tentativas'];
 
@@ -93,9 +108,17 @@ if ($resultado && $resultado->num_rows === 1) {
         }
         exit();
     }
-
 } else {
     $_SESSION['tentativas']++;
+
+    $stmtLog = $conexao->prepare("
+INSERT INTO logs (id_usuario, acao) 
+VALUES (NULL, ?)
+");
+
+    $acao = "Tentativa de login com email inexistente: $email";
+    $stmtLog->bind_param("s", $acao);
+    $stmtLog->execute();
 
     $restantes = 5 - $_SESSION['tentativas'];
 

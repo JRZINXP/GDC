@@ -6,7 +6,6 @@ session_start();
 $conector = new Conector();
 $conexao = $conector->getConexao();
 
-// Buscar dados do morador logado
 $stmt = $conexao->prepare("SELECT id_morador, nome FROM Morador WHERE id_usuario = ?");
 $stmt->bind_param("s", $_SESSION['id']);
 $stmt->execute();
@@ -21,10 +20,32 @@ if ($resultado->num_rows > 0) {
     header("Location: ../../login.php");
     exit();
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancelar_reserva'])) {
+
+    $id_reserva = $_POST['id_reserva'];
+
+    $stmtCancel = $conexao->prepare("
+        UPDATE Reserva 
+        SET status='cancelada' 
+        WHERE id_reserva=? AND id_morador=?
+    ");
+
+    $stmtCancel->bind_param("ii", $id_reserva, $id_morador);
+    $stmtCancel->execute();
+
+    $_SESSION['mensagem'] = "Reserva cancelada com sucesso!";
+    $_SESSION['tipo_mensagem'] = "sucesso";
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+date_default_timezone_set('Africa/Maputo');
+
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -253,13 +274,11 @@ if ($resultado->num_rows > 0) {
             border-left: 4px solid #ef4444;
         }
 
-/* ===== LAYOUT ===== */
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 240px;
             background: #9743d7;
@@ -269,7 +288,6 @@ if ($resultado->num_rows > 0) {
             flex-direction: column;
         }
 
-        /* TÍTULO */
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 30px;
@@ -277,15 +295,14 @@ if ($resultado->num_rows > 0) {
             align-items: center;
             gap: 10px;
             font-weight: 600;
+            color: #fff;
         }
 
-        /* NAV */
         .sidebar nav {
             display: flex;
             flex-direction: column;
         }
 
-        /* LINKS */
         .sidebar nav a {
             display: flex;
             align-items: center;
@@ -298,20 +315,16 @@ if ($resultado->num_rows > 0) {
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
             background: transparent;
-            /* IMPORTANTE */
         }
 
-        /* ÍCONES */
         .sidebar nav a i {
             color: #ffffff;
         }
 
-        /* HOVER (somente quando NÃO ativo) */
         .sidebar nav a:hover:not(.active) {
             background: rgba(255, 255, 255, 0.18);
         }
 
-        /* ===== ITEM ATIVO — BRANCO REAL ===== */
         .sidebar nav a.active {
             background: #ffffff !important;
             color: #9743d7 !important;
@@ -319,106 +332,20 @@ if ($resultado->num_rows > 0) {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ÍCONE DO ATIVO */
         .sidebar nav a.active i {
             color: #9743d7 !important;
         }
 
-        /* LOGOUT */
         .sidebar .logout {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
 
-        /* ===== CONTEÚDO ===== */
         .content {
             flex: 1;
             padding: 40px;
             background: #f4f6f9;
         }
-
-        /* ===== LAYOUT ===== */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 240px;
-            background: #9743d7;
-            color: #ffffff;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* TÍTULO */
-        .sidebar h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        /* NAV */
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* LINKS */
-        .sidebar nav a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-size: 15px;
-            transition: background 0.2s ease, color 0.2s ease;
-            background: transparent;
-            /* IMPORTANTE */
-        }
-
-        /* ÍCONES */
-        .sidebar nav a i {
-            color: #ffffff;
-        }
-
-        /* HOVER (somente quando NÃO ativo) */
-        .sidebar nav a:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        /* ===== ITEM ATIVO — BRANCO REAL ===== */
-        .sidebar nav a.active {
-            background: #ffffff !important;
-            color: #9743d7 !important;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* ÍCONE DO ATIVO */
-        .sidebar nav a.active i {
-            color: #9743d7 !important;
-        }
-
-        /* LOGOUT */
-        .sidebar .logout {
-            margin-top: auto;
-            background: rgba(0, 0, 0, 0.25);
-        }
-/* ===== CONTEÚDO ===== */
-.content {
-    flex: 1;
-    padding: 40px;
-    background: #f4f6f9;
-}
 
         @keyframes slideDown {
             from {
@@ -454,27 +381,25 @@ if ($resultado->num_rows > 0) {
     <div class="layout">
 
         <aside class="sidebar">
-        <h2><i class="fas fa-home"></i> Morador</h2>
-        <nav>
-            <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="agendar_visita.php" ><i class="fas fa-users"></i> Visitas</a>
-            <a href="reservas.php" class="active"><i class="fas fa-calendar-check"></i> Reservas</a>
-            <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
-            <a href="avisos.php"><i class="fas fa-bullhorn"></i> Avisos</a>
-            <a href="ocorrencias.php"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
-<a href="../../logout.php?logout=1" 
-   class="logout" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+            <h2><i class="fas fa-home"></i> Morador</h2>
+            <nav>
+                <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="agendar_visita.php"><i class="fas fa-users"></i> Visitas</a>
+                <a href="reservas.php" class="active"><i class="fas fa-calendar-check"></i> Reservas</a>
+                <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
+                <a href="avisos.php"><i class="fas fa-bullhorn"></i> Avisos</a>
+                <a href="ocorrencias.php"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
+                <a href="../../logout.php?logout=1"
+                    class="logout"
+                    onclick="return confirmarSaida();">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
 
-        </nav>
-    </aside>
+            </nav>
+        </aside>
 
-        <!-- CONTEÚDO -->
         <main class="content">
 
-            <!-- Cabeçalho -->
             <header class="dashboard-header">
                 <div class="header-left">
                     <h2>
@@ -491,11 +416,9 @@ if ($resultado->num_rows > 0) {
                 </div>
             </header>
 
-            <!-- CONTEÚDO PRINCIPAL -->
             <div class="container">
                 <div class="content-wrapper">
 
-                    <!-- NOVA RESERVA -->
                     <div class="card">
                         <h3>
                             <i class="fas fa-plus-circle"></i>
@@ -522,7 +445,7 @@ if ($resultado->num_rows > 0) {
                                     <option>Salão de Festas</option>
                                     <option>Piscina</option>
                                     <option>Churrasqueira</option>
-                                    <option>Quadra de Esportes</option>
+                                    <option>Campo Polidesportivo</option>
                                     <option>Sala de Reunião</option>
                                     <option>Sauna</option>
                                     <option>Ginásio</option>
@@ -553,7 +476,6 @@ if ($resultado->num_rows > 0) {
                         </form>
                     </div>
 
-                    <!-- LISTA DE RESERVAS -->
                     <div class="card">
                         <h3>
                             <i class="fas fa-list"></i>
@@ -563,38 +485,91 @@ if ($resultado->num_rows > 0) {
                         <div class="reservas-list">
                             <?php
                             $stmt = $conexao->prepare("
-                            SELECT area_comum, data, hora_inicio, hora_fim
-                            FROM Reserva
-                            WHERE id_morador = ?
-                            ORDER BY data DESC
-                        ");
+SELECT id_reserva, area_comum, data, hora_inicio, hora_fim, status
+FROM Reserva
+WHERE id_morador = ?
+ORDER BY data DESC
+
+");
                             $stmt->bind_param("i", $id_morador);
                             $stmt->execute();
                             $res = $stmt->get_result();
 
                             if ($res->num_rows > 0):
                                 while ($r = $res->fetch_assoc()):
-                            ?>
-                                    <div class="reserva-item">
-                                        <h4><?= htmlspecialchars($r['area_comum']) ?></h4>
-                                        <div class="reserva-info">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            <?= date('d/m/Y', strtotime($r['data'])) ?>
-                                        </div>
-                                        <div class="reserva-info">
-                                            <i class="fas fa-clock"></i>
-                                            <?= date('H:i', strtotime($r['hora_inicio'])) ?>
-                                            às
-                                            <?= date('H:i', strtotime($r['hora_fim'])) ?>
-                                        </div>
-                                    </div>
-                            <?php
-                                endwhile;
+
+    $status = $r['status'] ?? 'pendente';
+
+    if ($status == 'pendente') {
+        $cor = '#f59e0b';
+        $txt = 'Pendente de aprovação';
+    } elseif ($status == 'aprovada') {
+        $cor = '#10b981';
+        $txt = 'Aprovada';
+    } elseif ($status == 'cancelada') {
+        $cor = '#6b7280';
+        $txt = 'Cancelada';
+    } else {
+        $cor = '#ef4444';
+        $txt = 'Rejeitada';
+    }
+?>
+
+<div class="reserva-item">
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4><?= htmlspecialchars($r['area_comum']) ?></h4>
+
+        <span style="
+            font-size:12px;
+            font-weight:600;
+            color:#fff;
+            background:<?= $cor ?>;
+            padding:4px 10px;
+            border-radius:999px">
+            <?= $txt ?>
+        </span>
+    </div>
+
+    <div class="reserva-info">
+        <i class="fas fa-calendar-alt"></i>
+        <?= date('d/m/Y', strtotime($r['data'])) ?>
+    </div>
+
+    <div class="reserva-info">
+        <i class="fas fa-clock"></i>
+        <?= date('H:i', strtotime($r['hora_inicio'])) ?>
+        às
+        <?= date('H:i', strtotime($r['hora_fim'])) ?>
+    </div>
+
+    <?php if ($status == 'aprovada'): ?>
+        <form method="POST" onsubmit="return confirmarCancelamento();">
+            <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
+            <button name="cancelar_reserva"
+                style="
+                margin-top:10px;
+                background:#ef4444;
+                color:white;
+                border:none;
+                padding:6px 12px;
+                border-radius:6px;
+                cursor:pointer;">
+                <i class="fas fa-times"></i> Cancelar reserva
+            </button>
+        </form>
+    <?php endif; ?>
+
+</div>
+
+<?php endwhile; 
+
                             else:
                                 echo "<p style='color:#777'>Nenhuma reserva encontrada</p>";
                             endif;
                             ?>
                         </div>
+
                     </div>
 
                 </div>
@@ -604,7 +579,6 @@ if ($resultado->num_rows > 0) {
     </div>
 
     <script>
-        // Validar data mínima
         document.getElementById('data').addEventListener('change', function() {
             const data = new Date(this.value);
             const hoje = new Date();
@@ -616,7 +590,6 @@ if ($resultado->num_rows > 0) {
             }
         });
 
-        // Validar hora fim maior que hora início
         document.getElementById('form-reserva').addEventListener('submit', function(e) {
             const horaInicio = document.getElementById('hora_inicio').value;
             const horaFim = document.getElementById('hora_fim').value;
@@ -627,7 +600,6 @@ if ($resultado->num_rows > 0) {
             }
         });
 
-        // Limpar mensagem após 3s
         const alerta = document.querySelector('.alert-success');
         if (alerta) {
             setTimeout(function() {
@@ -638,9 +610,15 @@ if ($resultado->num_rows > 0) {
                 }, 400);
             }, 3000);
         }
+
         function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
+            return confirm("Tem a certeza que deseja sair?");
+        }
+
+        function confirmarCancelamento() {
+            return confirm("Tens certeza que queres cancelar esta reserva?");
+        }
     </script>
 </body>
+
 </html>

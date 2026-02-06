@@ -46,36 +46,30 @@ CREATE TABLE Veiculo (
     matricula VARCHAR(20) NOT NULL,
     cor NVARCHAR(50),
     modelo NVARCHAR(100),
-    FOREIGN KEY (id_morador) REFERENCES Morador(id_morador),
+    FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
 );
 
 CREATE TABLE Visitante (
     id_visitante INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    documento VARCHAR(50) NOT NULL,
-    tipo_documento VARCHAR(50) NOT NULL
+    documento_imagem VARCHAR(255) NOT NULL
 );
+
 
 CREATE TABLE Agendamento (
     id_agendamento INT AUTO_INCREMENT PRIMARY KEY,
-    id_morador INT,
-    id_visitante INT,
+    id_morador INT NOT NULL,
+    id_visitante INT NOT NULL,
     data DATE NOT NULL,
     hora TIME NOT NULL,
-    FOREIGN KEY (id_morador) REFERENCES Morador(id_morador),
-    FOREIGN KEY (id_visitante) REFERENCES Visitante(id_visitante)
+    motivo VARCHAR(100) NOT NULL,
+
+    FOREIGN KEY (id_morador) 
+        REFERENCES Morador(id_morador),
+
+    FOREIGN KEY (id_visitante) 
+        REFERENCES Visitante(id_visitante)
 );
-ALTER TABLE Agendamento
-ADD tipo_documento VARCHAR(30) NOT NULL,
-ADD documento VARCHAR(30) NOT NULL;
-ALTER TABLE Agendamento
-ADD motivo VARCHAR(100) NOT NULL;
-
-ALTER TABLE Registro
-DROP FOREIGN KEY registro_ibfk_2;
-
-ALTER TABLE Registro
-DROP COLUMN id_porteiro;
 
 CREATE TABLE Registro (
     id_registro INT AUTO_INCREMENT PRIMARY KEY,
@@ -83,8 +77,8 @@ CREATE TABLE Registro (
     id_porteiro INT,
     entrada DATETIME,
     saida DATETIME,
-    FOREIGN KEY (id_agendamento) REFERENCES Agendamento(id_agendamento),
-    FOREIGN KEY (id_porteiro) REFERENCES Porteiro(id_porteiro)
+    FOREIGN KEY (id_agendamento) REFERENCES Agendamento(id_agendamento)
+
 );
 
 CREATE TABLE Aviso (
@@ -115,6 +109,7 @@ CREATE TABLE Reserva (
     FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
 );
 
+
 CREATE TABLE Entrega (
     id_entrega INT AUTO_INCREMENT PRIMARY KEY,  
     id_morador INT,
@@ -137,3 +132,15 @@ CREATE TABLE Ocorrencia (
     resposta_sindico TEXT,
     FOREIGN KEY (id_morador) REFERENCES Morador(id_morador)
 );
+CREATE TABLE logs (
+    id_log INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    acao VARCHAR(255),
+    data_log DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE Reserva 
+ADD status VARCHAR(20) DEFAULT 'pendente';
+ALTER TABLE Reserva 
+MODIFY status VARCHAR(20) DEFAULT 'pendente';
+
+

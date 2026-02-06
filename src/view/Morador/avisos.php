@@ -9,7 +9,17 @@ if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Morador') {
 
 $conexao = (new Conector())->getConexao();
 
-/* BUSCAR MORADOR */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_aviso'])) {
+    $stmt = $conexao->prepare("
+        INSERT IGNORE INTO Leitura_Aviso (id_aviso, id_usuario)
+        VALUES (?, ?)
+    ");
+    $stmt->bind_param("ii", $_POST['id_aviso'], $_SESSION['id']);
+    $stmt->execute();
+    header("Location: avisos.php");
+    exit();
+}
+
 $stmt = $conexao->prepare("SELECT nome FROM Morador WHERE id_usuario = ?");
 $stmt->bind_param("i", $_SESSION['id']);
 $stmt->execute();
@@ -18,29 +28,51 @@ $morador = $stmt->get_result()->fetch_assoc();
 $nomeMorador = $morador['nome'];
 $iniciais = strtoupper(substr($nomeMorador, 0, 1));
 
-/* BUSCAR AVISOS */
-$avisos = $conexao->query("
-    SELECT id_aviso, titulo, conteudo, prioridade
-    FROM Aviso
-    ORDER BY id_aviso DESC
-")->fetch_all(MYSQLI_ASSOC);
+$stmtAvisos = $conexao->prepare("
+    SELECT 
+        a.id_aviso,
+        a.titulo,
+        a.conteudo,
+        a.prioridade,
+        la.id_usuario AS lido
+    FROM Aviso a
+    LEFT JOIN Leitura_Aviso la
+        ON la.id_aviso = a.id_aviso
+        AND la.id_usuario = ?
+    ORDER BY a.id_aviso DESC
+");
+$stmtAvisos->bind_param("i", $_SESSION['id']);
+$stmtAvisos->execute();
+$avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<title>Avisos</title>
+    <meta charset="UTF-8">
+    <title>Avisos</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f4f6f9}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif
+        }
+
+        body {
+            background: #f4f6f9
+        }
 
 
-.layout{display:flex;min-height:100vh}
+        .layout {
+            display: flex;
+            min-height: 100vh
+        }
 
         .layout {
             display: flex;
@@ -114,11 +146,14 @@ body{background:#f4f6f9}
             background: rgba(0, 0, 0, 0.25);
         }
 
-/* ===== CONTEÚDO ===== */
-.content{flex:1;padding:40px}
+        /* ===== CONTEÚDO ===== */
+        .content {
+            flex: 1;
+            padding: 40px
+        }
 
-/* HEADER */
-.dashboard-header {
+        /* HEADER */
+        .dashboard-header {
             background: rgba(255, 255, 255, 0.5);
             padding: 20px 40px;
             display: flex;
@@ -186,104 +221,140 @@ body{background:#f4f6f9}
             transform: translateY(-2px);
         }
 
-/* CARD */
-.section-card{
-    background:#fff;
-    padding:30px;
-    border-radius:14px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
+        /* CARD */
+        .section-card {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
 
-/* AVISOS */
-.aviso-item{
-    background:#f9fafb;
-    padding:20px;
-    border-radius:12px;
-    margin-bottom:15px;
-    box-shadow:0 6px 15px rgba(0,0,0,.06);
-}
-.prioridade-Baixa{border-left:5px solid #3b82f6}
-.prioridade-Média{border-left:5px solid #f59e0b}
-.prioridade-Alta{border-left:5px solid #ef4444}
 
-.aviso-item h3{
-    color:#333;
-    margin-bottom:8px;
-}
-.aviso-item p{
-    color:#555;
-    font-size:14px;
-    line-height:1.6;
-}
-.aviso-meta{
-    margin-top:10px;
-    font-size:12px;
-    color:#777;
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
-</style>
+        /* AVISOS */
+        .aviso-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, .06);
+        }
+
+        .prioridade-Baixa {
+            border-left: 5px solid #3b82f6
+        }
+
+        .prioridade-Média {
+            border-left: 5px solid #f59e0b
+        }
+
+        .prioridade-Alta {
+            border-left: 5px solid #ef4444
+        }
+
+        .aviso-item h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .aviso-item p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .aviso-meta {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #777;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-lido {
+            background: #9743d7;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px
+        }
+
+        .lido-ok {
+            color: #16a34a;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 10px;
+            display: inline-block
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="layout">
+    <div class="layout">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <h2><i class="fas fa-home"></i> Morador</h2>
-        <nav>
-            <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="agendar_visita.php"><i class="fas fa-users"></i> Visitas</a>
-            <a href="reservas.php"><i class="fas fa-calendar-check"></i> Reservas</a>
-            <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
-            <a href="avisos.php" class="active"><i class="fas fa-bullhorn"></i> Avisos</a>
-             <a href="ocorrencias.php"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
-            <a href="../../logout.php?logout=1" class="logout">
-                <i class="fas fa-sign-out-alt"></i> Sair
-            </a>
-        </nav>
-    </aside>
+        <aside class="sidebar">
+            <h2><i class="fas fa-home"></i> Morador</h2>
+            <nav>
+                <a href="index.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="agendar_visita.php"><i class="fas fa-users"></i> Visitas</a>
+                <a href="reservas.php"><i class="fas fa-calendar-check"></i> Reservas</a>
+                <a href="encomendas.php"><i class="fas fa-box"></i> Encomendas</a>
+                <a href="avisos.php" class="active"><i class="fas fa-bullhorn"></i> Avisos</a>
+                <a href="ocorrencias.php"><i class="fas fa-exclamation-triangle"></i> Ocorrências</a>
+                <a href="../../logout.php?logout=1" class="logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </nav>
+        </aside>
 
-    <!-- CONTEÚDO -->
-    <main class="content">
+        <main class="content">
 
-        <header class="dashboard-header">
-            <div class="header-left">
-                <h2><i class="fas fa-bullhorn"></i> Avisos</h2>
-                <div class="header-subtitle">Comunicados do condomínio</div>
-            </div>
-            <div class="user-info">
-                <div class="user-avatar"><?= $iniciais ?></div>
-                <strong><?= htmlspecialchars($nomeMorador) ?></strong>
-            </div>
-        </header>
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-bullhorn"></i> Avisos</h2>
+                    <div class="header-subtitle">Comunicados do condomínio</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar"><?= $iniciais ?></div>
+                    <strong><?= htmlspecialchars($nomeMorador) ?></strong>
+                </div>
+            </header>
 
-        <section class="section-card">
+            <section class="section-card">
 
-            <?php if (empty($avisos)): ?>
-                <p style="color:#777">Nenhum aviso publicado.</p>
-            <?php else: ?>
+                <?php if (empty($avisos)): ?>
+                    <p style="color:#777">Nenhum aviso publicado.</p>
+                <?php else: ?>
+                    <?php foreach ($avisos as $a): ?>
+                        <div class="aviso-item prioridade-<?= $a['prioridade'] ?>">
+                            <h3><?= htmlspecialchars($a['titulo']) ?></h3>
+                            <p><?= nl2br(htmlspecialchars($a['conteudo'])) ?></p>
 
-                <?php foreach ($avisos as $a): ?>
-                    <div class="aviso-item prioridade-<?= $a['prioridade'] ?>">
-                        <h3><?= htmlspecialchars($a['titulo']) ?></h3>
-                        <p><?= nl2br(htmlspecialchars($a['conteudo'])) ?></p>
+                            <div class="aviso-meta">
+                                <i class="fas fa-flag"></i>
+                                Prioridade: <?= $a['prioridade'] ?>
+                            </div>
 
-                        <div class="aviso-meta">
-                            <i class="fas fa-flag"></i>
-                            Prioridade: <?= $a['prioridade'] ?>
+                            <?php if ($a['lido'] === null): ?>
+                                <form method="POST">
+                                    <input type="hidden" name="id_aviso" value="<?= $a['id_aviso'] ?>">
+                                    <button type="submit" class="btn-lido">✔ Marcar como lido</button>
+                                </form>
+                            <?php else: ?>
+                                <span class="lido-ok">✔ Lido</span>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
-            <?php endif; ?>
+            </section>
 
-        </section>
-
-    </main>
-</div>
+        </main>
+    </div>
 
 </body>
+
 </html>

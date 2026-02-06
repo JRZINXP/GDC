@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../data/conector.php';
 
-if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Porteiro') {
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'Porteiro') {
     header('Location: ../../login.php');
     exit();
 }
@@ -10,7 +10,6 @@ if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Porteiro') {
 $conexao = (new Conector())->getConexao();
 $msg = '';
 
-/* REGISTRAR ENCOMENDA */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
 
     $id_morador = $_POST['id_morador'] ?? null;
@@ -78,155 +77,249 @@ $entregas = $conexao->query("
 
 <style>
 /* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif
 }
 
 /* BODY */
-body {
-    background: #f3f4f6;
-    min-height: 100vh;
+body{
+    background:linear-gradient(180deg,#f4f6f9,#eef1f6);
+    min-height:100vh;
+    color:#1f2937
+}
+/* ===== HEADER (IGUAL AO REGISTRO DE VISITAS) ===== */
+.header{
+    background:#ffffff;
+    padding:22px 36px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:5px solid #4a148c;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    margin-bottom:35px
+}
+
+.header h2{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:22px;
+    font-weight:600;
+    color:#1f2937
+}
+
+.header i{
+    color:#4a148c
+}
+
+.header-back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    font-weight:600;
+    color:#4a148c;
+    background:#ede9fe;
+    padding:10px 16px;
+    border-radius:12px;
+    transition:.3s
+}
+
+.header-back:hover{
+    background:#ddd6fe;
+    transform:translateX(-3px)
 }
 
 /* CONTAINER */
-.dashboard-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+.dashboard-container{
+    max-width:1300px;
+    margin:40px auto;
+    padding:0 24px
 }
 
 /* BOTÃO VOLTAR */
-.btn-voltar {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #e5e7eb;
-    color: #374151;
-    padding: 10px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 20px;
-    transition: 0.3s;
+.btn-voltar{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:#ffffff;
+    color:#374151;
+    padding:12px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:30px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    transition:.3s
 }
 
-.btn-voltar i {
-    color: #4a148c;
+.btn-voltar i{color:#4a148c}
+
+.btn-voltar:hover{
+    transform:translateX(-4px);
+    background:#f3f4f6
 }
 
-.btn-voltar:hover {
-    background: #d1d5db;
-    transform: translateX(-3px);
+/* ===== SECTION CARD ===== */
+.section-card{
+    background:#ffffff;
+    padding:30px;
+    border-radius:22px;
+    margin-bottom:35px;
+    box-shadow:0 14px 35px rgba(0,0,0,.1)
 }
 
-/* SECTION */
-.section-card {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 14px;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,.08);
-}
-
-/* TITLES */
+/* TÍTULOS */
 .section-card h1,
-.section-card h2 {
-    color: #1f2937;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.section-card h2{
+    font-size:22px;
+    font-weight:600;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    gap:12px
 }
 
 .section-card h1 i,
-.section-card h2 i {
-    color: #4a148c;
+.section-card h2 i{
+    color:#4a148c
 }
 
-/* FORM */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* ===== FORM ===== */
+form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px
 }
 
-select,
-input {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    font-size: 14px;
+form input,
+form select{
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #d1d5db;
+    font-size:14px
 }
 
-select:focus,
-input:focus {
-    outline: none;
-    border-color: #4a148c;
+form input:focus,
+form select:focus{
+    outline:none;
+    border-color:#4a148c;
+    box-shadow:0 0 0 3px rgba(74,20,140,.15)
 }
 
-/* BUTTON */
-.action-btn {
-    background: #4a148c;
-    color: #fff;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: 0.3s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+/* BOTÃO */
+.action-btn{
+    grid-column:1/-1;
+    background:linear-gradient(135deg,#4a148c,#311b92);
+    color:#fff;
+    padding:15px;
+    border-radius:16px;
+    border:none;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:.3s
 }
 
-.action-btn:hover {
-    background: #311b92;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(74, 20, 140, 0.45);
+.action-btn:hover{
+    filter:brightness(1.1);
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(74,20,140,.45)
 }
 
-/* LISTA */
-.encomenda-item {
-    background: #f9fafb;
-    padding: 18px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    border-left: 5px solid #4a148c;
+/* ===== LISTA GRID ===== */
+.encomendas-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:22px
+}
+
+/* ===== ENCOMENDA CARD ===== */
+.encomenda-item{
+    background:#ffffff;
+    padding:22px;
+    border-radius:20px;
+    box-shadow:0 12px 30px rgba(0,0,0,.1);
+    border-top:6px solid #d1d5db;
+    transition:.3s
+}
+
+.encomenda-item:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.14)
 }
 
 /* STATUS */
-.status-pendente {
-    color: #f59e0b;
-    font-weight: 600;
+.encomenda-item.pendente{border-color:#f59e0b}
+.encomenda-item.entregue{border-color:#10b981}
+
+.encomenda-item strong{
+    font-size:16px;
+    display:block;
+    margin-bottom:6px
 }
 
-.status-entregue {
-    color: #10b981;
-    font-weight: 600;
+.encomenda-item i{
+    color:#4a148c;
+    margin-right:6px
+}
+
+/* BADGE */
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    margin-top:12px
+}
+
+.status-pendente{
+    background:#fff7ed;
+    color:#9a3412
+}
+
+.status-entregue{
+    background:#ecfdf5;
+    color:#065f46
 }
 
 /* RESPONSIVO */
-@media (max-width: 768px) {
-    .dashboard-container {
-        padding: 0 15px;
+@media(max-width:768px){
+    form{
+        grid-template-columns:1fr
     }
 }
+
 </style>
 </head>
 
 <body>
 
-<main class="dashboard-container">
+<header class="header">
+    <h2>
+        <i class="fas fa-box"></i>
+        Registro de Encomendas
+    </h2>
 
-    <a href="index.php" class="btn-voltar">
+    <a href="index.php" class="header-back">
         <i class="fas fa-arrow-left"></i> Voltar
     </a>
+</header>
+
+<main class="dashboard-container">
+
+  
 
     <!-- REGISTRO -->
     <section class="section-card">
@@ -258,8 +351,11 @@ input:focus {
     <section class="section-card">
         <h2><i class="fas fa-list"></i> Encomendas Registradas</h2>
 
-        <?php foreach ($entregas as $e): ?>
-            <div class="encomenda-item">
+        <div class="encomendas-grid">
+
+<?php foreach ($entregas as $e): ?>
+    <div class="encomenda-item <?= $e['status'] == 0 ? 'pendente' : 'entregue' ?>">
+
                 <strong><?= htmlspecialchars($e['descricao']) ?></strong><br>
                 <i class="fas fa-user"></i> <?= htmlspecialchars($e['morador_nome']) ?> – Casa <?= $e['casa'] ?><br>
                 <i class="fas fa-clock"></i> <?= date('d/m/Y H:i', strtotime($e['data_recepcao'])) ?><br><br>
@@ -278,6 +374,7 @@ input:focus {
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
+        </div>
     </section>
 
 </main>
