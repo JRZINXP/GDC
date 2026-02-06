@@ -744,6 +744,8 @@ function editarVisita(id, data, hora, motivo){
     </script>
 
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>

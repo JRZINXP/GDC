@@ -379,5 +379,7 @@ form select:focus{
 
 </main>
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 </html>

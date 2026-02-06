@@ -384,5 +384,7 @@ function fecharResposta(){
 }
 </script>
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 </html>

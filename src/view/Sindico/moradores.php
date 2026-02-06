@@ -560,6 +560,8 @@ $iniciais = strtoupper(substr($userName, 0, 1));
         }
     </script>
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>

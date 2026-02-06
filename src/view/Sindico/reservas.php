@@ -804,6 +804,8 @@ if ($resultado) {
 
         renderCalendar();
     </script>
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>
