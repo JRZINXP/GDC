@@ -355,6 +355,8 @@ $avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
         </main>
     </div>
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>

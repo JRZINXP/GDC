@@ -166,6 +166,8 @@ $totalAvisos = $conexao->query("
             return confirm("Tem a certeza que deseja sair?");
         }
     </script>
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>

@@ -403,6 +403,8 @@ $porteiros = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         }
     </script>
 
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>

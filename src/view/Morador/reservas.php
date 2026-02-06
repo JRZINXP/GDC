@@ -619,6 +619,8 @@ ORDER BY data DESC
             return confirm("Tens certeza que queres cancelar esta reserva?");
         }
     </script>
+<script src="../../../assets/js/auto-logout.js"></script>
+
 </body>
 
 </html>
