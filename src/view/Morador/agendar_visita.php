@@ -70,13 +70,12 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             background: #f4f6f9;
             color: #1f2937;
         }
-/* ===== LAYOUT ===== */
+
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 240px;
             background: #9743d7;
@@ -86,7 +85,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             flex-direction: column;
         }
 
-        /* TÍTULO */
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 30px;
@@ -97,13 +95,11 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: #fff;
         }
 
-        /* NAV */
         .sidebar nav {
             display: flex;
             flex-direction: column;
         }
 
-        /* LINKS */
         .sidebar nav a {
             display: flex;
             align-items: center;
@@ -116,10 +112,8 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
             background: transparent;
-            /* IMPORTANTE */
         }
 
-        /* ÍCONES */
         .sidebar nav a i {
             color: #ffffff;
         }
@@ -135,25 +129,20 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ÍCONE DO ATIVO */
         .sidebar nav a.active i {
             color: #9743d7 !important;
         }
 
-        /* LOGOUT */
         .sidebar .logout {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
 
-        /* ===== CONTEÚDO ===== */
         .content {
             flex: 1;
             padding: 40px;
             background: #f4f6f9;
         }
-
-       
 
         @keyframes slideDown {
             from {
@@ -182,7 +171,7 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             }
         }
 
- .dashboard-header {
+        .dashboard-header {
             background: rgba(255, 255, 255, 0.5);
             padding: 20px 40px;
             display: flex;
@@ -248,6 +237,7 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             background: #5a6268;
             transform: translateY(-2px);
         }
+
         .container {
             background: #fff;
             padding: 30px;
@@ -255,30 +245,30 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         }
 
         .btn-primary {
-    background: linear-gradient(135deg, #a855f7, #9333ea);
-    color: #fff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2rem;
-    transition: all .25s ease;
-    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
-}
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2rem;
+            transition: all .25s ease;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+        }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(147, 51, 234, 0.45);
-}
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(147, 51, 234, 0.45);
+        }
 
-.btn-primary:active {
-    transform: scale(.97);
-}
+        .btn-primary:active {
+            transform: scale(.97);
+        }
 
 
         table {
@@ -466,10 +456,11 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             background: #fee2e2;
             color: #991b1b;
         }
-.btn-cancelar i,
-.btn-editar i {
-    margin-right: 6px;
-}
+
+        .btn-cancelar i,
+        .btn-editar i {
+            margin-right: 6px;
+        }
 
 
         @media (max-width: 600px) {
@@ -507,91 +498,89 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             <header class="dashboard-header">
                 <h2><i class="fas fa-users"></i> Minhas Visitas</h2>
                 <div class="user-info">
-                   <div class="user-avatar"><?= $iniciais ?></div>
+                    <div class="user-avatar"><?= $iniciais ?></div>
 
                     <strong><?= htmlspecialchars($nomeMorador) ?></strong>
                 </div>
             </header>
             <button class="btn-primary" onclick="abrirModal()">
-    <i class="fas fa-plus"></i> Agendar visita
-</button>
-
+                <i class="fas fa-plus"></i> Agendar visita
+            </button>
 
             <?php if (empty($visitas)): ?>
-    <p style="margin-top:25px;color:#6b7280">Nenhuma visita agendada.</p>
-<?php else: ?>
-    <?php if(isset($_SESSION['erro'])): ?>
-<div style="background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin-bottom:20px">
-    <?= $_SESSION['erro']; unset($_SESSION['erro']); ?>
-</div>
-<?php endif; ?>
+                <p style="margin-top:25px;color:#6b7280">Nenhuma visita agendada.</p>
+            <?php else: ?>
+                <?php if (isset($_SESSION['erro'])): ?>
+                    <div style="background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin-bottom:20px">
+                        <?= $_SESSION['erro'];
+                        unset($_SESSION['erro']); ?>
+                    </div>
+                <?php endif; ?>
 
-    
+                <div class="cards">
 
-<div class="cards">
-    
-<?php foreach ($visitas as $v):
+                    <?php foreach ($visitas as $v):
 
-    if (!$v['entrada']) {
-    $statusTxt = 'Agendada';
-    $statusCls = 'status-agendada';
-    $podeAlterar = true;
-} elseif (!$v['saida']) {
-    $statusTxt = 'Em visita';
-    $statusCls = 'status-em';
-    $podeAlterar = false;
-} else {
-    $statusTxt = 'Concluída';
-    $statusCls = 'status-done';
-    $podeAlterar = false;
-}
+                        if (!$v['entrada']) {
+                            $statusTxt = 'Agendada';
+                            $statusCls = 'status-agendada';
+                            $podeAlterar = true;
+                        } elseif (!$v['saida']) {
+                            $statusTxt = 'Em visita';
+                            $statusCls = 'status-em';
+                            $podeAlterar = false;
+                        } else {
+                            $statusTxt = 'Concluída';
+                            $statusCls = 'status-done';
+                            $podeAlterar = false;
+                        }
 
-?>
+                    ?>
 
-<div class="card">
-    <span class="status <?= $statusCls ?>"><?= $statusTxt ?></span>
+                        <div class="card">
+                            <span class="status <?= $statusCls ?>"><?= $statusTxt ?></span>
 
-    <h4><?= htmlspecialchars($v['visitante']) ?></h4>
+                            <h4><?= htmlspecialchars($v['visitante']) ?></h4>
 
-    <div class="meta">
-        <?= date('d/m/Y', strtotime($v['data'])) ?> às <?= date('H:i', strtotime($v['hora'])) ?>
-    </div>
+                            <div class="meta">
+                                <?= date('d/m/Y', strtotime($v['data'])) ?> às <?= date('H:i', strtotime($v['hora'])) ?>
+                            </div>
 
-    <div class="motivo">
-        <?= htmlspecialchars($v['motivo']) ?>
-    </div>
+                            <div class="motivo">
+                                <?= htmlspecialchars($v['motivo']) ?>
+                            </div>
 
-    <a href="../../<?= $v['documento_imagem'] ?>" target="_blank">📄 Ver documento</a>
+                            <a href="../../<?= $v['documento_imagem'] ?>" target="_blank">📄 Ver documento</a>
 
-    <?php if ($podeAlterar): ?>
-    <div class="acoes">
-        <form method="post" action="../../controller/Morador/visitas.php">
-            <input type="hidden" name="acao" value="cancelar">
-            <input type="hidden" name="id_agendamento" value="<?= $v['id_agendamento'] ?>">
-            <button class="btn-cancelar" type="submit">
-    <i class="fas fa-times-circle"></i> Cancelar
-</button>
+                            <?php if ($podeAlterar): ?>
+                                <div class="acoes">
+                                    <form method="post" action="../../controller/Morador/visitas.php">
+                                        <input type="hidden" name="acao" value="cancelar">
+                                        <input type="hidden" name="id_agendamento" value="<?= $v['id_agendamento'] ?>">
+                                        <button class="btn-cancelar" type="submit">
+                                            <i class="fas fa-times-circle"></i> Cancelar
+                                        </button>
 
-        </form>
-<button class="btn-editar"
-onclick="editarVisita(
+                                    </form>
+                                    <button class="btn-editar"
+                                        onclick="editarVisita(
 <?= $v['id_agendamento'] ?>,
 '<?= htmlspecialchars($v['visitante'], ENT_QUOTES) ?>',
 '<?= $v['data'] ?>',
 '<?= $v['hora'] ?>',
 '<?= htmlspecialchars($v['motivo'], ENT_QUOTES) ?>'
 )">
-    <i class="fas fa-pen"></i> Editar
-</button>
+                                        <i class="fas fa-pen"></i> Editar
+                                    </button>
 
-    </div>
-    <?php endif; ?>
-</div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
-<?php endforeach; ?>
-</div>
+                    <?php endforeach; ?>
+                </div>
 
-<?php endif; ?>
+            <?php endif; ?>
 
         </main>
     </div>
@@ -600,7 +589,7 @@ onclick="editarVisita(
         <div class="modal">
             <h3>Agendar Visita</h3>
             <form action="../../controller/Morador/visitas.php" method="POST" enctype="multipart/form-data">
-                
+
                 <div class="form-group">
                     <label>Nome do Visitante</label>
                     <input type="text" name="nome_visitante" required>
@@ -706,45 +695,40 @@ onclick="editarVisita(
             }
         });
 
-function editarVisita(id, data, hora, motivo){
+        function editarVisita(id, data, hora, motivo) {
 
-    abrirModal();
+            abrirModal();
 
-    document.querySelector(".modal h3").innerText = "Editar Visita";
+            document.querySelector(".modal h3").innerText = "Editar Visita";
 
-    // criar campo hidden id
-    let idInput = document.getElementById("id_edit");
-    if(!idInput){
-        idInput = document.createElement("input");
-        idInput.type = "hidden";
-        idInput.name = "id_agendamento";
-        idInput.id = "id_edit";
-        document.querySelector(".modal form").appendChild(idInput);
-    }
-    idInput.value = id;
+            let idInput = document.getElementById("id_edit");
+            if (!idInput) {
+                idInput = document.createElement("input");
+                idInput.type = "hidden";
+                idInput.name = "id_agendamento";
+                idInput.id = "id_edit";
+                document.querySelector(".modal form").appendChild(idInput);
+            }
+            idInput.value = id;
 
-    // criar campo ação
-    let acaoInput = document.getElementById("acao_edit");
-    if(!acaoInput){
-        acaoInput = document.createElement("input");
-        acaoInput.type = "hidden";
-        acaoInput.name = "acao";
-        acaoInput.id = "acao_edit";
-        document.querySelector(".modal form").appendChild(acaoInput);
-    }
-    acaoInput.value = "editar";
+            let acaoInput = document.getElementById("acao_edit");
+            if (!acaoInput) {
+                acaoInput = document.createElement("input");
+                acaoInput.type = "hidden";
+                acaoInput.name = "acao";
+                acaoInput.id = "acao_edit";
+                document.querySelector(".modal form").appendChild(acaoInput);
+            }
+            acaoInput.value = "editar";
 
-    // preencher campos
-    document.querySelector("input[name=data]").value = data;
-    document.querySelector("input[name=hora]").value = hora;
-    document.querySelector("select[name=motivo]").value = "";
-}
-
-
+            document.querySelector("input[name=data]").value = data;
+            document.querySelector("input[name=hora]").value = hora;
+            document.querySelector("select[name=motivo]").value = "";
+        }
     </script>
 
 
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 

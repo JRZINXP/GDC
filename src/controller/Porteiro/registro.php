@@ -4,7 +4,6 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../data/conector.php';
 
-/* PROTEÇÃO */
 if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Porteiro') {
     echo json_encode([
         'success' => false,
@@ -36,7 +35,6 @@ $conexao = (new Conector())->getConexao();
 
 try {
 
-    /* VERIFICAR AGENDAMENTO */
     $stmt = $conexao->prepare("
         SELECT id_agendamento
         FROM Agendamento
@@ -49,7 +47,6 @@ try {
         throw new Exception('Agendamento não encontrado');
     }
 
-    /* BUSCAR REGISTRO */
     $stmt = $conexao->prepare("
         SELECT id_registro, entrada, saida
         FROM Registro
@@ -59,7 +56,6 @@ try {
     $stmt->execute();
     $registro = $stmt->get_result()->fetch_assoc();
 
-    /* ===== REGISTRAR ENTRADA ===== */
     if ($acao === 'entrada') {
 
         if ($registro) {
@@ -80,7 +76,6 @@ try {
         exit;
     }
 
-    /* ===== REGISTRAR SAÍDA ===== */
     if ($acao === 'saida') {
 
         if (!$registro || !$registro['entrada']) {

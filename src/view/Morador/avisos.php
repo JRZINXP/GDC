@@ -117,17 +117,14 @@ $avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
 
         }
 
-        /* ÍCONES */
         .sidebar nav a i {
             color: #ffffff;
         }
 
-        /* HOVER (somente quando NÃO ativo) */
         .sidebar nav a:hover:not(.active) {
             background: rgba(255, 255, 255, 0.18);
         }
 
-        /* ===== ITEM ATIVO — BRANCO REAL ===== */
         .sidebar nav a.active {
             background: #ffffff !important;
             color: #9743d7 !important;
@@ -135,24 +132,20 @@ $avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ÍCONE DO ATIVO */
         .sidebar nav a.active i {
             color: #9743d7 !important;
         }
 
-        /* LOGOUT */
         .sidebar .logout {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
 
-        /* ===== CONTEÚDO ===== */
         .content {
             flex: 1;
             padding: 40px
         }
 
-        /* HEADER */
         .dashboard-header {
             background: rgba(255, 255, 255, 0.5);
             padding: 20px 40px;
@@ -221,7 +214,6 @@ $avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
             transform: translateY(-2px);
         }
 
-        /* CARD */
         .section-card {
             background: transparent;
             padding: 0;
@@ -229,8 +221,6 @@ $avisos = $stmtAvisos->get_result()->fetch_all(MYSQLI_ASSOC);
             box-shadow: none;
         }
 
-
-        /* AVISOS */
         .aviso-item {
             background: #f9fafb;
             padding: 20px;

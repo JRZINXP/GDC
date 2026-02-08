@@ -1,6 +1,5 @@
 <!-- src/view/Porteiro/sidebar_porteiro.php -->
 <?php
-// Verifica se estamos na página index (não mostra sidebar no index)
 $current_page = basename($_SERVER['PHP_SELF']);
 $is_index = ($current_page == 'index.php');
 ?>

@@ -10,7 +10,6 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['t
 
 $conexao = (new Conector())->getConexao();
 
-/* Buscar morador */
 $stmt = $conexao->prepare("SELECT id_morador, nome FROM Morador WHERE id_usuario = ?");
 $stmt->bind_param("i", $_SESSION['id']);
 $stmt->execute();
@@ -74,7 +73,6 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: var(--text);
         }
 
-        /* HEADER */
         .header {
             background: var(--card);
             padding: 20px 35px;
@@ -113,14 +111,12 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-weight: 600;
         }
 
-        /* CONTAINER */
         .container {
             max-width: 1200px;
             margin: 35px auto;
             padding: 0 20px;
         }
 
-        /* INFO */
         .info-box {
             background: #eef2ff;
             color: #3730a3;
@@ -132,14 +128,12 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             align-items: center;
         }
 
-        /* GRID */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
 
-        /* CARD */
         .card {
             background: var(--card);
             border-radius: 16px;
@@ -191,7 +185,6 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: #065f46;
         }
 
-        /* EMPTY */
         .empty {
             grid-column: 1/-1;
             text-align: center;
@@ -208,13 +201,11 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: var(--primary);
         }
 
-        /* ===== LAYOUT ===== */
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 240px;
             background: #9743d7;
@@ -224,7 +215,6 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             flex-direction: column;
         }
 
-        /* TÍTULO */
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 30px;
@@ -234,13 +224,11 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-weight: 600;
         }
 
-        /* NAV */
         .sidebar nav {
             display: flex;
             flex-direction: column;
         }
 
-        /* LINKS */
         .sidebar nav a {
             display: flex;
             align-items: center;
@@ -253,20 +241,17 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
             background: transparent;
-            /* IMPORTANTE */
+
         }
 
-        /* ÍCONES */
         .sidebar nav a i {
             color: #ffffff;
         }
 
-        /* HOVER (somente quando NÃO ativo) */
         .sidebar nav a:hover:not(.active) {
             background: rgba(255, 255, 255, 0.18);
         }
 
-        /* ===== ITEM ATIVO — BRANCO REAL ===== */
         .sidebar nav a.active {
             background: #ffffff !important;
             color: #9743d7 !important;
@@ -274,94 +259,85 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ÍCONE DO ATIVO */
         .sidebar nav a.active i {
             color: #9743d7 !important;
         }
 
-        /* LOGOUT */
         .sidebar .logout {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
 
-        /* ===== CONTEÚDO ===== */
         .content {
             flex: 1;
             padding: 40px;
             background: #f4f6f9;
         }
-        /* ===== HEADER ===== */
-.dashboard-header {
-    background: #ffffff;
-    padding: 20px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 3px solid #9743d7;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    margin-bottom: 30px;
-}
 
-/* ESQUERDA */
-.header-left h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #1f2937;
-}
+        .dashboard-header {
+            background: #ffffff;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #9743d7;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+        }
 
-.header-left h2 i {
-    color: #9743d7;
-    font-size: 22px;
-}
+        .header-left h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1f2937;
+        }
 
-.header-subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    margin-top: 4px;
-}
+        .header-left h2 i {
+            color: #9743d7;
+            font-size: 22px;
+        }
 
-/* DIREITA */
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #1f2937;
-    font-weight: 500;
-}
+        .header-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
 
-/* AVATAR */
-.user-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #9743d7;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
-}
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1f2937;
+            font-weight: 500;
+        }
 
-/* RESPONSIVO */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #9743d7;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
 
-    .user-info {
-        align-self: flex-end;
-    }
-}
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
 
+            .user-info {
+                align-self: flex-end;
+            }
+        }
 
-        /* RESPONSIVO */
         @media(max-width:768px) {
             .header {
                 flex-direction: column;
@@ -375,7 +351,6 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
     <div class="layout">
 
-        <!-- SIDEBAR -->
         <aside class="sidebar">
             <h2>
                 <i class="fas fa-home"></i>
@@ -407,19 +382,16 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     <i class="fas fa-exclamation-triangle"></i> Ocorrências
                 </a>
 
-<a href="../../logout.php?logout=1" 
-   class="logout" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
+                <a href="../../logout.php?logout=1"
+                    class="logout"
+                    onclick="return confirmarSaida();">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
 
             </nav>
         </aside>
-
-        <!-- CONTEÚDO -->
         <main class="content">
 
-            <!-- HEADER -->
             <header class="dashboard-header">
                 <div class="header-left">
                     <h2>
@@ -446,70 +418,67 @@ $encomendas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 </div>
                 <?php if (empty($encomendas)): ?>
 
-    <div class="empty">
-        <i class="fas fa-box-open"></i>
-        <h3>Nenhuma encomenda registrada</h3>
-        <p>Quando uma encomenda chegar, ela aparecerá aqui.</p>
-    </div>
+                    <div class="empty">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Nenhuma encomenda registrada</h3>
+                        <p>Quando uma encomenda chegar, ela aparecerá aqui.</p>
+                    </div>
 
-<?php else: ?>
+                <?php else: ?>
 
-<table style="width:100%;border-collapse:collapse;background:#fff">
-    <thead>
-        <tr style="background:#f3f4f6">
-            <th style="padding:14px;text-align:left">Descrição</th>
-            <th>Recebida em</th>
-            <th>Entregue em</th>
-            <th>Status</th>
-        </tr>
-    </thead>
+                    <table style="width:100%;border-collapse:collapse;background:#fff">
+                        <thead>
+                            <tr style="background:#f3f4f6">
+                                <th style="padding:14px;text-align:left">Descrição</th>
+                                <th>Recebida em</th>
+                                <th>Entregue em</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
 
-    <tbody>
-    <?php foreach ($encomendas as $e):
-        $status = $e['status'] == 1 ? 'entregue' : 'pendente';
-    ?>
-        <tr style="border-bottom:1px solid #e5e7eb">
-            <td style="padding:14px">
-                <?= htmlspecialchars($e['descricao']) ?>
-            </td>
+                        <tbody>
+                            <?php foreach ($encomendas as $e):
+                                $status = $e['status'] == 1 ? 'entregue' : 'pendente';
+                            ?>
+                                <tr style="border-bottom:1px solid #e5e7eb">
+                                    <td style="padding:14px">
+                                        <?= htmlspecialchars($e['descricao']) ?>
+                                    </td>
 
-            <td>
-                <?= date('d/m/Y H:i', strtotime($e['data_recepcao'])) ?>
-            </td>
+                                    <td>
+                                        <?= date('d/m/Y H:i', strtotime($e['data_recepcao'])) ?>
+                                    </td>
 
-            <td>
-                <?= !empty($e['data_entrega'])
-                    ? date('d/m/Y H:i', strtotime($e['data_entrega']))
-                    : '--'
-                ?>
-            </td>
+                                    <td>
+                                        <?= !empty($e['data_entrega'])
+                                            ? date('d/m/Y H:i', strtotime($e['data_entrega']))
+                                            : '--'
+                                        ?>
+                                    </td>
 
-            <td>
-                <span class="status <?= $status ?>">
-                    <i class="fas <?= $status === 'entregue' ? 'fa-check-circle' : 'fa-clock' ?>"></i>
-                    <?= $status === 'entregue'
-                        ? 'Entregue ao morador'
-                        : 'Aguardando retirada'
-                    ?>
-                </span>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
-
-<?php endif; ?>
-
+                                    <td>
+                                        <span class="status <?= $status ?>">
+                                            <i class="fas <?= $status === 'entregue' ? 'fa-check-circle' : 'fa-clock' ?>"></i>
+                                            <?= $status === 'entregue'
+                                                ? 'Entregue ao morador'
+                                                : 'Aguardando retirada'
+                                            ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </div>
-
         </main>
     </div>
-<script>
-    function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
-</script>
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script>
+        function confirmarSaida() {
+            return confirm("Tem a certeza que deseja sair?");
+        }
+    </script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 

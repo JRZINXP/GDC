@@ -485,12 +485,10 @@ date_default_timezone_set('Africa/Maputo');
                         <div class="reservas-list">
                             <?php
                             $stmt = $conexao->prepare("
-SELECT id_reserva, area_comum, data, hora_inicio, hora_fim, status
-FROM Reserva
-WHERE id_morador = ?
-ORDER BY data DESC
-
-");
+                                SELECT id_reserva, area_comum, data, hora_inicio, hora_fim, status
+                                FROM Reserva
+                                WHERE id_morador = ?
+                                ORDER BY data DESC");
                             $stmt->bind_param("i", $id_morador);
                             $stmt->execute();
                             $res = $stmt->get_result();
@@ -498,83 +496,80 @@ ORDER BY data DESC
                             if ($res->num_rows > 0):
                                 while ($r = $res->fetch_assoc()):
 
-    $status = $r['status'] ?? 'pendente';
+                                    $status = $r['status'] ?? 'pendente';
 
-    if ($status == 'pendente') {
-        $cor = '#f59e0b';
-        $txt = 'Pendente de aprovação';
-    } elseif ($status == 'aprovada') {
-        $cor = '#10b981';
-        $txt = 'Aprovada';
-    } elseif ($status == 'cancelada') {
-        $cor = '#6b7280';
-        $txt = 'Cancelada';
-    } else {
-        $cor = '#ef4444';
-        $txt = 'Rejeitada';
-    }
-?>
+                                    if ($status == 'pendente') {
+                                        $cor = '#f59e0b';
+                                        $txt = 'Pendente de aprovação';
+                                    } elseif ($status == 'aprovada') {
+                                        $cor = '#10b981';
+                                        $txt = 'Aprovada';
+                                    } elseif ($status == 'cancelada') {
+                                        $cor = '#6b7280';
+                                        $txt = 'Cancelada';
+                                    } else {
+                                        $cor = '#ef4444';
+                                        $txt = 'Rejeitada';
+                                    }
+                            ?>
 
-<div class="reserva-item">
+                                    <div class="reserva-item">
 
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h4><?= htmlspecialchars($r['area_comum']) ?></h4>
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <h4><?= htmlspecialchars($r['area_comum']) ?></h4>
 
-        <span style="
-            font-size:12px;
-            font-weight:600;
-            color:#fff;
-            background:<?= $cor ?>;
-            padding:4px 10px;
-            border-radius:999px">
-            <?= $txt ?>
-        </span>
-    </div>
+                                            <span style="
+                                                    font-size:12px;
+                                                    font-weight:600;
+                                                    color:#fff;
+                                                    background:<?= $cor ?>;
+                                                    padding:4px 10px;
+                                                    border-radius:999px">
+                                                <?= $txt ?>
+                                            </span>
+                                        </div>
 
-    <div class="reserva-info">
-        <i class="fas fa-calendar-alt"></i>
-        <?= date('d/m/Y', strtotime($r['data'])) ?>
-    </div>
+                                        <div class="reserva-info">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <?= date('d/m/Y', strtotime($r['data'])) ?>
+                                        </div>
 
-    <div class="reserva-info">
-        <i class="fas fa-clock"></i>
-        <?= date('H:i', strtotime($r['hora_inicio'])) ?>
-        às
-        <?= date('H:i', strtotime($r['hora_fim'])) ?>
-    </div>
+                                        <div class="reserva-info">
+                                            <i class="fas fa-clock"></i>
+                                            <?= date('H:i', strtotime($r['hora_inicio'])) ?>
+                                            às
+                                            <?= date('H:i', strtotime($r['hora_fim'])) ?>
+                                        </div>
 
-    <?php if ($status == 'aprovada'): ?>
-        <form method="POST" onsubmit="return confirmarCancelamento();">
-            <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
-            <button name="cancelar_reserva"
-                style="
-                margin-top:10px;
-                background:#ef4444;
-                color:white;
-                border:none;
-                padding:6px 12px;
-                border-radius:6px;
-                cursor:pointer;">
-                <i class="fas fa-times"></i> Cancelar reserva
-            </button>
-        </form>
-    <?php endif; ?>
+                                        <?php if ($status == 'aprovada'): ?>
+                                            <form method="POST" onsubmit="return confirmarCancelamento();">
+                                                <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
+                                                <button name="cancelar_reserva"
+                                                    style="
+                                                        margin-top:10px;
+                                                        background:#ef4444;
+                                                        color:white;
+                                                        border:none;
+                                                        padding:6px 12px;
+                                                        border-radius:6px;
+                                                        cursor:pointer;">
+                                                    <i class="fas fa-times"></i> Cancelar reserva
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
 
-</div>
+                                    </div>
 
-<?php endwhile; 
+                            <?php endwhile;
 
                             else:
                                 echo "<p style='color:#777'>Nenhuma reserva encontrada</p>";
                             endif;
                             ?>
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </main>
     </div>
 
@@ -619,7 +614,7 @@ ORDER BY data DESC
             return confirm("Tens certeza que queres cancelar esta reserva?");
         }
     </script>
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 

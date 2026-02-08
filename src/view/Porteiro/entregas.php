@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     }
 }
 
-/* MARCAR COMO ENTREGUE */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entregar'])) {
 
     $id_entrega = $_POST['id_entrega'];
@@ -47,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entregar'])) {
     $msg = "Encomenda entregue ao morador.";
 }
 
-/* MORADORES */
 $moradores = $conexao->query("
     SELECT m.id_morador, m.nome, u.numero
     FROM Morador m
@@ -55,7 +53,6 @@ $moradores = $conexao->query("
     ORDER BY m.nome
 ")->fetch_all(MYSQLI_ASSOC);
 
-/* ENCOMENDAS */
 $entregas = $conexao->query("
     SELECT e.id_entrega, e.descricao, e.data_recepcao, e.status,
            m.nome AS morador_nome, u.numero AS casa
@@ -68,318 +65,308 @@ $entregas = $conexao->query("
 
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<title>Registrar Encomendas</title>
+    <meta charset="UTF-8">
+    <title>Registrar Encomendas</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-/* RESET */
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif
+        }
 
-/* BODY */
-body{
-    background:linear-gradient(180deg,#f4f6f9,#eef1f6);
-    min-height:100vh;
-    color:#1f2937
-}
-/* ===== HEADER (IGUAL AO REGISTRO DE VISITAS) ===== */
-.header{
-    background:#ffffff;
-    padding:22px 36px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:5px solid #4a148c;
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
-    margin-bottom:35px
-}
+        body {
+            background: linear-gradient(180deg, #f4f6f9, #eef1f6);
+            min-height: 100vh;
+            color: #1f2937
+        }
 
-.header h2{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-size:22px;
-    font-weight:600;
-    color:#1f2937
-}
+        .header {
+            background: #ffffff;
+            padding: 22px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid #4a148c;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+            margin-bottom: 35px
+        }
 
-.header i{
-    color:#4a148c
-}
+        .header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1f2937
+        }
 
-.header-back{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    text-decoration:none;
-    font-weight:600;
-    color:#4a148c;
-    background:#ede9fe;
-    padding:10px 16px;
-    border-radius:12px;
-    transition:.3s
-}
+        .header i {
+            color: #4a148c
+        }
 
-.header-back:hover{
-    background:#ddd6fe;
-    transform:translateX(-3px)
-}
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #4a148c;
+            background: #ede9fe;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transition: .3s
+        }
 
-/* CONTAINER */
-.dashboard-container{
-    max-width:1300px;
-    margin:40px auto;
-    padding:0 24px
-}
+        .header-back:hover {
+            background: #ddd6fe;
+            transform: translateX(-3px)
+        }
 
-/* BOTÃO VOLTAR */
-.btn-voltar{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    background:#ffffff;
-    color:#374151;
-    padding:12px 18px;
-    border-radius:12px;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:600;
-    margin-bottom:30px;
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
-    transition:.3s
-}
+        .dashboard-container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 24px
+        }
 
-.btn-voltar i{color:#4a148c}
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #374151;
+            padding: 12px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+            transition: .3s
+        }
 
-.btn-voltar:hover{
-    transform:translateX(-4px);
-    background:#f3f4f6
-}
+        .btn-voltar i {
+            color: #4a148c
+        }
 
-/* ===== SECTION CARD ===== */
-.section-card{
-    background:#ffffff;
-    padding:30px;
-    border-radius:22px;
-    margin-bottom:35px;
-    box-shadow:0 14px 35px rgba(0,0,0,.1)
-}
+        .btn-voltar:hover {
+            transform: translateX(-4px);
+            background: #f3f4f6
+        }
 
-/* TÍTULOS */
-.section-card h1,
-.section-card h2{
-    font-size:22px;
-    font-weight:600;
-    margin-bottom:22px;
-    display:flex;
-    align-items:center;
-    gap:12px
-}
+        .section-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 22px;
+            margin-bottom: 35px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .1)
+        }
 
-.section-card h1 i,
-.section-card h2 i{
-    color:#4a148c
-}
+        .section-card h1,
+        .section-card h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
 
-/* ===== FORM ===== */
-form{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px
-}
+        .section-card h1 i,
+        .section-card h2 i {
+            color: #4a148c
+        }
 
-form input,
-form select{
-    padding:14px;
-    border-radius:12px;
-    border:1px solid #d1d5db;
-    font-size:14px
-}
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
 
-form input:focus,
-form select:focus{
-    outline:none;
-    border-color:#4a148c;
-    box-shadow:0 0 0 3px rgba(74,20,140,.15)
-}
+        form input,
+        form select {
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            font-size: 14px
+        }
 
-/* BOTÃO */
-.action-btn{
-    grid-column:1/-1;
-    background:linear-gradient(135deg,#4a148c,#311b92);
-    color:#fff;
-    padding:15px;
-    border-radius:16px;
-    border:none;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    transition:.3s
-}
+        form input:focus,
+        form select:focus {
+            outline: none;
+            border-color: #4a148c;
+            box-shadow: 0 0 0 3px rgba(74, 20, 140, .15)
+        }
 
-.action-btn:hover{
-    filter:brightness(1.1);
-    transform:translateY(-3px);
-    box-shadow:0 10px 25px rgba(74,20,140,.45)
-}
+        .action-btn {
+            grid-column: 1/-1;
+            background: linear-gradient(135deg, #4a148c, #311b92);
+            color: #fff;
+            padding: 15px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: .3s
+        }
 
-/* ===== LISTA GRID ===== */
-.encomendas-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:22px
-}
+        .action-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(74, 20, 140, .45)
+        }
 
-/* ===== ENCOMENDA CARD ===== */
-.encomenda-item{
-    background:#ffffff;
-    padding:22px;
-    border-radius:20px;
-    box-shadow:0 12px 30px rgba(0,0,0,.1);
-    border-top:6px solid #d1d5db;
-    transition:.3s
-}
+        .encomendas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px
+        }
 
-.encomenda-item:hover{
-    transform:translateY(-6px);
-    box-shadow:0 18px 40px rgba(0,0,0,.14)
-}
+        .encomenda-item {
+            background: #ffffff;
+            padding: 22px;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .1);
+            border-top: 6px solid #d1d5db;
+            transition: .3s
+        }
 
-/* STATUS */
-.encomenda-item.pendente{border-color:#f59e0b}
-.encomenda-item.entregue{border-color:#10b981}
+        .encomenda-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .14)
+        }
 
-.encomenda-item strong{
-    font-size:16px;
-    display:block;
-    margin-bottom:6px
-}
+        .encomenda-item.pendente {
+            border-color: #f59e0b
+        }
 
-.encomenda-item i{
-    color:#4a148c;
-    margin-right:6px
-}
+        .encomenda-item.entregue {
+            border-color: #10b981
+        }
 
-/* BADGE */
-.status-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:6px 14px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:600;
-    margin-top:12px
-}
+        .encomenda-item strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 6px
+        }
 
-.status-pendente{
-    background:#fff7ed;
-    color:#9a3412
-}
+        .encomenda-item i {
+            color: #4a148c;
+            margin-right: 6px
+        }
 
-.status-entregue{
-    background:#ecfdf5;
-    color:#065f46
-}
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px
+        }
 
-/* RESPONSIVO */
-@media(max-width:768px){
-    form{
-        grid-template-columns:1fr
-    }
-}
+        .status-pendente {
+            background: #fff7ed;
+            color: #9a3412
+        }
 
-</style>
+        .status-entregue {
+            background: #ecfdf5;
+            color: #065f46
+        }
+
+        @media(max-width:768px) {
+            form {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="header">
-    <h2>
-        <i class="fas fa-box"></i>
-        Registro de Encomendas
-    </h2>
+    <header class="header">
+        <h2>
+            <i class="fas fa-box"></i>
+            Registro de Encomendas
+        </h2>
 
-    <a href="index.php" class="header-back">
-        <i class="fas fa-arrow-left"></i> Voltar
-    </a>
-</header>
+        <a href="index.php" class="header-back">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </header>
 
-<main class="dashboard-container">
+    <main class="dashboard-container">
 
-  
+        <section class="section-card">
+            <h1><i class="fas fa-box"></i> Registrar Encomenda</h1>
 
-    <!-- REGISTRO -->
-    <section class="section-card">
-        <h1><i class="fas fa-box"></i> Registrar Encomenda</h1>
+            <?php if ($msg): ?>
+                <p><strong><?= htmlspecialchars($msg) ?></strong></p>
+            <?php endif; ?>
 
-        <?php if ($msg): ?>
-            <p><strong><?= htmlspecialchars($msg) ?></strong></p>
-        <?php endif; ?>
+            <form method="POST">
+                <select name="id_morador" required>
+                    <option value="">Selecione o morador</option>
+                    <?php foreach ($moradores as $m): ?>
+                        <option value="<?= $m['id_morador'] ?>">
+                            <?= htmlspecialchars($m['nome']) ?> – Casa <?= $m['numero'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-        <form method="POST">
-            <select name="id_morador" required>
-                <option value="">Selecione o morador</option>
-                <?php foreach ($moradores as $m): ?>
-                    <option value="<?= $m['id_morador'] ?>">
-                        <?= htmlspecialchars($m['nome']) ?> – Casa <?= $m['numero'] ?>
-                    </option>
+                <input type="text" name="descricao" placeholder="Descrição da encomenda" required>
+
+                <button type="submit" name="registrar" class="action-btn">
+                    <i class="fas fa-save"></i> Registrar Encomenda
+                </button>
+            </form>
+        </section>
+
+        <section class="section-card">
+            <h2><i class="fas fa-list"></i> Encomendas Registradas</h2>
+
+            <div class="encomendas-grid">
+
+                <?php foreach ($entregas as $e): ?>
+                    <div class="encomenda-item <?= $e['status'] == 0 ? 'pendente' : 'entregue' ?>">
+
+                        <strong><?= htmlspecialchars($e['descricao']) ?></strong><br>
+                        <i class="fas fa-user"></i> <?= htmlspecialchars($e['morador_nome']) ?> – Casa <?= $e['casa'] ?><br>
+                        <i class="fas fa-clock"></i> <?= date('d/m/Y H:i', strtotime($e['data_recepcao'])) ?><br><br>
+
+                        <?php if ($e['status'] == 0): ?>
+                            <form method="POST">
+                                <input type="hidden" name="id_entrega" value="<?= $e['id_entrega'] ?>">
+                                <button type="submit" name="entregar" class="action-btn">
+                                    <i class="fas fa-check-circle"></i> Marcar como entregue
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <span class="status-entregue">
+                                <i class="fas fa-check"></i> Entregue
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
-            </select>
-
-            <input type="text" name="descricao" placeholder="Descrição da encomenda" required>
-
-            <button type="submit" name="registrar" class="action-btn">
-                <i class="fas fa-save"></i> Registrar Encomenda
-            </button>
-        </form>
-    </section>
-
-    <!-- LISTA -->
-    <section class="section-card">
-        <h2><i class="fas fa-list"></i> Encomendas Registradas</h2>
-
-        <div class="encomendas-grid">
-
-<?php foreach ($entregas as $e): ?>
-    <div class="encomenda-item <?= $e['status'] == 0 ? 'pendente' : 'entregue' ?>">
-
-                <strong><?= htmlspecialchars($e['descricao']) ?></strong><br>
-                <i class="fas fa-user"></i> <?= htmlspecialchars($e['morador_nome']) ?> – Casa <?= $e['casa'] ?><br>
-                <i class="fas fa-clock"></i> <?= date('d/m/Y H:i', strtotime($e['data_recepcao'])) ?><br><br>
-
-                <?php if ($e['status'] == 0): ?>
-                    <form method="POST">
-                        <input type="hidden" name="id_entrega" value="<?= $e['id_entrega'] ?>">
-                        <button type="submit" name="entregar" class="action-btn">
-                            <i class="fas fa-check-circle"></i> Marcar como entregue
-                        </button>
-                    </form>
-                <?php else: ?>
-                    <span class="status-entregue">
-                        <i class="fas fa-check"></i> Entregue
-                    </span>
-                <?php endif; ?>
             </div>
-        <?php endforeach; ?>
-        </div>
-    </section>
+        </section>
 
-</main>
+    </main>
 
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 </html>

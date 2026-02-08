@@ -1,25 +1,19 @@
 <?php
 session_start();
 
-// Incluir a classe de conexão
 require_once '../../data/conector.php';
-
-// Verificar se a requisição é POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../../view/Sindico/novoPorteiro.php?erro=Método não permitido');
     exit;
 }
 
-// Obter dados do formulário
 $email = trim($_POST['email'] ?? '');
 $senha = $_POST['senha'] ?? '';
 $confirmar_senha = $_POST['confirmar_senha'] ?? '';
 $nome = trim($_POST['nome'] ?? '');
 
-// Array de erros
 $erros = [];
 
-// Validações
 if (empty($email)) {
     $erros[] = 'Email é obrigatório';
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -44,7 +38,6 @@ if (empty($nome)) {
     $erros[] = 'Nome é obrigatório';
 }
 
-// Se houver erros, redirecionar com mensagens
 if (!empty($erros)) {
     $erro_msg = urlencode(implode(', ', $erros));
     header("Location: ../../view/Sindico/novoPorteiro.php?erro=$erro_msg");
@@ -52,11 +45,10 @@ if (!empty($erros)) {
 }
 
 try {
-    // Conectar ao banco de dados
+
     $conector = new Conector();
     $conexao = $conector->getConexao();
 
-    // Verificar se o email já existe
     $stmt = $conexao->prepare("SELECT id_usuario FROM Usuario WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -69,35 +61,29 @@ try {
     }
     $stmt->close();
 
-    // Hash da senha
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-    // Iniciar transação
     $conexao->begin_transaction();
 
-    // 1. Inserir dados na tabela Usuario com tipo 'Porteiro'
     $stmt = $conexao->prepare("INSERT INTO Usuario (email, senha_hash, tipo) VALUES (?, ?, 'Porteiro')");
     $stmt->bind_param("ss", $email, $senha_hash);
     $stmt->execute();
     $id_usuario = $conexao->insert_id;
     $stmt->close();
 
-    // 2. Inserir dados na tabela Porteiro
     $stmt = $conexao->prepare("INSERT INTO Porteiro (id_usuario, nome) VALUES (?, ?)");
     $stmt->bind_param("is", $id_usuario, $nome);
     $stmt->execute();
     $stmt->close();
 
-    // Confirmar transação
+
     $conexao->commit();
 
-    // Redirecionar com mensagem de sucesso
     $sucesso_msg = urlencode('Porteiro criado com sucesso!');
     header("Location: ../../view/Sindico/novoPorteiro.php?success=$sucesso_msg");
     exit;
 
 } catch (mysqli_sql_exception $e) {
-    // Se houver erro, fazer rollback
     if (isset($conexao)) {
         $conexao->rollback();
     }
@@ -115,11 +101,11 @@ try {
     exit;
 }
 if ($_GET['action'] === 'toggle') {
-    // ativa / desativa
+
 }
 
 if ($_GET['action'] === 'reset') {
-    // reset de senha
+
 }
 
 ?>

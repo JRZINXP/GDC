@@ -18,7 +18,6 @@ $row = $stmt->get_result()->fetch_assoc();
 $userName = $row['nome'];
 $iniciais = strtoupper(substr($userName, 0, 1));
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'adicionar') {
     $numero = trim($_POST['numero']);
     $rua = trim($_POST['rua']);
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'adici
         $stmt->execute();
     }
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'editar') {
     $id = (int)$_POST['id_unidade'];

@@ -30,7 +30,7 @@ $avisos = $conexao->query("
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ===== RESET ===== */
+
 *{
     margin:0;
     padding:0;
@@ -44,7 +44,6 @@ body{
     min-height:100vh;
 }
 
-/* ===== HEADER ===== */
 .dashboard-header{
     background:#ffffff;
     padding:22px 36px;
@@ -80,7 +79,6 @@ body{
     margin-top:6px;
 }
 
-/* BOTÃO VOLTAR */
 .back-btn{
     background:#f3f4f6;
     color:#374151;
@@ -104,14 +102,12 @@ body{
     transform:translateX(-3px);
 }
 
-/* ===== CONTAINER ===== */
 .dashboard-container{
     max-width:1200px;
     margin:40px auto;
     padding:0 24px;
 }
 
-/* ===== CARD PRINCIPAL ===== */
 .section-card{
     background:transparent;
     padding:0;
@@ -119,8 +115,6 @@ body{
     box-shadow:none;
 }
 
-
-/* ===== TÍTULO ===== */
 .section-card h1{
     display:flex;
     align-items:center;
@@ -135,7 +129,6 @@ body{
     color:#4a148c;
 }
 
-/* ===== AVISO ===== */
 .aviso-item{
     position:relative;
     background:#ffffff;
@@ -150,7 +143,6 @@ body{
     background:#fafafa;
 }
 
-/* PRIORIDADE */
 .prioridade-Baixa{
     border-color:#3b82f6;
 }
@@ -163,7 +155,6 @@ body{
     border-color:#ef4444;
 }
 
-/* TÍTULO AVISO */
 .aviso-item h3{
     font-size:18px;
     font-weight:600;
@@ -171,14 +162,11 @@ body{
     margin-bottom:6px;
 }
 
-/* TEXTO AVISO */
 .aviso-item p{
     font-size:15px;
     color:#374151;
     line-height:1.7;
 }
-
-/* META */
 .aviso-meta{
     margin-top:14px;
     font-size:13px;
@@ -192,7 +180,7 @@ body{
     color:#4a148c;
 }
 
-/* ===== RESPONSIVO ===== */
+
 @media(max-width:768px){
 
     .dashboard-header{
