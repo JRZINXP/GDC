@@ -8,12 +8,11 @@ $senha = $_POST['senha'];
 $telefone = isset($_POST['telefone']) ? $_POST['telefone'] : null;
 $id_unidade = isset($_POST['unidade']) ? $_POST['unidade'] : null;
 
-// Criar instância do conector
 $conector = new Conector();
 $conexao = $conector->getConexao();
 
 try {
-    // 1. Criar usuário na tabela Usuario
+
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
     $tipo_usuario = 'Morador';
     
@@ -26,8 +25,7 @@ try {
     }
     
     $id_usuario = $stmt_usuario->insert_id;
-    
-    // 2. Criar morador na tabela Morador
+
     $query_morador = "INSERT INTO Morador (id_usuario, id_unidade, nome, telefone) VALUES (?, ?, ?, ?)";
     $stmt_morador = $conexao->prepare($query_morador);
     $stmt_morador->bind_param("iiss", $id_usuario, $id_unidade, $nome, $telefone);
@@ -38,7 +36,6 @@ try {
     
     $id_morador = $stmt_morador->insert_id;
     
-    // Sucesso
     $_SESSION['mensagem'] = "Morador criado com sucesso!";
     $_SESSION['tipo_mensagem'] = "sucesso";
     header("Location: ../../view/Sindico/moradores.php");

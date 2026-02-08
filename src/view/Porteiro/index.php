@@ -1,4 +1,3 @@
-
 <?php
 require_once __DIR__ . '/../../auth/session.php';
 require_once __DIR__ . '/../../data/conector.php';
@@ -71,6 +70,7 @@ $entregasPendentes = $stmt->get_result()->fetch_assoc()['total'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,120 +82,121 @@ $entregasPendentes = $stmt->get_result()->fetch_assoc()['total'];
 </head>
 
 <body>
-<header class="dashboard-header">
-    <div class="header-left">
-        <h2><i class="fas fa-door-closed"></i> Condomínio Digital</h2>
-        <div class="header-subtitle">Dashboard do Porteiro</div>
-    </div>
+    <header class="dashboard-header">
+        <div class="header-left">
+            <h2><i class="fas fa-door-closed"></i> Condomínio Digital</h2>
+            <div class="header-subtitle">Dashboard do Porteiro</div>
+        </div>
 
-    <div class="user-info">
-        <div class="user-avatar"><?php echo $iniciais; ?></div>
-        <div class="user-details">
-            <div class="user-name"><?php echo htmlspecialchars($userName); ?></div>
-            <div class="user-role">
-                <i class="fas fa-user-shield"></i> Porteiro
+        <div class="user-info">
+            <div class="user-avatar"><?php echo $iniciais; ?></div>
+            <div class="user-details">
+                <div class="user-name"><?php echo htmlspecialchars($userName); ?></div>
+                <div class="user-role">
+                    <i class="fas fa-user-shield"></i> Porteiro
+                </div>
             </div>
-        </div>
-<a href="../../logout.php?logout=1" 
-   class="logout-btn" 
-   onclick="return confirmarSaida();">
-    <i class="fas fa-sign-out-alt"></i> Sair
-</a>
-
-    </div>
-</header>
-
-<main class="dashboard-container">
-
-    <section class="welcome-section">
-        <h1><i class="fas fa-user-shield"></i> Bem-vindo, <?php echo htmlspecialchars($userName); ?>!</h1>
-        <p>
-            Painel de controlo da portaria.  
-            Aqui você pode registrar <strong>entrada e saída de visitantes</strong>,
-            controlar encomendas e garantir a segurança do condomínio.
-        </p>
-
-        <div class="quick-actions">
-            <a href="registro.php" class="action-btn">
-                <i class="fas fa-user-check"></i> Registrar Visita
-            </a>
-
-            <a href="entregas.php" class="action-btn">
-                <i class="fas fa-box"></i> Registrar Entrega
-            </a>
-
-            <a href="avisos.php" class="action-btn">
-                <i class="fas fa-bullhorn"></i> Avisos
+            <a href="../../logout.php?logout=1"
+                class="logout-btn"
+                onclick="return confirmarSaida();">
+                <i class="fas fa-sign-out-alt"></i> Sair
             </a>
 
         </div>
-    </section>
+    </header>
 
-    <div class="dashboard-grid">
+    <main class="dashboard-container">
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-users"></i> Visitas Hoje
+        <section class="welcome-section">
+            <h1><i class="fas fa-user-shield"></i> Bem-vindo, <?php echo htmlspecialchars($userName); ?>!</h1>
+            <p>
+                Painel de controlo da portaria.
+                Aqui você pode registrar <strong>entrada e saída de visitantes</strong>,
+                controlar encomendas e garantir a segurança do condomínio.
+            </p>
+
+            <div class="quick-actions">
+                <a href="registro.php" class="action-btn">
+                    <i class="fas fa-user-check"></i> Registrar Visita
+                </a>
+
+                <a href="entregas.php" class="action-btn">
+                    <i class="fas fa-box"></i> Registrar Entrega
+                </a>
+
+                <a href="avisos.php" class="action-btn">
+                    <i class="fas fa-bullhorn"></i> Avisos
+                </a>
+
+            </div>
+        </section>
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-users"></i> Visitas Hoje
+                </div>
+                <div class="card-content">
+                    <p><?= $visitasHoje ?></p>
+                    <p>Controle diário de visitas</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-sign-in-alt"></i> Entradas
+                </div>
+                <div class="card-content">
+                    <p><?= $entradas ?></p>
+                    <p>Visitantes em circulação</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-sign-out-alt"></i> Saídas
+                </div>
+                <div class="card-content">
+                    <p><?= $saidas ?></p>
+                    <p>Visitas concluídas</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <i class="fas fa-box-open"></i> Encomendas
+                </div>
+                <div class="card-content">
+                    <p><?= $entregasPendentes ?></p>
+                    <p>Itens pendentes</p>
+                </div>
+            </div>
+
         </div>
-        <div class="card-content">
-            <p><?= $visitasHoje ?></p>
-            <p>Controle diário de visitas</p>
-        </div>
-    </div>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-sign-in-alt"></i> Entradas
-        </div>
-        <div class="card-content">
-            <p><?= $entradas ?></p>
-            <p>Visitantes em circulação</p>
-        </div>
-    </div>
+    </main>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-sign-out-alt"></i> Saídas
-        </div>
-        <div class="card-content">
-            <p><?= $saidas ?></p>
-            <p>Visitas concluídas</p>
-        </div>
-    </div>
+    <footer class="dashboard-footer">
+        <p>Sistema Condomínio Digital &copy; <?php echo date('Y'); ?></p>
+        <p>Portaria</p>
+    </footer>
 
-    <div class="dashboard-card">
-        <div class="card-title">
-            <i class="fas fa-box-open"></i> Encomendas
-        </div>
-        <div class="card-content">
-            <p><?= $entregasPendentes ?></p>
-            <p>Itens pendentes</p>
-        </div>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.dashboard-card').forEach((card, i) => {
+                card.style.animationDelay = `${i * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+        });
 
-</div>
+        function confirmarSaida() {
+            return confirm("Tem a certeza que deseja sair?");
+        }
+    </script>
 
-</main>
-
-<!-- FOOTER -->
-<footer class="dashboard-footer">
-    <p>Sistema Condomínio Digital &copy; <?php echo date('Y'); ?></p>
-    <p>Portaria</p>
-</footer>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.dashboard-card').forEach((card, i) => {
-        card.style.animationDelay = `${i * 0.1}s`;
-        card.classList.add('fade-in');
-    });
-});
-function confirmarSaida() {
-    return confirm("Tem a certeza que deseja sair?");
-}
-</script>
-
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
+
 </html>

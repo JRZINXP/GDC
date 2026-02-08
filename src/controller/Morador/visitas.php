@@ -25,23 +25,15 @@ $acao = $_POST['acao'] ?? '';
 date_default_timezone_set('Africa/Maputo');
 
 if ($acao === 'cancelar') {
-
     $id = (int) $_POST['id_agendamento'];
-
-    $stmt = $conexao->prepare("
-        DELETE FROM Agendamento
-        WHERE id_agendamento = ?
-    ");
+    $stmt = $conexao->prepare("DELETE FROM Agendamento WHERE id_agendamento = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
-
-    header("Location: ../../view/Morador/agendar_visita.php");
+    header("Location: ../../view/morador/agendar_visita.php");
     exit;
 }
 
-
 if ($acao === 'editar') {
-
     $idAgendamento = (int)($_POST['id_agendamento'] ?? 0);
     $data = $_POST['data'] ?? '';
     $hora = $_POST['hora'] ?? '';
@@ -67,6 +59,15 @@ if ($acao === 'editar') {
         $motivo = $motivoLabel;
     }
 
+    $dataHoraEscolhida = new DateTime("$data $hora");
+    $dataHoraAtual = new DateTime();
+
+    if ($dataHoraEscolhida < $dataHoraAtual) {
+        $_SESSION['erro'] = "Não pode escolher data ou hora que já passou!";
+        header('Location: ../../view/morador/agendar_visita.php');
+        exit;
+    }
+
     $stmt = $conexao->prepare("
         UPDATE Agendamento a
         LEFT JOIN Registro r ON r.id_agendamento = a.id_agendamento
@@ -81,15 +82,6 @@ if ($acao === 'editar') {
     header('Location: ../../view/morador/agendar_visita.php');
     exit;
 }
-$dataAtual = date('Y-m-d');
-$horaAtual = date('H:i');
-
-if ($data < $dataAtual || ($data === $dataAtual && $hora < $horaAtual)) {
-    $_SESSION['erro'] = "Não pode escolher data ou hora que já passou!";
-    header('Location: ../../view/morador/agendar_visita.php');
-    exit;
-}
-
 
 $nomeVisitante = trim($_POST['nome_visitante'] ?? '');
 $data = $_POST['data'] ?? '';
@@ -97,6 +89,15 @@ $hora = $_POST['hora'] ?? '';
 $motivo = trim($_POST['motivo'] ?? '');
 
 if (!$nomeVisitante || !$data || !$hora || !$motivo) {
+    header('Location: ../../view/morador/agendar_visita.php');
+    exit;
+}
+
+$dataHoraEscolhida = new DateTime("$data $hora");
+$dataHoraAtual = new DateTime();
+
+if ($dataHoraEscolhida < $dataHoraAtual) {
+    $_SESSION['erro'] = "Não pode escolher data ou hora que já passou!";
     header('Location: ../../view/morador/agendar_visita.php');
     exit;
 }
@@ -131,14 +132,6 @@ $stmt->bind_param("ss", $nomeVisitante, $caminhoBanco);
 $stmt->execute();
 
 $idVisitante = $stmt->insert_id;
-
-$dataAtual = date('Y-m-d');
-$horaAtual = date('H:i');
-
-if ($data < $dataAtual || ($data === $dataAtual && $hora < $horaAtual)) {
-    header('Location: ../../view/morador/agendar_visita.php');
-    exit;
-}
 
 $subMotivo = '';
 

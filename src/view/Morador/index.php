@@ -194,9 +194,9 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
                             <span class="notif-bell">
                                 <i class="fas fa-bell"></i>
                                 <span class="notif-count"><?= $avisosNovos ?></span>
-                            
+
                             </span>
-                            <?php endif; ?>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <div class="card-content">
@@ -249,8 +249,6 @@ $avisosNovos = $stmt->get_result()->fetch_assoc()['total'];
             return confirm("Tem a certeza que deseja sair?");
         }
     </script>
-<script src="../../../assets/js/auto-logout.js"></script>
-
+    <script src="../../../assets/js/auto-logout.js"></script>
 </body>
-
 </html>

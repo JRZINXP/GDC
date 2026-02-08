@@ -333,74 +333,77 @@ $historico = $stmtHist->get_result()->fetch_all(MYSQLI_ASSOC);
             background: #ede9fe;
             color: #4a148c;
         }
-        .btn-historico{
-    background:#4a148c;
-    color:#fff;
-    padding:10px 16px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    height:40px;
-    width:auto;
-    box-shadow:0 6px 16px rgba(0,0,0,.15);
-    transition:.2s;
-}
 
-.btn-historico:hover{
-    transform:translateY(-1px);
-    filter:brightness(1.1);
-}
-.tabela-box{
-    background:#fff;
-    padding:24px;
-    border-radius:22px;
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
-    margin-top:40px;
-}
+        .btn-historico {
+            background: #4a148c;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 40px;
+            width: auto;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+            transition: .2s;
+        }
 
-.tabela-box h3{
-    font-size:18px;
-    margin-bottom:16px;
-}
+        .btn-historico:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+        }
 
-.tabela{
-    width:100%;
-    border-collapse:collapse;
-}
+        .tabela-box {
+            background: #fff;
+            padding: 24px;
+            border-radius: 22px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+            margin-top: 40px;
+        }
 
-.tabela thead{
-    background:#4a148c;
-    color:#fff;
-}
+        .tabela-box h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
 
-.tabela th{
-    text-align:left;
-    padding:12px;
-    font-weight:600;
-    font-size:13px;
-}
+        .tabela {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.tabela td{
-    padding:12px;
-    border-bottom:1px solid #eee;
-    font-size:14px;
-}
+        .tabela thead {
+            background: #4a148c;
+            color: #fff;
+        }
 
-.icon{
-    width:28px;
-    height:28px;
-    border-radius:8px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    margin-right:6px;
-    font-size:12px;
-}
+        .tabela th {
+            text-align: left;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .tabela td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
         @media(max-width:600px) {
             .header {
                 flex-direction: column;
@@ -430,20 +433,15 @@ $historico = $stmtHist->get_result()->fetch_all(MYSQLI_ASSOC);
 
 
             <div class="panel-right">
-    <span class="legend pendente">Pendente</span>
-    <span class="legend em">Em visita</span>
-    <span class="legend done">Concluída</span>
+                <span class="legend pendente">Pendente</span>
+                <span class="legend em">Em visita</span>
+                <span class="legend done">Concluída</span>
 
-    <button class="btn-historico" onclick="toggleTabela()">
-        <i class="fas fa-table"></i> Ver visitas
-    </button>
-</div>
-
-
-
+                <button class="btn-historico" onclick="toggleTabela()">
+                    <i class="fas fa-table"></i> Ver visitas
+                </button>
+            </div>
         </div>
-
-
         <div class="cards">
             <?php foreach ($visitas as $v):
                 if (!$v['entrada']) {
@@ -506,51 +504,48 @@ $historico = $stmtHist->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
         <div id="tabelaHistorico" style="display:none;">
 
-    <div class="tabela-box">
-        <h3 style="margin-bottom:18px;display:flex;align-items:center;gap:10px">
-<i class="fas fa-clock" style="color:#4a148c"></i>
-Histórico de visitas
-</h3>
+            <div class="tabela-box">
+                <h3 style="margin-bottom:18px;display:flex;align-items:center;gap:10px">
+                    <i class="fas fa-clock" style="color:#4a148c"></i>
+                    Histórico de visitas
+                </h3>
 
-        <table class="tabela">
-            <thead>
-                <tr>
-                    <th style="padding:12px;text-align:left">Visitante</th>
-                    <th>Casa</th>
-                    <th>Motivo</th>
-                    <th>Data</th>
-                    <th>Entrada</th>
-                    <th>Saída</th>
-                </tr>
-            </thead>
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th style="padding:12px;text-align:left">Visitante</th>
+                            <th>Casa</th>
+                            <th>Motivo</th>
+                            <th>Data</th>
+                            <th>Entrada</th>
+                            <th>Saída</th>
+                        </tr>
+                    </thead>
 
-            <tbody>
-                <?php foreach($historico as $h): ?>
-                <tr style="border-bottom:1px solid #eee">
-                    <td style="padding:10px"><?= htmlspecialchars($h['visitante_nome']) ?></td>
-                    <td><?= $h['casa_numero'] ?></td>
-                    <td><?= htmlspecialchars($h['motivo']) ?></td>
-                    <td><?= date('d/m/Y', strtotime($h['data'])) ?></td>
-                    <td><?= date('H:i', strtotime($h['entrada'])) ?></td>
-                    <td><?= date('H:i', strtotime($h['saida'])) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                    <tbody>
+                        <?php foreach ($historico as $h): ?>
+                            <tr style="border-bottom:1px solid #eee">
+                                <td style="padding:10px"><?= htmlspecialchars($h['visitante_nome']) ?></td>
+                                <td><?= $h['casa_numero'] ?></td>
+                                <td><?= htmlspecialchars($h['motivo']) ?></td>
+                                <td><?= date('d/m/Y', strtotime($h['data'])) ?></td>
+                                <td><?= date('H:i', strtotime($h['entrada'])) ?></td>
+                                <td><?= date('H:i', strtotime($h['saida'])) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
 
-    </div>
-</div>
+            </div>
+        </div>
 
     </div>
 
     <script>
-
-function toggleTabela(){
-    const tabela = document.getElementById("tabelaHistorico");
-    tabela.style.display = tabela.style.display === "none" ? "block" : "none";
-}
-
-
+        function toggleTabela() {
+            const tabela = document.getElementById("tabelaHistorico");
+            tabela.style.display = tabela.style.display === "none" ? "block" : "none";
+        }
 
         function acao(tipo, id) {
             fetch('<?= $base_url ?>/src/controller/Porteiro/registro.php', {
@@ -565,7 +560,7 @@ function toggleTabela(){
         }
     </script>
 
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 

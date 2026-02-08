@@ -50,8 +50,8 @@ if ($resultado && $resultado->num_rows === 1) {
         $id_usuario = $user['id_usuario'];
 
         $stmtLog = $conexao->prepare("
-INSERT INTO logs (id_usuario, acao) 
-VALUES (?, 'Login no sistema')
+    INSERT INTO logs (id_usuario, acao) 
+    VALUES (?, 'Login no sistema')
 ");
         $stmtLog->bind_param("i", $id_usuario);
         $stmtLog->execute();
@@ -88,8 +88,8 @@ VALUES (?, 'Login no sistema')
         $_SESSION['tentativas']++;
 
         $stmtLog = $conexao->prepare("
-INSERT INTO logs (id_usuario, acao) 
-VALUES (?, 'Tentativa de login com senha errada')
+    INSERT INTO logs (id_usuario, acao) 
+    VALUES (?, 'Tentativa de login com senha errada')
 ");
         $stmtLog->bind_param("i", $user['id_usuario']);
         $stmtLog->execute();
@@ -112,8 +112,8 @@ VALUES (?, 'Tentativa de login com senha errada')
     $_SESSION['tentativas']++;
 
     $stmtLog = $conexao->prepare("
-INSERT INTO logs (id_usuario, acao) 
-VALUES (NULL, ?)
+    INSERT INTO logs (id_usuario, acao) 
+    VALUES (NULL, ?)
 ");
 
     $acao = "Tentativa de login com email inexistente: $email";

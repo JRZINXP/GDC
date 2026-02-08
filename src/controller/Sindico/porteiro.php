@@ -2,7 +2,6 @@
 session_start();
 require_once __DIR__ . '/../../data/conector.php';
 
-/* PROTEÇÃO */
 if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
     header('Location: ../../login.php');
     exit;
@@ -10,9 +9,6 @@ if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
 
 $conexao = (new Conector())->getConexao();
 
-/* ===============================
-   ✅ CRIAR PORTEIRO (POST)
-================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nome  = trim($_POST['nome'] ?? '');
@@ -27,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conexao->begin_transaction();
 
-        /* Verifica email */
         $stmt = $conexao->prepare("SELECT id_usuario FROM Usuario WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -35,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Email já existe');
         }
 
-        /* Cria usuário */
         $hash = password_hash($senha, PASSWORD_DEFAULT);
         $stmt = $conexao->prepare("
             INSERT INTO Usuario (email, senha_hash, tipo)
@@ -45,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $idUsuario = $conexao->insert_id;
 
-        /* Cria porteiro */
+
         $stmt = $conexao->prepare("
             INSERT INTO Porteiro (id_usuario, nome)
             VALUES (?, ?)
@@ -65,9 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/* ===============================
-   🔁 RESET / DELETE (GET)
-================================ */
 if (!isset($_GET['action'], $_GET['id'])) {
     header('Location: ../../view/Sindico/porteiros.php');
     exit;
@@ -91,7 +82,6 @@ try {
         throw new Exception('Porteiro não encontrado');
     }
 
-    /* RESET */
     if ($action === 'reset') {
         $hash = password_hash('porteiro123', PASSWORD_DEFAULT);
         $stmt = $conexao->prepare("UPDATE Usuario SET senha_hash=? WHERE id_usuario=?");
@@ -99,7 +89,6 @@ try {
         $stmt->execute();
     }
 
-    /* DELETE */
     if ($action === 'delete') {
         $conexao->begin_transaction();
         $stmt = $conexao->prepare("DELETE FROM Porteiro WHERE id_porteiro=?");

@@ -71,13 +71,11 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: #1f2937;
         }
 
-        /* ===== LAYOUT ===== */
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 240px;
             background: #9743d7;
@@ -87,7 +85,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             flex-direction: column;
         }
 
-        /* TÍTULO */
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 30px;
@@ -98,13 +95,11 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             color: #fff;
         }
 
-        /* NAV */
         .sidebar nav {
             display: flex;
             flex-direction: column;
         }
 
-        /* LINKS */
         .sidebar nav a {
             display: flex;
             align-items: center;
@@ -117,10 +112,8 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
             background: transparent;
-            /* IMPORTANTE */
         }
 
-        /* ÍCONES */
         .sidebar nav a i {
             color: #ffffff;
         }
@@ -136,25 +129,20 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ÍCONE DO ATIVO */
         .sidebar nav a.active i {
             color: #9743d7 !important;
         }
 
-        /* LOGOUT */
         .sidebar .logout {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.25);
         }
 
-        /* ===== CONTEÚDO ===== */
         .content {
             flex: 1;
             padding: 40px;
             background: #f4f6f9;
         }
-
-
 
         @keyframes slideDown {
             from {
@@ -519,7 +507,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 <i class="fas fa-plus"></i> Agendar visita
             </button>
 
-
             <?php if (empty($visitas)): ?>
                 <p style="margin-top:25px;color:#6b7280">Nenhuma visita agendada.</p>
             <?php else: ?>
@@ -529,8 +516,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         unset($_SESSION['erro']); ?>
                     </div>
                 <?php endif; ?>
-
-
 
                 <div class="cards">
 
@@ -716,7 +701,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             document.querySelector(".modal h3").innerText = "Editar Visita";
 
-            // criar campo hidden id
             let idInput = document.getElementById("id_edit");
             if (!idInput) {
                 idInput = document.createElement("input");
@@ -727,7 +711,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             }
             idInput.value = id;
 
-            // criar campo ação
             let acaoInput = document.getElementById("acao_edit");
             if (!acaoInput) {
                 acaoInput = document.createElement("input");
@@ -738,7 +721,6 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             }
             acaoInput.value = "editar";
 
-            // preencher campos
             document.querySelector("input[name=data]").value = data;
             document.querySelector("input[name=hora]").value = hora;
             document.querySelector("select[name=motivo]").value = "";
@@ -746,7 +728,7 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     </script>
 
 
-<script src="../../../assets/js/auto-logout.js"></script>
+    <script src="../../../assets/js/auto-logout.js"></script>
 
 </body>
 
