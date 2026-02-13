@@ -9,7 +9,6 @@ if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
 
 $conexao = (new Conector())->getConexao();
 
-/* EDITAR MORADOR */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'editar') {
     $id_morador = (int)$_POST['id_morador'];
     $nome = trim($_POST['nome']);
@@ -60,7 +59,7 @@ $iniciais = strtoupper(substr($userName, 0, 1));
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -430,14 +429,14 @@ $iniciais = strtoupper(substr($userName, 0, 1));
         </div>
     </div>
 
-    <!-- MODAL NOVO MORADOR -->
+
     <div class="modal" id="modalNovo">
         <div class="box">
             <div class="modal-header">
                 <h3><i class="fas fa-user-plus"></i> Novo Morador</h3>
             </div>
 
-            <form action="../../controller/Sindico/user.php" method="post">
+            <form id="formNovoMorador">
                 <input type="text" name="nome" placeholder="Nome completo" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="senha" placeholder="Senha" required>
@@ -466,7 +465,6 @@ $iniciais = strtoupper(substr($userName, 0, 1));
         </div>
     </div>
 
-    <!-- MODAL EDITAR MORADOR -->
     <div class="modal" id="modalEditar">
         <div class="box">
             <div class="modal-header">
@@ -559,6 +557,9 @@ $iniciais = strtoupper(substr($userName, 0, 1));
             document.getElementById('modalDesativar').classList.remove('active')
         }
     </script>
+
+    <script src="../../../public/jquery-3.7.1.js"></script>
+<script src="../../../assets/js/moradores.js"></script>
 
 <script src="../../../assets/js/auto-logout.js"></script>
 
