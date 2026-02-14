@@ -47,6 +47,9 @@ if ($acao === 'editar') {
     $hora = $_POST['hora'] ?? '';
     $motivo = trim($_POST['motivo'] ?? '');
 
+    $dataAtual = date('Y-m-d');
+    $horaAtual = date('H:i');
+
     $subMotivo = '';
 
     if ($motivo === 'visita_social') {
@@ -81,8 +84,7 @@ if ($acao === 'editar') {
     header('Location: ../../view/morador/agendar_visita.php');
     exit;
 }
-$dataAtual = date('Y-m-d');
-$horaAtual = date('H:i');
+
 
 if ($data < $dataAtual || ($data === $dataAtual && $hora < $horaAtual)) {
     $_SESSION['erro'] = "Não pode escolher data ou hora que já passou!";
@@ -131,9 +133,6 @@ $stmt->bind_param("ss", $nomeVisitante, $caminhoBanco);
 $stmt->execute();
 
 $idVisitante = $stmt->insert_id;
-
-$dataAtual = date('Y-m-d');
-$horaAtual = date('H:i');
 
 if ($data < $dataAtual || ($data === $dataAtual && $hora < $horaAtual)) {
     header('Location: ../../view/morador/agendar_visita.php');
