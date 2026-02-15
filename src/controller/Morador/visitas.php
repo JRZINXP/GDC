@@ -117,16 +117,60 @@ if (!in_array($extensao, $permitidos)) {
     exit;
 }
 
-$pasta = __DIR__ . '/../../uploads/documents/';
-if (!is_dir($pasta)) {
-    mkdir($pasta, 0777, true);
+$nomeArquivo = uniqid('doc_') . '.' . $extensao;
+$remotePath = "/Projetos/Escola/uploads/{$nomeArquivo}";
+
+function encodeGraphPath($path) {
+    $parts = array_map('rawurlencode', explode('/', trim($path, '/')));
+    return '/' . implode('/', $parts);
 }
 
-$nomeArquivo = uniqid('doc_') . '.' . $extensao;
-$caminhoFisico = $pasta . $nomeArquivo;
-$caminhoBanco = 'uploads/documents/' . $nomeArquivo;
+function uploadToOneDrive($accessToken, $tmpPath, $remotePath) {
+    $encodedPath = encodeGraphPath($remotePath);
+    $url = "https://graph.microsoft.com/v1.0/me/drive/root:" . $encodedPath . ":/content";
 
-move_uploaded_file($arquivo['tmp_name'], $caminhoFisico);
+    $fileContents = file_get_contents($tmpPath);
+    if ($fileContents === false) {
+        return null;
+    }
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => $fileContents,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/octet-stream',
+        ],
+    ]);
+
+    $response = curl_exec($ch);
+    if ($response === false) {
+        return null;
+    }
+
+    $data = json_decode($response, true);
+    return $data['id'] ?? null;
+}
+
+if (!isset($_SESSION['access_token'])) {
+    $_SESSION['erro'] = 'Conecte o OneDrive antes de enviar documentos.';
+    header('Location: ../../view/morador/agendar_visita.php');
+    exit;
+}
+
+$accessToken = $_SESSION['access_token'];
+
+$itemId = uploadToOneDrive($accessToken, $arquivo['tmp_name'], $remotePath);
+
+if (!$itemId) {
+    $_SESSION['erro'] = 'Falha ao enviar o documento ao OneDrive.';
+    header('Location: ../../view/morador/agendar_visita.php');
+    exit;
+}
+
+$caminhoBanco = 'onedrive:' . $itemId;
 
 $stmt = $conexao->prepare("INSERT INTO Visitante (nome, documento_imagem) VALUES (?, ?)");
 $stmt->bind_param("ss", $nomeVisitante, $caminhoBanco);

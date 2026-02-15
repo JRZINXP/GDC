@@ -46,6 +46,8 @@ $stmt = $conexao->prepare("
 $stmt->bind_param("i", $idMorador);
 $stmt->execute();
 $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$onedriveConectado = isset($_SESSION['access_token']);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -511,10 +513,21 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 <h2><i class="fas fa-users"></i> Minhas Visitas</h2>
                 <div class="user-info">
                     <div class="user-avatar"><?= $iniciais ?></div>
-
                     <strong><?= htmlspecialchars($nomeMorador) ?></strong>
                 </div>
             </header>
+
+            <div style="margin:12px 0;display:flex;gap:10px;align-items:center;">
+                <?php if (!$onedriveConectado): ?>
+                    <a class="btn-primary" href="../../azure/login.php">
+                        <i class="fas fa-cloud"></i> Conectar OneDrive
+                    </a>
+                    <span style="color:#b91c1c;">OneDrive não conectado</span>
+                <?php else: ?>
+                    <span style="color:#166534;">OneDrive conectado</span>
+                <?php endif; ?>
+            </div>
+
             <button class="btn-primary" onclick="abrirModal()">
                 <i class="fas fa-plus"></i> Agendar visita
             </button>
@@ -565,7 +578,17 @@ $visitas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <?= htmlspecialchars($v['motivo']) ?>
                             </div>
 
-                            <a href="../../<?= $v['documento_imagem'] ?>" target="_blank">📄 Ver documento</a>
+                            <?php
+                            $doc = $v['documento_imagem'];
+                            if (str_starts_with($doc, 'onedrive:')) {
+                                $itemId = substr($doc, strlen('onedrive:'));
+                                $docUrl = '../../azure/onedrive_proxy.php?id=' . urlencode($itemId);
+                            } else {
+                                $docUrl = '../../' . $doc;
+                            }
+?>
+<img src="<?= htmlspecialchars($docUrl) ?>" alt="Documento do visitante" style="width:100%;max-width:260px;border-radius:8px;display:block;">
+<a href="<?= htmlspecialchars($docUrl) ?>" target="_blank">📄 Ver documento</a>
 
                             <?php if ($podeAlterar): ?>
                                 <div class="acoes">
