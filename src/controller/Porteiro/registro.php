@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../data/conector.php';
+require_once __DIR__ . '/../../utils/log.php';
 
 if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Porteiro') {
     echo json_encode([
@@ -56,6 +57,7 @@ try {
     $stmt->execute();
     $registro = $stmt->get_result()->fetch_assoc();
 
+    /* ================= ENTRADA ================= */
     if ($acao === 'entrada') {
 
         if ($registro) {
@@ -69,6 +71,15 @@ try {
         $stmt->bind_param("i", $idAgendamento);
         $stmt->execute();
 
+        /* LOG */
+        registrarLog(
+            $conexao,
+            $_SESSION['id'],
+            $_SESSION['nome'] ?? $_SESSION['email'],
+            "ENTRADA_VISITANTE",
+            "Registrou entrada do agendamento ID $idAgendamento"
+        );
+
         echo json_encode([
             'success' => true,
             'message' => 'Entrada registrada com sucesso'
@@ -76,6 +87,7 @@ try {
         exit;
     }
 
+    /* ================= SAÍDA ================= */
     if ($acao === 'saida') {
 
         if (!$registro || !$registro['entrada']) {
@@ -93,6 +105,15 @@ try {
         ");
         $stmt->bind_param("i", $registro['id_registro']);
         $stmt->execute();
+
+        /* LOG */
+        registrarLog(
+            $conexao,
+            $_SESSION['id'],
+            $_SESSION['nome'] ?? $_SESSION['email'],
+            "SAIDA_VISITANTE",
+            "Registrou saída do agendamento ID $idAgendamento"
+        );
 
         echo json_encode([
             'success' => true,

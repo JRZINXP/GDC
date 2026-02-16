@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../../utils/log.php';
 require_once __DIR__ . '/../../data/conector.php';
 
 session_start();
@@ -100,7 +100,7 @@ AND status = 'aprovada'";
 VALUES (?, ?, ?, ?, ?, 'pendente')";
 
         
-        $stmt_inserir = $conexao->prepare($query_inserir);
+    $stmt_inserir = $conexao->prepare($query_inserir);
        $stmt_inserir->bind_param("issss", $id_morador, $area_comum, $data, $hora_inicio, $hora_fim);
 
         if ($stmt_inserir->execute()) {
@@ -109,6 +109,15 @@ VALUES (?, ?, ?, ?, ?, 'pendente')";
         } else {
             throw new Exception("Erro ao criar reserva: " . $stmt_inserir->error);
         }
+
+        registrarLog(
+    $conexao,
+    $_SESSION['id'],
+    $_SESSION['nome'],
+    "RESERVA",
+    "Criou reserva"
+);
+
 
     } catch (Exception $e) {
         $_SESSION['mensagem'] = $e->getMessage();

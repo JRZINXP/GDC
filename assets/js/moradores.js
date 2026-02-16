@@ -16,7 +16,6 @@ $(document).ready(function(){
                     $("#formNovoMorador")[0].reset();
                     fecharModalNovo();
 
-                    // recarregar lista
                     location.reload();
 
                 }else{

@@ -1,11 +1,11 @@
 <?php
+function registrarLog($conexao, $id_usuario, $nome_usuario, $acao, $descricao){
 
-function registrarLog($conexao, $id_usuario, $acao){
     $stmt = $conexao->prepare("
-        INSERT INTO logs (id_usuario, acao)
-        VALUES (?, ?)
+        INSERT INTO logs (id_usuario, nome_usuario, acao, descricao)
+        VALUES (?,?,?,?)
     ");
-    $stmt->bind_param("is", $id_usuario, $acao);
+
+    $stmt->bind_param("isss", $id_usuario, $nome_usuario, $acao, $descricao);
     $stmt->execute();
 }
-?>

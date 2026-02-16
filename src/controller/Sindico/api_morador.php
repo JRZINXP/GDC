@@ -22,14 +22,27 @@ if($nome=="" || $email=="" || $senha==""){
     exit;
 }
 
+if($id_unidade=="") $id_unidade = null;
+
 $conexao->begin_transaction();
 
 try{
 
+    $check = $conexao->prepare("SELECT id_usuario FROM Usuario WHERE email=?");
+    $check->bind_param("s",$email);
+    $check->execute();
+
+    if($check->get_result()->num_rows > 0){
+        echo json_encode(["status"=>"erro","msg"=>"Email já existe"]);
+        exit;
+    }
 
     $hash = password_hash($senha, PASSWORD_DEFAULT);
 
-    $stmt = $conexao->prepare("INSERT INTO Usuario(email,senha_hash,tipo,activo) VALUES (?,?, 'Morador',1)");
+    $stmt = $conexao->prepare("
+        INSERT INTO Usuario(email,senha_hash,tipo)
+        VALUES (?,?, 'Morador')
+    ");
     $stmt->bind_param("ss",$email,$hash);
     $stmt->execute();
 
@@ -42,6 +55,20 @@ try{
     $stmt2->bind_param("iiss",$id_usuario,$id_unidade,$nome,$telefone);
     $stmt2->execute();
 
+    $id_sindico = $_SESSION['id'] ?? 0;
+$nome_sindico = $_SESSION['nome'] ?? "Desconhecido";
+
+$acao = "CADASTRO_MORADOR";
+$descricao = "Síndico $nome_sindico cadastrou o morador $nome";
+
+$stmt3 = $conexao->prepare("
+    INSERT INTO logs (id_usuario, acao, descricao)
+    VALUES (?,?,?)
+");
+
+$stmt3->bind_param("iss", $id_sindico, $acao, $descricao);
+$stmt3->execute();
+
     $conexao->commit();
 
     echo json_encode([
@@ -50,9 +77,11 @@ try{
     ]);
 
 }catch(Exception $e){
+
     $conexao->rollback();
+
     echo json_encode([
         "status"=>"erro",
-        "msg"=>"Erro ao cadastrar"
+        "msg"=>$e->getMessage() 
     ]);
 }

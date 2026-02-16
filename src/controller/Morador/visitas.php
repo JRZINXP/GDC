@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../utils/log.php';
 require_once __DIR__ . '/../../data/conector.php';
 
 if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Morador') {
@@ -24,16 +25,30 @@ $acao = $_POST['acao'] ?? '';
 
 date_default_timezone_set('Africa/Maputo');
 
+
 if ($acao === 'cancelar') {
+
     $id = (int) $_POST['id_agendamento'];
+
     $stmt = $conexao->prepare("DELETE FROM Agendamento WHERE id_agendamento = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
+
+    registrarLog(
+        $conexao,
+        $_SESSION['id'],
+        $_SESSION['nome'] ?? $_SESSION['email'],
+        "CANCELAR_VISITA",
+        "Cancelou agendamento ID $id"
+    );
+
     header("Location: ../../view/morador/agendar_visita.php");
     exit;
 }
 
+
 if ($acao === 'editar') {
+
     $idAgendamento = (int)($_POST['id_agendamento'] ?? 0);
     $data = $_POST['data'] ?? '';
     $hora = $_POST['hora'] ?? '';
@@ -78,6 +93,14 @@ if ($acao === 'editar') {
     ");
     $stmt->bind_param("sssii", $data, $hora, $motivo, $idAgendamento, $idMorador);
     $stmt->execute();
+
+    registrarLog(
+        $conexao,
+        $_SESSION['id'],
+        $_SESSION['nome'] ?? $_SESSION['email'],
+        "EDITAR_VISITA",
+        "Editou agendamento ID $idAgendamento"
+    );
 
     header('Location: ../../view/morador/agendar_visita.php');
     exit;
@@ -133,33 +156,22 @@ $stmt->execute();
 
 $idVisitante = $stmt->insert_id;
 
-$subMotivo = '';
-
-if ($motivo === 'visita_social') {
-    $subMotivo = trim($_POST['social'] ?? '');
-} elseif ($motivo === 'prestacao_servico') {
-    $subMotivo = trim($_POST['servico'] ?? '');
-} elseif ($motivo === 'administrativo') {
-    $subMotivo = trim($_POST['administrativo'] ?? '');
-} elseif ($motivo === 'evento') {
-    $subMotivo = trim($_POST['evento'] ?? '');
-}
-
 $motivoLabel = ucfirst(str_replace('_', ' ', $motivo));
-
-if ($subMotivo) {
-    $motivo = $motivoLabel . ' – ' . ucfirst(str_replace('_', ' ', $subMotivo));
-} else {
-    $motivo = $motivoLabel;
-}
 
 $stmt = $conexao->prepare("
     INSERT INTO Agendamento (id_morador, id_visitante, data, hora, motivo)
     VALUES (?, ?, ?, ?, ?)
 ");
-
-$stmt->bind_param("iisss", $idMorador, $idVisitante, $data, $hora, $motivo);
+$stmt->bind_param("iisss", $idMorador, $idVisitante, $data, $hora, $motivoLabel);
 $stmt->execute();
+
+registrarLog(
+    $conexao,
+    $_SESSION['id'],
+    $_SESSION['nome'] ?? $_SESSION['email'],
+    "CRIAR_VISITA",
+    "Criou agendamento para $nomeVisitante"
+);
 
 header('Location: ../../view/morador/agendar_visita.php');
 exit;

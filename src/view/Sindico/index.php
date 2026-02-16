@@ -43,6 +43,12 @@ $totalAvisos = $conexao->query("
     SELECT COUNT(*) total FROM Aviso
 ")->fetch_assoc()['total'];
 
+$logs = $conexao->query("
+SELECT nome_usuario, acao, descricao, data_log 
+FROM logs 
+ORDER BY data_log DESC 
+LIMIT 50
+");
 
 ?>
 
@@ -95,6 +101,10 @@ $totalAvisos = $conexao->query("
                 <a href="novoVeiculo.php" class="action-btn"><i class="fas fa-car"></i> Gerir Veículos</a>
                 <a href="porteiros.php" class="action-btn"><i class="fas fa-user-tie"></i> Gerir Porteiros</a>
                 <a href="unidade.php" class="action-btn"><i class="fas fa-home"></i> Gerir Unidades</a>
+                <a href="auditoria.php" class="action-btn">
+    <i class="fas fa-clipboard-list"></i> Auditoria
+</a>
+
             </div>
         </section>
 

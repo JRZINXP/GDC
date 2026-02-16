@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../data/conector.php';
+require_once __DIR__ . '/../../utils/log.php';
 session_start();
 
 if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'Sindico') {
@@ -45,6 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtLeitura->bind_param("ii", $idAviso, $u['id_usuario']);
         $stmtLeitura->execute();
     }
+
+    registrarLog(
+        $conexao,
+        $_SESSION['id'],
+        $_SESSION['nome'] ?? $_SESSION['email'],
+        "CRIAR_AVISO",
+        "Publicou aviso: $titulo"
+    );
 
     header("Location: ../../views/Sindico/avisos.php?success=Aviso publicado");
     exit;

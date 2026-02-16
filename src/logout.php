@@ -1,34 +1,29 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/data/conector.php';
+
+require_once __DIR__ . '/utils/log.php';
+
 if (isset($_GET['logout'])) {
 
-    $_SESSION = [];
+    $id   = $_SESSION['id'] ?? null;
+    $nome = $_SESSION['nome'] ?? $_SESSION['email'] ?? "Utilizador";
 
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
+    if ($id) {
+        $conexao = (new Conector())->getConexao();
+
+        registrarLog(
+            $conexao,
+            $id,
+            $nome,
+            "LOGOUT",
+            "Saiu do sistema"
         );
     }
 
-    foreach ($_COOKIE as $name => $value) {
-        if (strpos($name, 'gdc_session_') === 0) {
-            setcookie($name, '', time() - 3600, '/');
-        }
-    }
-
-    session_unset();
     session_destroy();
-
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Pragma: no-cache");
     header("Location: login.php");
-    exit;
+    exit();
 }
+

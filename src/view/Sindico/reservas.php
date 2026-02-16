@@ -1,11 +1,31 @@
 <?php
 require_once __DIR__ . '/../../data/conector.php';
-
 session_start();
-
 
 $conector = new Conector();
 $conexao = $conector->getConexao();
+
+function registrarLog($conexao, $idUsuario, $descricao)
+{
+    $stmtNome = $conexao->prepare("SELECT nome FROM sindico WHERE id_usuario=?");
+    $stmtNome->bind_param("i", $idUsuario);
+    $stmtNome->execute();
+    $resNome = $stmtNome->get_result();
+
+    $nome = "Síndico";
+    if ($resNome->num_rows > 0) {
+        $row = $resNome->fetch_assoc();
+        $nome = $row['nome'];
+    }
+
+    $acao = "RESERVA";
+    $descricaoFinal = "$nome - $descricao";
+
+    $stmt = $conexao->prepare("INSERT INTO logs (id_usuario, acao, descricao) VALUES (?,?,?)");
+    $stmt->bind_param("iss", $idUsuario, $acao, $descricaoFinal);
+    $stmt->execute();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
 
     $id = $_POST['id_reserva'] ?? null;
@@ -13,20 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
 
     if ($id) {
 
+        $stmtMorador = $conexao->prepare("
+            SELECT m.nome 
+            FROM Reserva r
+            JOIN Morador m ON r.id_morador = m.id_morador
+            WHERE r.id_reserva=?
+        ");
+        $stmtMorador->bind_param("i", $id);
+        $stmtMorador->execute();
+        $resMorador = $stmtMorador->get_result();
+
+        $nomeMorador = "Morador";
+        if ($resMorador->num_rows > 0) {
+            $nomeMorador = $resMorador->fetch_assoc()['nome'];
+        }
+
         if ($acao === 'aprovar') {
             $status = 'aprovada';
-            registrarLog(
-        $conexao,
-        $_SESSION['id'],
-        "Aprovou reserva ID $id");
+            registrarLog($conexao, $_SESSION['id'], "aprovou a reserva de $nomeMorador");
         } else {
             $status = 'rejeitada';
-            registrarLog(
-    $conexao,
-    $_SESSION['id'],
-    "Cancelou reserva ID $id_reserva"
-);
-
+            registrarLog($conexao, $_SESSION['id'], "rejeitou a reserva de $nomeMorador");
         }
 
         $stmtUp = $conexao->prepare("UPDATE Reserva SET status=? WHERE id_reserva=?");
@@ -35,66 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
 
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
-    }
-}
-
-
-$stmt = $conexao->prepare("Select * from sindico Where id_usuario = ?");
-$stmt->bind_param("s", $_SESSION['id']);
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-if ($resultado->num_rows > 0) {
-    $row = $resultado->fetch_assoc();
-    $userName = $row['nome'];
-    $iniciais = strtoupper(substr($userName, 0, 1));
-}
-$reservasPorData = [];
-$queryDatas = "
-    SELECT 
-        r.data, 
-        r.area_comum, 
-        r.hora_inicio, 
-        r.hora_fim, 
-        m.nome AS morador
-    FROM Reserva r
-    JOIN Morador m ON r.id_morador = m.id_morador
-WHERE r.status = 'aprovada'
-
-
-";
-
-
-$resultDatas = $conexao->query($queryDatas);
-
-if ($resultDatas) {
-    while ($row = $resultDatas->fetch_assoc()) {
-        $data = $row['data'];
-        $reservasPorData[$data][] = [
-            'area' => $row['area_comum'],
-            'inicio' => substr($row['hora_inicio'], 0, 5),
-            'fim' => substr($row['hora_fim'], 0, 5),
-            'morador' => $row['morador']
-        ];
-    }
-}
-$reservas = [];
-
-$query = "
-SELECT r.id_reserva, r.area_comum, r.data, r.hora_inicio, r.hora_fim,
-       r.status,
-       m.nome AS nome_morador, m.telefone
-FROM Reserva r
-JOIN Morador m ON r.id_morador = m.id_morador
-ORDER BY r.data DESC, r.hora_inicio ASC
-
-";
-
-$resultado = $conexao->query($query);
-
-if ($resultado) {
-    while ($row = $resultado->fetch_assoc()) {
-        $reservas[] = $row;
     }
 }
 ?>
